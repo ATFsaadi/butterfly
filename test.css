@@ -1,0 +1,76 @@
+
+/* Placement dans un coin spécifique */
+.voyage-reset-icon-container {
+    position: a;
+    /* Erreur potentielle ici (position mal définie) */
+    top: 10px;
+    /* Position en haut */
+    right: 10px;
+    /* Position à droite */
+    z-index: 10;
+    /* Assure que l'icône reste au-dessus des autres éléments */
+}
+
+/* Conteneur principal de l'icône */
+.voyage-reset-icon-container {
+    display: flex;
+    /* Utilisation de Flexbox pour centrer le contenu */
+    justify-content: center;
+    /* Centrage horizontal */
+    margin-top: 50px;
+    /* Espacement au-dessus de l'icône */
+}
+
+/* Style du bouton contenant l'icône */
+.voyage-reset-icon {
+    background: #fff;
+    /* Fond blanc */
+    border: 1px solid #ccc;
+    /* Bordure fine */
+    border-radius: 50%;
+    /* Forme circulaire */
+    width: 20px;
+    /* Taille fixe */
+    height: 20px;
+    /* Hauteur identique à la largeur */
+    cursor: pointer;
+    /* Curseur en forme de main */
+    display: flex;
+    /* Utilisation de Flexbox pour centrer le contenu */
+    align-items: center;
+    /* Centrage vertical */
+    justify-content: center;
+    /* Centrage horizontal */
+    transition: all 0.3s ease;
+    /* Animation fluide */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    /* Ombre légère */
+}
+
+/* Hover sur le bouton */
+.voyage-reset-icon:hover {
+    background: #f0f8ff;
+    /* Fond légèrement plus foncé */
+    border-color: #00353F;
+    /* Bordure accentuée */
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+    /* Ombre renforcée */
+    transform: scale(1.1);
+    /* Légère augmentation de taille */
+}
+
+/* Style de l'image à l'intérieur du bouton */
+.voyage-reset-icon img {
+    width: 20px;
+    /* Taille fixe */
+    height: auto;
+    /* Maintien des proportions */
+    transition: transform 0.3s ease;
+    /* Animation fluide */
+}
+
+/* Hover sur l'image */
+.voyage-reset-icon:hover img {
+    transform: rotate(90deg);
+    /* Rotation légère pour un effet dynamique */
+}
