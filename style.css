@@ -1,108 +1,87 @@
-/*===== Style du corps de la page =====*/
 body {
     font-family: "Poiret One", sans-serif;
-    /* Définit une police élégante avec une fallback sur une police générique */
     font-weight: bold;
-    /* Met en gras l'ensemble du texte */
     background-color: white;
-    /* Fond légèrement gris pour un contraste doux */
 }
 
 .logo-size {
-    width: 210px;
-    height: 55px;
-    /* Limite la taille maximale du logo */
+    width: 200px;
+    height: 100px;
     margin-top: -10px;
-    /* Ajoute un espace en haut pour l'alignement */
     margin-left: 0;
-    /* Ajuste l'alignement horizontal */
-}
-h6{
-    font-family:"Meow Script", cursive; /* Police cursive élégante */
-    color: #F27438;
-    font-size:50px ;
-}
-h1 {
-    font-family:"Meow Script", cursive; /* Police cursive élégante */
-    font-weight:100; /* Poids léger pour une apparence fluide */
-    font-size: 50px; /* Taille importante pour attirer l'attention */
-    color: #00353F; /* Couleur bleu foncé pour contraste */
-    
 }
 
-/*===== Barre de navigation principale =====*/
+h6 {
+    font-family: "Meow Script", cursive;
+    color: #F27438;
+    font-size: 50px;
+}
+
+h1 {
+    font-family: "Meow Script", cursive;
+    font-weight: 100;
+    font-size: 50px;
+    color: #00353F;
+}
+
 nav.custom-navbar {
     padding: 0;
     margin-top: 0;
     background-color: rgb(255, 255, 255);
 }
 
-/* Espacement entre les liens de navigation */
 .navbar-nav .nav-item {
     margin: 0 10px;
 }
 
-/* Style du texte sous les icônes */
 .nav-link {
     font-size: 15px;
     color: #26474E;
-    /* Couleur de texte par défaut */
     transition: color 0.3s ease;
 }
 
-/* Changement de couleur du texte au survol */
 .nav-link:hover {
     color: #F27438;
-    /* Couleur de texte au survol */
-}
-
-/* Style général des icônes circulaires */
-.icon-circle {
-    display: flex; /* Utilisation de Flexbox pour centrer le contenu */
-    justify-content: center; /* Centrage horizontal */
-    align-items: center; /* Centrage vertical */
-    width: 35px; /* Largeur fixe pour créer un cercle */
-    height: 35px; /* Hauteur identique à la largeur */
-    background: #fff; /* Fond blanc pour contraste */
-    border: 1px solid #ccc; /* Bordure fine pour délimiter */
-    border-radius: 50%; /* Forme circulaire grâce au rayon */
-    font-size: 20px; /* Taille des icônes */
-    color: #00353F; /* Couleur des icônes en bleu foncé */
-    transition: all 0.3s ease; /* Animation fluide lors des interactions */
 }
 
 .nav-link span {
     font-size: 10px;
-    /* Réduit encore la taille du texte pour économiser de l'espace */
 }
 
-/* Effet au survol des icônes */
+.icon-circle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 35px;
+    height: 35px;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    font-size: 20px;
+    color: #00353F;
+    transition: all 0.3s ease;
+}
+
 .icon-hover:hover {
-    transform: scale(1.1); /* Légère augmentation de taille */
-    background: #f0f8ff; /* Fond légèrement plus foncé */
-    border-color: #00353F; /* Bordure accentuée */
+    transform: scale(1.1);
+    background: #f0f8ff;
+    border-color: #00353F;
 }
 
-/* Style des icônes SVG */
 .icon-circle svg {
     fill: #26474E;
-    /* Couleur par défaut des icônes SVG */
     transition: fill 0.3s ease;
 }
 
-/* Effet au survol des SVG */
 .icon-circle:hover svg {
     fill: #F27438;
-    /* Couleur des icônes SVG au survol */
 }
 
-/* Affichage de la carte au survol */
 .adresse-hover:hover #map-container {
     opacity: 1;
     visibility: visible;
 }
 
-/* Responsive de la carte Google Maps */
 #adresse-container {
     position: relative;
 }
@@ -112,7 +91,6 @@ nav.custom-navbar {
     visibility: hidden;
     position: absolute;
     top: 100%;
-    /* Position sous le lien */
     left: 50%;
     transform: translateX(-50%);
     width: 300px;
@@ -121,407 +99,199 @@ nav.custom-navbar {
     overflow: hidden;
     transition: opacity 0.3s ease, visibility 0.3s ease;
     z-index: 1500;
-    /* border: 1px solid #F27438; Bordure de la carte */
 }
-
-/*===== Barre de navigation seconder =====*/
 
 #navbarNav {
     border-bottom: 0.5px solid #F27438;
 }
-/* Style des menus déroulants */
-.dropdown-menu {
-    border: none;
-    /* Supprime les bordures par défaut pour un design moderne */
-    border-radius: 0;
-    /* Pas d'arrondi pour un look minimaliste */
-    opacity: 0;
-    /* Cache le menu par défaut */
-    visibility: hidden;
-    /* Le rend invisible */
-    transform: translateY(100px);
-    /* Décale le menu vers le bas initialement */
-    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
-    /* Transition fluide pour l'apparition */
-}
 
-/* Effet au survol du menu déroulant */
-.nav-item.dropdown:hover .dropdown-menu {
-    opacity: 1;
-    /* Rend le menu visible */
-    visibility: visible;
-    /* Affiche complètement le menu */
-    transform: translateY(0);
-    /* Ramène le menu à sa position normale */
-}
-
-/* Style des liens dans le dropdown */
-.dropdown-menu .dropdown-item {
-    font-size: 16px;
-    /* Taille de texte réduite pour économiser de l'espace */
-    font-weight: 50;
-    /* Texte un peu plus épais pour la lisibilité */
-    color: #26474E;
-    /* Bleu foncé pour correspondre au thème */
-    padding: 10px 20px;
-    /* Espacement interne pour un clic facile */
-    transition: 0.3s ease-in-out;
-    /* Transition fluide pour le fond */
-}
-
-.dropdown-menu .dropdown-item:hover {
-    background-color: transparent;
-    /* Fond transparent pour un design propre */
-    color: #F27438;
-    /* Couleur orange pour indiquer l'interaction */
-    border-radius: 0;
-    /* Aucun arrondi pour rester cohérent */
-}
-
-/* Gestion du padding des conteneurs fluides */
-.container-fluid {
-    padding-left: 35px;
-    padding-right: 35px;
-    /* Padding uniforme pour tous les conteneurs fluides */
-}
-
-.nav-link span {
-    font-size: 10px;
-    /* Réduit encore la taille du texte pour économiser de l'espace */
-    
-}
-
-/*===== barre de recherche =====*/
-
-/*Globale barre de recherche*/
 .voyage-container {
-    background: #f9f9f9; /* Fond clair */
-    padding: 30px; /* Espacement interne */
-    margin: 20px auto; /* Centrage horizontal */
-    max-width: 100%; /* Largeur maximale */
-    margin-top: 0px;
+    background: #f9f9f9;
+    padding: 30px;
+    margin: 20px auto;
+    max-width: 100%;
+    margin-top: 0;
 }
 
-/* Supprimer la flèche des menus déroulants */
-.navbar-nav .dropdown-toggle::after {
-    display: none !important;
-    /* Masque complètement la flèche par défaut */
-}
-
-.dropdown-item:focus,
-.nav-link:focus {
-    outline: none !important;
-    /* Supprime le contour bleu lorsqu'un lien est sélectionné */
-    box-shadow: none !important;
-    /* Supprime toute ombre bleue pour un design propre */
-}
-
-/* Style du titre principal de la barre de recherche */
 .voyage-menu-title {
-    font-family: "Lavishly Yours", cursive; /* Police cursive élégante */
-    font-weight: 400; /* Poids léger pour une apparence fluide */
-    font-style: italic; /* Style italique pour un effet esthétique */
-    font-size: 28px; /* Taille de police */
-    color: #373f00; /* Couleur personnalisée */
-    text-align: center; /* Centrage horizontal */
-    margin: 0 auto; /* Centrage vertical et suppression des marges inutiles */
-    margin-bottom: -30px;
-    margin-top:-10px ;
+    font-family: "Lavishly Yours", cursive;
+    font-weight: 400;
+    font-style: italic;
+    font-size: 28px;
+    color: #373f00;
+    text-align: center;
+    margin: 0 auto -30px;
+    padding-top: 10px;
 }
 
-/* Style des boutons (dropdowns et recherche) */
-.voyage-dropdown button,
-.voyage-search-btn {
-    background: white;
-    /* Fond blanc */
-    border: 1px solid transparent;
-    /* Bordure discrète */
-    border-radius: 0;
-    /* Coins droits */
+.voyage-menu {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0;
+    padding: 40px 0;
+    overflow: visible;
+    position: relative;
+}
+
+.voyage-dropdown {
+    position: relative;
     width: 180px;
-    /* Largeur fixe */
+    text-align: center;
+}
+
+.voyage-dropdown button {
+    background: white;
+    border: 1px solid transparent;
+    border-radius: 0;
+    width: 100%;
     height: 100px;
-    /* Hauteur fixe */
     cursor: pointer;
-    /* Curseur en forme de main pour indiquer l'interactivité */
     font-size: 16px;
-    /* Taille de police standard */
     font-weight: normal;
-    /* Poids normal pour une apparence simple */
     transition: all 0.3s ease;
-    /* Animation fluide */
 }
 
-/* Hover sur les boutons */
-.voyage-dropdown button:hover,
-.voyage-search-btn:hover {
+.voyage-dropdown button:hover {
     border-color: #F27438;
-    /* Couleur accentuée au survol */
 }
 
-/* Suggestions dans les boutons */
 .voyage-suggestion {
     color: #26474E;
-    /* Couleur bleu foncé */
     font-weight: bold;
-    /* Texte en gras pour attirer l'attention */
     display: block;
-    /* Affichage en bloc pour une disposition correcte */
     margin-top: 5px;
-    /* Espacement au-dessus du texte */
     font-size: 12px;
-    /* Taille réduite pour le texte */
 }
 
-/* Contenu des dropdowns */
 .voyage-dropdown-content {
     display: none;
-    /* Masqué par défaut */
     position: absolute;
-    /* Positionnement absolu pour le placement précis */
     top: 100%;
-    /* Positionné juste en dessous du bouton */
     left: 0;
-    /* Aligné à gauche */
     width: 100%;
-    /* Largeur identique au bouton */
     background: white;
-    /* Fond blanc */
     list-style: none;
-    /* Suppression des puces */
-    padding: 0;
-    /* Suppression de l'espacement interne */
-    margin-top: 5px;
-    /* Espacement entre le bouton et le contenu */
-    z-index: 10;
-    /* Assure que le contenu reste au-dessus des autres éléments */
+    padding: 10px 0;
+    margin-top: 2px;
+    z-index: 1000;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
-/* Éléments individuels dans les dropdowns */
-.voyage-dropdown-content li {
-    padding: 10px;
-    /* Espacement interne */
-    cursor: pointer;
-    /* Curseur en forme de main pour indiquer l'interactivité */
-    transition: background 0.3s ease;
-    /* Animation fluide pour le fond */
-}
-
-/* Animation pour afficher les dropdowns */
 .voyage-dropdown:hover .voyage-dropdown-content {
     display: block;
-    /* Rend le contenu visible */
+    opacity: 1;
+    visibility: visible;
     animation: fadeIn 0.3s ease;
-    /* Animation d'apparition progressive */
 }
 
-/* Bouton de recherche */
+.voyage-dropdown-content li {
+    padding: 10px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    color: #26474E;
+    font-size: 16px;
+}
+
+.voyage-dropdown-content li:hover {
+    background: #f0f8ff;
+}
+
 .voyage-search-btn {
     background: #F27438;
-    /* Dégradé orange pour attirer l'attention */
     color: #fff;
-    /* Texte en blanc pour contraste */
     font-weight: bold;
-    /* Texte en gras */
     border: none;
-    /* Suppression de la bordure */
     border-radius: 0;
-    /* Coins droits */
-    transition: transform 0.2s ease;
-    /* Animation fluide */
-}
-
-/* Champ de date */
-.voyage-date-picker {
-    position: absolute;
-    /* Positionnement absolu pour le placement précis */
-    top: 0;
-    /* Aligné en haut */
-    left: 0;
-    /* Aligné à gauche */
-    width: 100%;
-    /* Largeur identique au bouton */
-    height: 100%;
-    /* Hauteur identique au bouton */
-    opacity: 0;
-    /* Invisible mais fonctionnel */
-    cursor: pointer;
-    /* Curseur en forme de main */
-}
-
-
-
-/* Conteneur principal de l'icône + dropdown */
-.adresse-container {
-    position: relative;
-    /* Permet de positionner la carte en absolu */
-}
-/* Style du champ de date */
-.voyage-date-picker {
-    background: #fff;
-    /* Fond blanc */
-    border: 1px solid #ccc;
-    /* Bordure fine */
-    border-radius: 0;
-    /* Coins droits */
-    width: 100%;
-    /* Largeur complète */
-    height: 50px;
-    /* Hauteur identique aux autres champs */
-    font-size: 14px;
-    /* Taille de police standard */
-    padding: 10px;
-    /* Espacement interne */
-    cursor: pointer;
-    /* Curseur en forme de main */
-    transition: border-color 0.3s ease;
-    /* Animation fluide */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    /* Ombre légère */
-}
-
-/* Hover sur le champ de date */
-.voyage-date-picker:hover {
-    border-color: #00353F;
-    /* Bordure accentuée */
-}
-
-/* Placeholder du champ de date */
-.voyage-date-picker::placeholder {
-    color: #aaa;
-    /* Couleur du texte placeholder */
-    font-style: italic;
-    /* Style italique pour un effet esthétique */
-}
-
-/* Style du calendrier Flatpickr */
-.flatpickr-calendar {
-    background: #f9f9f9;
-    /* Fond clair */
-    border: 1px solid #ccc;
-    /* Bordure fine */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    /* Ombre légère */
-}
-
-
-
-/* Animation de l'icône dans le bouton de recherche */
-.voyage-search-btn {
+    width: 180px;
+    height: 100px;
     display: flex;
-    /* Assure que l'icône et le texte sont alignés */
     align-items: center;
-    /* Centrage vertical */
     justify-content: center;
-    /* Centrage horizontal */
     gap: 10px;
-    /* Espace entre l'icône et le texte */
-    overflow: hidden;
-    /* Limite les animations à l'intérieur du bouton */
+    transition: transform 0.2s ease;
 }
 
-/* Effet lorsque le bouton est survolé */
+.voyage-search-btn:hover {
+    border-color: #F27438;
+}
+
 .voyage-search-btn:hover .search-icon {
     transform: translateY(-5px);
-    /* Légère translation vers le haut */
-    animation: bounce 1s infinite;
-    /* Ajoute une animation de rebond */
+    animation: custom-bounce 1s infinite;
 }
 
-/* Style global pour le conteneur du bouton Réinitialiser */
+.voyage-date-picker {
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 0;
+    width: 100%;
+    height: 50px;
+    font-size: 14px;
+    padding: 10px;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.voyage-date-picker:hover,
+.voyage-date-picker:focus {
+    border-color: #F27438;
+    outline: none;
+}
+
+.voyage-date-picker::placeholder {
+    color: #aaa;
+    font-style: italic;
+}
+
+.flatpickr-calendar {
+    background: #f9f9f9;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
 .voyage-reset-icon-container {
-    position: absolute; /* Positionnement absolu pour un contrôle précis */
-    top: 20px; /* Marge supérieure (ajustez cette valeur selon vos besoins) */
-    left: 79.5%; /* Centrage horizontal initial */
-    transform: translateX(-50%); /* Ajustement pour un centrage parfait */
-    margin-left: 20px; /* Décalage vers la droite (ajustez selon vos besoins) */
-    width: 180px; /* Largeur fixe pour correspondre aux autres filtres */
-    text-align: center; /* Alignement du contenu au centre */
-    z-index: 1500; /* Assure que le bouton reste au-dessus des autres éléments */
+    position: absolute;
+    top: 20px;
+    left: 79.5%;
+    transform: translateX(-50%);
+    margin-left: 20px;
+    width: 180px;
+    text-align: center;
+    z-index: 1500;
 }
 
-/* Style pour le bouton Réinitialiser */
 .voyage-reset-icon {
-    display: inline-flex; /* Flexbox pour aligner l'icône et le texte */
-    align-items: center; /* Alignement vertical des éléments internes */
-    justify-content: center; /* Alignement horizontal des éléments internes */
-    background-color: #F27438; /* Couleur rouge pour indiquer une action de réinitialisation */
-    color: rgb(255, 255, 255); /* Texte en blanc pour un bon contraste */
-    border: none; /* Suppression de la bordure par défaut */
-    border-radius: 50%; /* Forme circulaire pour le bouton */
-    width: 15px; /* Largeur fixe pour une forme circulaire */
-    height: 15px; /* Hauteur fixe pour une forme circulaire */
-    cursor: pointer; /* Curseur en forme de main pour indiquer qu'il est cliquable */
-    transition: all 0.3s ease; /* Animation fluide pour les transitions */
-    margin: 0 auto; /* Centrage horizontal dans son conteneur */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #F27438;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-/* Hover effect pour le bouton Réinitialiser */
 .voyage-reset-icon:hover {
-    background-color: white; /* Couleur rouge plus foncée au survol */
+    background-color: white;
 }
 
-/* Style pour l'icône à l'intérieur du bouton */
 .voyage-reset-icon img {
-    width: 15px; /* Taille de l'icône */
-    height: 15px; /* Taille de l'icône */
+    width: 20px;
+    height: 20px;
 }
-/* Hover sur l'image */
+
 .voyage-reset-icon:hover img {
     transform: rotate(90deg);
-    /* Rotation légère pour un effet dynamique */
-}   
-
-/* Styles pour le bouton du menu sur les petits écrans */
-@media (max-width: 991.98px) {
-    .custom-navbar .navbar-toggler {
-        margin-right: 10px;
-        /* Espace entre le bouton et le logo */
-    }
-
-    .custom-navbar .navbar-brand {
-        margin-left: 0;
-        /* Supprimer tout espace supplémentaire */
-    }
 }
 
-/* Animation personnalisée pour les icônes */
-@keyframes custom-bounce {
-    0%,
-    100% {
-        transform: translateY(0);
-    }
-    /* Position initiale et finale */
-    50% {
-        transform: translateY(-10px);
-    }
-    /* Légère translation vers le haut */
-}
-
-/* Animation d'apparition progressive */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        /* Invisible au début */
-    }
-    to {
-        opacity: 1;
-        /* Pleinement visible à la fin */
-    }
-}
-a:hover img {
-    transform: rotate(2deg);
-    /* Rotation légère pour un effet dynamique */
-}   
-
-
-    /*=====slides=====*/
-
-/*=== Carrousel général ===*/
-/* Styles globaux */
-
-
-/*=== Carrousel principal ===*/
 .carousel {
     width: 100%;
     margin: 0;
@@ -533,7 +303,7 @@ a:hover img {
 
 .carousel-image {
     width: 100%;
-    height: 900px; /* Hauteur fixe pour les images du carrousel */
+    height: 900px;
     object-fit: cover;
 }
 
@@ -553,8 +323,9 @@ a:hover img {
     transition: all 0.3s ease;
     padding: 10px 25px;
     font-size: 1rem;
-    border-radius: 0px; /* Boutons arrondis */
+    border-radius: 50rem;
 }
+
 .carousel-caption .btn:hover,
 .card .btn:hover {
     background-color: transparent;
@@ -565,22 +336,23 @@ a:hover img {
 .carousel-control-next {
     width: 50px;
     height: 50px;
-    background-color:transparent;
-    border-radius:0px;
+    background-color: transparent;
+    border-radius: 0;
     top: 50%;
     transform: translateY(-50%);
     transition: background-color 0.3s ease;
 }
+
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
     filter: invert(1);
 }
+
 .carousel-control-prev:hover,
 .carousel-control-next:hover {
     background-color: #F27438;
 }
 
-/*=== Sections communes ===*/
 .selection-section,
 .offers-section {
     padding: 40px 0;
@@ -599,29 +371,28 @@ a:hover img {
     margin-bottom: 40px;
 }
 
-/*=== Cartes communes ===*/
 .card {
     border: none;
-    border-radius: 0px;
-    width: 100%; /* Largeur complète */
+    border-radius: 0;
+    width: 100%;
     margin: 0;
     padding: 0;
     overflow: hidden;
 }
+
 .card:hover {
     transform: translateY(-10px);
 }
 
 .card-img-top {
     width: 100%;
-    height: 650px; /* Hauteur fixe pour les images des cartes */
+    height: 650px;
     object-fit: cover;
-    border-top-left-radius: 0px;
-    border-top-right-radius: 0px;
+    border-radius: 0;
 }
 
 .card-body {
-    min-height: 200px; /* Hauteur minimale pour le contenu texte */
+    min-height: 200px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -639,9 +410,6 @@ a:hover img {
     margin-bottom: 20px;
 }
 
-/*=== Notre Sélection ===*/
-
-
 .big-card {
     width: 100%;
     max-width: 600px;
@@ -649,8 +417,8 @@ a:hover img {
 }
 
 .big-card .card-img-top {
-    height: 800px; /* Hauteur spécifique pour les grandes cartes */
-    width: 600px;
+    height: 800px;
+    width: 100%;
 }
 
 .big-card .card-title {
@@ -668,7 +436,6 @@ a:hover img {
     height: 60px;
 }
 
-/*=== Footer ===*/
 footer {
     background-color: #26474E !important;
     color: #ffffff;
@@ -686,6 +453,7 @@ footer a {
     color: #ffffff;
     transition: color 0.3s ease;
 }
+
 footer a:hover {
     color: #F27438;
     text-decoration: none;
@@ -698,6 +466,7 @@ footer .list-unstyled li {
 footer i.fab {
     transition: transform 0.3s ease, color 0.3s ease;
 }
+
 footer i.fab:hover {
     transform: scale(1.2);
     color: #F27438;
@@ -714,16 +483,63 @@ footer .text-center {
     padding-bottom: 20px;
 }
 
+@media (max-width: 991.98px) {
+    .custom-navbar .navbar-toggler {
+        margin-right: 10px;
+    }
+
+    .custom-navbar .navbar-brand {
+        margin-left: 0;
+    }
+
+    .voyage-menu {
+        gap: 10px;
+        padding: 20px 0;
+    }
+
+    .voyage-dropdown,
+    .voyage-search-btn {
+        width: 100%;
+        max-width: 180px;
+    }
+
+    .voyage-reset-icon-container {
+        position: static;
+        transform: none;
+        margin: 10px auto;
+    }
+}
+
 @media (max-width: 768px) {
     footer .col-md-6 {
         text-align: left;
     }
+
     footer .col-md-6 h5 {
         text-align: center;
     }
 }
 
+@keyframes custom-bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
 
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 
-
-
+a:hover img {
+    transform: rotate(0deg);
+}
