@@ -10,7 +10,7 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin">
         <link href="https://fonts.googleapis.com/css2?family=Genos:ital,wght@0,100..900;1,100..900&family=Lavishly+Yours&family=Meow+Script&family=Poiret+One&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="./style/style.css">
     </head>
     <body>
         <nav class="custom-navbar navbar-expand-lg">
@@ -33,15 +33,15 @@
                 <div class="navbar-right">
                     <ul class="navbar-nav flex-row align-items-center gap-3">
                         <li class="nav-item d-flex flex-column align-items-center">
-                            <a class="nav-link d-flex flex-column align-items-center" href="sing.php" aria-label="Envoyer un email">
-                                <span class="icon-circle">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" width="15" height="15">
-                                        <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
-                                    </svg>
-                                </span>
-                                <span class="mt-1">Mail</span>
-                            </a>
-                        </li>
+    <a class="nav-link signin-nav-link d-flex flex-column align-items-center" href="signin.php" aria-label="Se connecter">
+        <span class="icon-circle">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15">
+                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+            </svg>
+        </span>
+        <span class="mt-1">Connecter</span>
+    </a>
+</li>
                         <li class="nav-item d-flex flex-column align-items-center">
                             <a class="nav-link d-flex flex-column align-items-center" href="https://wa.me/33648843836" target="_blank" aria-label="Nous contacter via WhatsApp">
                                 <span class="icon-circle">

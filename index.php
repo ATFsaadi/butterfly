@@ -86,7 +86,7 @@
                 <div class="text-center">
                     <h6>Découvrir Oran</h6>
                     <p>El Bahia, ville côtière algérienne, mêle charme méditerranéen, histoire riche et culture vivante. Idéale pour découvrir paysages maritimes, architecture coloniale et musique raï.</p>
-                    <div class="col-md d-grid">
+                      <div class="col-md d-grid">
                         <button type="button" class="btn btn-outline-dark w-100 rounded-pill py-2">Découvrir</button>
                     </div>
                 </div>
