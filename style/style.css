@@ -1,9 +1,21 @@
+/* VARIABLES */
+:root {
+    --primary-color: #F27438;       /* Couleur principale */
+    --secondary-color: #26474E;     /* Couleur secondaire */
+    --text-color: #00353F;          /* Texte général */
+    --muted-color: #6c757d;         /* Texte secondaire / sous-titres */
+    --bg-light: #f9f9f9;            /* Fond clair sections */
+    --border-color: #ccc;           /* Bordures standards */
+}
+
+/* BODY */
 body {
     font-family: "Poiret One", sans-serif;
     font-weight: bold;
     background-color: white;
 }
 
+/* LOGO */
 .logo-size {
     width: 200px;
     height: 100px;
@@ -11,9 +23,10 @@ body {
     margin-left: 0;
 }
 
+/* HEADINGS */
 h6 {
-    font-family: "Meow Script", cursive;
-    color: #F27438;
+    font-family: "Poiret One", sans-serif;
+    color: var(--primary-color);
     font-size: 50px;
 }
 
@@ -21,9 +34,10 @@ h1 {
     font-family: "Meow Script", cursive;
     font-weight: 100;
     font-size: 50px;
-    color: #00353F;
+    color: var(--text-color);
 }
 
+/* NAVBAR */
 nav.custom-navbar {
     padding: 0;
     margin-top: 0;
@@ -36,12 +50,12 @@ nav.custom-navbar {
 
 .nav-link {
     font-size: 15px;
-    color: #26474E;
+    color: var(--secondary-color);
     transition: color 0.3s ease;
 }
 
 .nav-link:hover {
-    color: #F27438;
+    color: var(--primary-color);
 }
 
 .nav-link span {
@@ -55,28 +69,29 @@ nav.custom-navbar {
     width: 35px;
     height: 35px;
     background: #fff;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border-color);
     border-radius: 50%;
     font-size: 20px;
-    color: #00353F;
+    color: var(--text-color);
     transition: all 0.3s ease;
 }
 
 .icon-hover:hover {
     transform: scale(1.1);
     background: #f0f8ff;
-    border-color: #00353F;
+    border-color: var(--text-color);
 }
 
 .icon-circle svg {
-    fill: #26474E;
+    fill: var(--secondary-color);
     transition: fill 0.3s ease;
 }
 
 .icon-circle:hover svg {
-    fill: #F27438;
+    fill: var(--primary-color);
 }
 
+/* MAP HOVER */
 .adresse-hover:hover #map-container {
     opacity: 1;
     visibility: visible;
@@ -101,12 +116,14 @@ nav.custom-navbar {
     z-index: 1500;
 }
 
+/* NAVBAR BOTTOM BORDER */
 #navbarNav {
-    border-bottom: 0.5px solid #F27438;
+    border-bottom: 0.5px solid var(--primary-color);
 }
 
+/* VOYAGES */
 .voyage-container {
-    background: #f9f9f9;
+    background: var(--bg-light);
     padding: 30px;
     margin: 20px auto;
     max-width: 100%;
@@ -118,7 +135,7 @@ nav.custom-navbar {
     font-weight: 400;
     font-style: italic;
     font-size: 28px;
-    color: #373f00;
+    color: var(--text-color);
     text-align: center;
     margin: 0 auto -30px;
     padding-top: 10px;
@@ -154,11 +171,11 @@ nav.custom-navbar {
 }
 
 .voyage-dropdown button:hover {
-    border-color: #F27438;
+    border-color: var(--primary-color);
 }
 
 .voyage-suggestion {
-    color: #26474E;
+    color: var(--secondary-color);
     font-weight: bold;
     display: block;
     margin-top: 5px;
@@ -176,7 +193,7 @@ nav.custom-navbar {
     padding: 10px 0;
     margin-top: 2px;
     z-index: 1000;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border-color);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     transition: opacity 0.3s ease, visibility 0.3s ease;
 }
@@ -192,7 +209,7 @@ nav.custom-navbar {
     padding: 10px;
     cursor: pointer;
     transition: background 0.3s ease;
-    color: #26474E;
+    color: var(--secondary-color);
     font-size: 16px;
 }
 
@@ -200,8 +217,9 @@ nav.custom-navbar {
     background: #f0f8ff;
 }
 
+/* BTN VOYAGE */
 .voyage-search-btn {
-    background: #F27438;
+    background: linear-gradient(135deg, var(--primary-color), #F2A65B);
     color: #fff;
     font-weight: bold;
     border: none;
@@ -216,7 +234,7 @@ nav.custom-navbar {
 }
 
 .voyage-search-btn:hover {
-    border-color: #F27438;
+    border-color: var(--primary-color);
 }
 
 .voyage-search-btn:hover .search-icon {
@@ -224,9 +242,10 @@ nav.custom-navbar {
     animation: custom-bounce 1s infinite;
 }
 
+/* DATE PICKER */
 .voyage-date-picker {
     background: white;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border-color);
     border-radius: 0;
     width: 100%;
     height: 50px;
@@ -239,7 +258,7 @@ nav.custom-navbar {
 
 .voyage-date-picker:hover,
 .voyage-date-picker:focus {
-    border-color: #F27438;
+    border-color: var(--primary-color);
     outline: none;
 }
 
@@ -249,11 +268,12 @@ nav.custom-navbar {
 }
 
 .flatpickr-calendar {
-    background: #f9f9f9;
-    border: 1px solid #ccc;
+    background: var(--bg-light);
+    border: 1px solid var(--border-color);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+/* RESET ICON */
 .voyage-reset-icon-container {
     position: absolute;
     top: 20px;
@@ -269,7 +289,7 @@ nav.custom-navbar {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background-color: #F27438;
+    background-color: var(--primary-color);
     color: #fff;
     border: none;
     border-radius: 50%;
@@ -292,6 +312,7 @@ nav.custom-navbar {
     transform: rotate(90deg);
 }
 
+/* CAROUSEL */
 .carousel {
     width: 100%;
     margin: 0;
@@ -312,14 +333,14 @@ nav.custom-navbar {
 }
 
 .carousel-indicators .active {
-    background-color: #F27438;
+    background-color: var(--primary-color);
 }
 
 .carousel-caption .btn,
 .card .btn {
-    background-color: #F27438;
-    color: #ffffff;
-    border: 1px solid #F27438;
+    background: linear-gradient(135deg, var(--primary-color), #F2A65B);
+    color: var(--bg-light);
+    border: 1px solid var(--primary-color);
     transition: all 0.3s ease;
     padding: 10px 25px;
     font-size: 1rem;
@@ -329,9 +350,10 @@ nav.custom-navbar {
 .carousel-caption .btn:hover,
 .card .btn:hover {
     background-color: transparent;
-    color: #F27438;
+    color: var(--muted-color);
 }
 
+/* CAROUSEL CONTROLS */
 .carousel-control-prev,
 .carousel-control-next {
     width: 50px;
@@ -350,13 +372,14 @@ nav.custom-navbar {
 
 .carousel-control-prev:hover,
 .carousel-control-next:hover {
-    background-color: #F27438;
+    background-color: var(--primary-color);
 }
 
+/* SECTIONS */
 .selection-section,
 .offers-section {
     padding: 40px 0;
-    background-color: #f9f9f9;
+    background-color: var(--bg-light);
 }
 
 .section-title {
@@ -367,10 +390,11 @@ nav.custom-navbar {
 
 .section-subtitle {
     font-size: 1.2rem;
-    color: #6c757d;
+    color: var(--muted-color);
     margin-bottom: 40px;
 }
 
+/* CARD */
 .card {
     border: none;
     border-radius: 0;
@@ -400,16 +424,17 @@ nav.custom-navbar {
 
 .card-title {
     font-size: 1.5rem;
-    color: #F27438;
+    color: var(--primary-color);
     margin-bottom: 10px;
 }
 
 .card-text {
     font-size: 1rem;
-    color: #6c757d;
+    color: var(--muted-color);
     margin-bottom: 20px;
 }
 
+/* BIG CARD */
 .big-card {
     width: 100%;
     max-width: 600px;
@@ -436,8 +461,9 @@ nav.custom-navbar {
     height: 60px;
 }
 
+/* FOOTER */
 footer {
-    background-color: #26474E !important;
+    background-color: var(--secondary-color) !important;
     color: #ffffff;
     padding-top: 40px;
     margin-top: 50px;
@@ -445,7 +471,7 @@ footer {
 
 footer h5 {
     font-size: 1.2rem;
-    color: #F27438;
+    color: var(--primary-color);
     margin-bottom: 15px;
 }
 
@@ -455,7 +481,7 @@ footer a {
 }
 
 footer a:hover {
-    color: #F27438;
+    color: var(--primary-color);
     text-decoration: none;
 }
 
@@ -469,11 +495,11 @@ footer i.fab {
 
 footer i.fab:hover {
     transform: scale(1.2);
-    color: #F27438;
+    color: var(--primary-color);
 }
 
 footer hr {
-    border-color: #F27438;
+    border-color: var(--primary-color);
     margin: 20px 0;
 }
 
@@ -483,6 +509,7 @@ footer .text-center {
     padding-bottom: 20px;
 }
 
+/* MEDIA QUERIES */
 @media (max-width: 991.98px) {
     .custom-navbar .navbar-toggler {
         margin-right: 10px;
@@ -520,6 +547,7 @@ footer .text-center {
     }
 }
 
+/* ANIMATIONS */
 @keyframes custom-bounce {
     0%, 100% {
         transform: translateY(0);
@@ -543,23 +571,3 @@ footer .text-center {
 a:hover img {
     transform: rotate(0deg);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

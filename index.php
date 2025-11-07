@@ -1,273 +1,224 @@
-<?php include 'includes/header.php';?>
-<section class="voyage-menu-section">
-    <div class="voyage-container">
-        <div class="voyage-menu-title">
-            <h1>Pour un voyage de rêve ...</h1>
-        </div>
-        <div class="voyage-menu">
-            <div class="voyage-dropdown">
-                <button class="voyage-btn" aria-label="Sélectionner le type de voyage">Type de Voyage
-                    <span class="voyage-suggestion">Séjour</span>
-                </button>
-                <ul class="voyage-dropdown-content">
-                    <li>Séjour</li>
-                    <li>Aventure</li>
-                    <li>Plage</li>
-                    <li>Culture</li>
-                </ul>
-            </div>
-            <div class="voyage-dropdown">
-                <button class="voyage-btn" aria-label="Sélectionner la destination">Destination
-                    <span class="voyage-suggestion">N'importe où</span>
-                </button>
-                <ul class="voyage-dropdown-content">
-                    <li>N'importe où</li>
-                    <li>France</li>
-                    <li>États-Unis</li>
-                    <li>Japon</li>
-                </ul>
-            </div>
-            <div class="voyage-dropdown">
-                <button class="voyage-btn" aria-label="Sélectionner la ville de départ">Ville de Départ
-                    <span class="voyage-suggestion">Tout endroit</span>
-                </button>
-                <ul class="voyage-dropdown-content">
-                    <li>Tout endroit</li>
-                    <li>Paris</li>
-                    <li>Marseille</li>
-                    <li>Lyon</li>
-                </ul>
-            </div>
-            <div class="voyage-dropdown">
-                <button id="dateButton" class="voyage-btn" aria-label="Ouvrir le sélecteur de date de départ">Date de Départ
-                    <span class="voyage-suggestion"></span>
-                </button>
-                <div class="voyage-dropdown-content">
-                    <input type="date" id="dateDepart" class="voyage-date-picker" aria-label="Sélectionner la date de départ">
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Bfly</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" crossorigin="anonymous">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin">
+        <link href="https://fonts.googleapis.com/css2?family=Genos:ital,wght@0,100..900;1,100..900&family=Lavishly+Yours&family=Meow+Script&family=Poiret+One&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="style/style.css">
+       
+    </head>
+    <body>
+        <nav class="custom-navbar navbar-expand-lg">
+            <div class="container-fluid d-flex justify-content-between" style="padding: 20px 100px;">
+                <div class="d-flex align-items-center">
+                    <li class="nav-item d-flex flex-column align-items-center">
+                        <button class="navbar-toggler d-lg-none nav-link d-flex flex-column align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="icon-circle">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" width="15" height="15">
+                                    <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                                </svg>
+                            </span>
+                            <span class="mt-1">Menu</span>
+                        </button>
+                    </li>
+                    <a href="index.php" class="navbar-brand logo-spacing d-none d-lg-flex">
+                        <img src="icons/logo-off.png" alt="Logo de l'agence" class="logo-size">
+                    </a>
+                </div>
+                <div class="navbar-right">
+                    <ul class="navbar-nav flex-row align-items-center gap-3">
+                        <li class="nav-item d-flex flex-column align-items-center">
+                            <a class="nav-link signin-nav-link d-flex flex-column align-items-center" href="vue/vue_connexion.php" aria-label="Se connecter">
+                                <span class="icon-circle">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15">
+                                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                                    </svg>
+                                </span>
+                                <span class="mt-1">Connecter</span>
+                            </a>
+                        </li>
+                        <li class="nav-item d-flex flex-column align-items-center">
+                            <a class="nav-link d-flex flex-column align-items-center" href="https://wa.me/33648843836" target="_blank" aria-label="Nous contacter via WhatsApp">
+                                <span class="icon-circle">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" width="15" height="15" fill="currentColor">
+                                        <path d="M6.62 10.79C8.06 13.62 10.38 15.94 13.21 17.38L15.41 15.18C15.68 14.91 16.08 14.82 16.43 14.91C17.69 15.22 18.99 15.39 20.32 15.39C20.75 15.39 21.13 15.76 21.13 16.19V20.3C21.13 20.73 20.75 21.1 20.32 21.1C10.71 21.1 3 13.39 3 3.78C3 3.35 3.38 2.97 3.81 2.97H7.92C8.35 2.97 8.72 3.35 8.72 3.78C8.72 5.11 8.89 6.41 9.2 7.67C9.29 8.02 9.2 8.42 8.93 8.69L6.62 10.79Z"/>
+                                    </svg>
+                                </span>
+                                <span class="mt-1">WhatsApp</span>
+                            </a>
+                        </li>
+                        <li class="nav-item adresse-container d-flex flex-column align-items-center d-none d-lg-block">
+                            <div class="adresse-hover d-flex flex-column align-items-center">
+                                <a class="nav-link d-flex flex-column align-items-center" href="#">
+                                    <span class="icon-circle">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" width="15" height="15">
+                                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                                    </svg>
+                                </span>
+                                <span class="mt-1">Notre agence</span>
+                            </a>
+                            <div id="adresse-container">
+                                <div id="map-container">
+                                    <iframe width="100%" height="100%" frameborder="0" style="border:0" allowfullscreen="allowfullscreen" loading="lazy" referrerpolicy="no-referrer" src="https://www.google.com/maps/embed?pb=..."></iframe>
+                                </div>
+                            </div>
+                        </div>
+                        </li>
+                        <li class="nav-item d-flex flex-column align-items-center d-none d-lg-block">
+                            <a class="nav-link d-flex flex-column align-items-center" href="about.php" aria-label="En savoir plus sur nous">
+                                <span class="icon-circle">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" width="15" height="15">
+                                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+                                    </svg>
+                                </span>
+                                <span class="mt-1">À propos</span>
+                            </a>
+                        </li>
+                    </ul>
                 </div>
             </div>
-            <div class="voyage-dropdown">
-                <button class="voyage-btn" aria-label="Sélectionner la durée du voyage">Durée
-                    <span class="voyage-suggestion">Peu importe</span>
-                </button>
-                <ul class="voyage-dropdown-content">
-                    <li>Peu importe</li>
-                    <li>1 jour</li>
-                    <li>3 jours</li>
-                    <li>1 semaine</li>
-                    <li>2 semaines</li>
-                </ul>
-            </div>
-            <div class="voyage-reset-icon-container">
-                <button class="voyage-reset-icon" aria-label="Réinitialiser les filtres">
-                    <img src="icons/reste.png" width="20" height="20" alt="Réinitialiser">
-                </button>
-            </div>
-            <div class="voyage-search-container">
-                <button class="voyage-search-btn" aria-label="Lancer la recherche">
-                    <img src="icons/loupe.png" width="18" height="18" alt="Rechercher" class="search-icon">
-                    Rechercher
-                </button>
+        </nav>
+        <div class="custom-navbar navbar-expand-lg navbar-light bg-white sticky-top" role="navigation" aria-label="Menu principal">
+            <div class="container-fluid">
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav mx-auto">
+                        <li class="nav-item me-4 d-lg-none">
+                            <a class="nav-link" href="#">Notre agence</a>
+                        </li>
+                        <li class="nav-item me-4 d-lg-none">
+                            <a class="nav-link" href="about.php">À propos</a>
+                        </li>
+                        <li class="nav-item dropdown me-4">
+                            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                                <i data-feather="home" class="nav-icon"></i>
+                                Hôtels
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">Hôtels de luxe</a></li>
+                                <li><a class="dropdown-item" href="#">Hôtels économiques</a></li>
+                                <li><a class="dropdown-item" href="#">Hôtels tout inclus</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown me-4">
+                            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                                <i data-feather="tag" class="nav-icon"></i>
+                                Promo
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">Réductions spéciales</a></li>
+                                <li><a class="dropdown-item" href="#">Codes promo</a></li>
+                                <li><a class="dropdown-item" href="#">Offres de saison</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown me-4">
+                            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                                <i data-feather="clock" class="nav-icon"></i>
+                                Dernière Minute
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">Offres spéciales</a></li>
+                                <li><a class="dropdown-item" href="#">Voyages à petit prix</a></li>
+                                <li><a class="dropdown-item" href="#">Destinations populaires</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown me-4">
+                            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                                <i data-feather="map" class="nav-icon"></i>
+                                Circuits
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">Circuits classiques</a></li>
+                                <li><a class="dropdown-item" href="#">Circuits aventure</a></li>
+                                <li><a class="dropdown-item" href="#">Circuits culturels</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown me-4">
+                            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                                <i data-feather="briefcase" class="nav-icon"></i>
+                                Séjours
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">Séjours en Europe</a></li>
+                                <li><a class="dropdown-item" href="#">Séjours en Asie</a></li>
+                                <li><a class="dropdown-item" href="#">Séjours en Amérique</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
+    </body>
+</html>
+
+
+
+
+    <?php require_once ("vue/home.php")?>
+
+
+
+
+
+ <!-- Chargement des scripts JS -->
+ <script src="script.js"></script>
+
+<!-- JavaScript de Bootstrap -->
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+<!-- Footer -->
+<footer class="text-light pt-4 mt-5">
+<div class="container">
+<div class="row">
+    <!-- Colonne Liens Utiles -->
+    <div class="col-md-3">
+        <h5>Liens Utiles</h5>
+        <ul class="list-unstyled">
+            <li><a href="#" class="text-light text-decoration-none">Accueil</a></li>
+            <li><a href="#" class="text-light text-decoration-none">Destinations</a></li>
+            <li><a href="#" class="text-light text-decoration-none">Nos Offres</a></li>
+            <li><a href="#" class="text-light text-decoration-none">Contact</a></li>
+        </ul>
+        <img src="icons/bfly.png" width="60px" alt="">
     </div>
-</section>
-<div id="carouselExampleIndicators" class="carousel slide mt-4" data-bs-ride="carousel">
-    <div class="carousel-indicators">
-        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
-        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3" aria-label="Slide 4"></button>
+    <!-- Colonne Suivez-nous et Contact (au milieu) -->
+    <div class="col-md-6 text-center">
+        <h5>Suivez-nous</h5>
+        <div class="mb-3">
+            <a href="#" class="text-light me-4"><i class="fab fa-facebook fa-2x"></i></a>
+            <a href="#" class="text-light me-4"><i class="fab fa-instagram fa-2x"></i></a>
+            <a href="#" class="text-light me-4"><i class="fab fa-twitter fa-2x"></i></a>
+            <a href="#" class="text-light"><i class="fab fa-youtube fa-2x"></i></a>
+        </div>
+        <h5>Contact</h5>
+        <p><i class="fas fa-map-marker-alt me-2"></i> 123 Rue du Voyage, Paris</p>
+        <p><i class="fas fa-phone me-2"></i> +33 1 23 45 67 89</p>
+        <p><i class="fas fa-envelope me-2"></i> contact@butterflyvoyage.com</p>
     </div>
-    <div class="carousel-inner">
-        <div class="carousel-item active">
-            <img src="carousel/oran2.jpg" class="d-block w-100 carousel-image" alt="Vue d'Oran, Algérie">
-            <div class="carousel-caption d-flex justify-content-center align-items-center h-100">
-                <div class="text-center">
-                    <h6>Découvrir Oran</h6>
-                    <p>El Bahia, ville côtière algérienne, mêle charme méditerranéen, histoire riche et culture vivante. Idéale pour découvrir paysages maritimes, architecture coloniale et musique raï.</p>
-                      <div class="col-md d-grid">
-                        <button type="button" class="btn btn-outline-dark w-100 rounded-pill py-2">Découvrir</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="carousel-item">
-            <img src="carousel/motagne.png" class="d-block w-100 carousel-image" alt="Paysage montagneux">
-            <div class="carousel-caption d-flex justify-content-center align-items-center h-100">
-                <div class="text-center">
-                    <h6>Magnifique Montagne</h6>
-                    <p>La beauté des montagnes qui vous attend.</p>
-                    <div class="col-md d-grid">
-                        <button type="button" class="btn btn-outline-dark w-100 rounded-pill py-2">Découvrir</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="carousel-item">
-            <img src="carousel/mer.jpg" class="d-block w-100 carousel-image" alt="Paysage marin">
-            <div class="carousel-caption d-flex justify-content-center align-items-center h-100">
-                <div class="text-center">
-                    <h6>Voyage en Mer</h6>
-                    <p>Explorez les horizons marins comme jamais auparavant.</p>
-                    <div class="col-md d-grid">
-                        <button type="button" class="btn btn-outline-dark w-100 rounded-pill py-2">Découvrir</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="carousel-item">
-            <img src="carousel/le monde.png" class="d-block w-100 carousel-image" alt="Paysages mondiaux">
-            <div class="carousel-caption d-flex justify-content-center align-items-center h-100">
-                <div class="text-center">
-                    <h6>Explorer le Monde</h6>
-                    <p>Un voyage inoubliable à travers des paysages incroyables.</p>
-                    <div class="col-md d-grid">
-                        <button type="button" class="btn btn-outline-dark w-100 rounded-pill py-2">Découvrir</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+
+    <!-- Colonne À Propos de Nous (à droite) -->
+    <div class="col-md-3">
+        <h5>À Propos de Nous</h5>
+        <p>
+            Butterfly Voyage est une agence spécialisée dans les voyages sur mesure.
+            Notre mission est de créer des expériences uniques et inoubliables pour nos clients.
+        </p>
     </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev" aria-label="Précédent">
-        <span class="carousel-control-prev-icon"></span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next" aria-label="Suivant">
-        <span class="carousel-control-next-icon"></span>
-    </button>
 </div>
-<section class="selection-section mt-5">
-    <div class="container text-center">
-        <h3 class="section-title">Notre Sélection</h3>
-        <p class="section-subtitle">Découvrez nos destinations préférées pour vos prochaines aventures.</p>
-        <div id="cardCarousel" class="carousel slide" data-bs-ride="carousel">
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="card">
-                                <img src="slides/mountains-862870_1280.jpg" class="card-img-top" alt="Montagnes de Bejaia">
-                                <div class="card-body">
-                                    <h6 class="card-title">Montagnes Enchantées</h6>
-                                    <p class="card-text">Explorez les sommets majestueux de Bejaia.</p>
-                                    <a href="#" class="btn btn-outline-dark rounded-pill">Découvrir</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="card">
-                                <img src="slides/maldives-5071309_1280.jpg" class="card-img-top" alt="Plages de la Méditerranée">
-                                <div class="card-body">
-                                    <h6 class="card-title">Plages de Rêve</h6>
-                                    <p class="card-text">Profitez des eaux cristallines de la Méditerranée.</p>
-                                    <a href="#" class="btn btn-outline-dark rounded-pill">Découvrir</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="card">
-                                <img src="carousel/Mont-saint-michel.avif" class="card-img-top" alt="Villages pittoresques">
-                                <div class="card-body">
-                                    <h6 class="card-title">Villages Authentiques</h6>
-                                    <p class="card-text">Découvrez la culture locale dans des villages pittoresques.</p>
-                                    <a href="#" class="btn btn-outline-dark rounded-pill">Découvrir</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="card">
-                                <img src="slides/forest-3409907_1280.jpg" class="card-img-top" alt="Forêts anciennes">
-                                <div class="card-body">
-                                    <h6 class="card-title">Forêts Mystérieuses</h6>
-                                    <p class="card-text">Parcourez les sentiers secrets des forêts anciennes.</p>
-                                    <a href="#" class="btn btn-outline-dark rounded-pill">Découvrir</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="card">
-                                <img src="carousel/surf.jpg" class="card-img-top" alt="Aventures marines">
-                                <div class="card-body">
-                                    <h6 class="card-title">Aventures en Mer</h6>
-                                    <p class="card-text">Naviguez vers l'inconnu sur des eaux turquoise.</p>
-                                    <a href="#" class="btn btn-outline-dark rounded-pill">Découvrir</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="card">
-                                <img src="slides/mountain-4635428_1920.jpg" class="card-img-top" alt="Paysages de Bejaia">
-                                <div class="card-body">
-                                    <h6 class="card-title">Paysages Époustouflants</h6>
-                                    <p class="card-text">Admirez les paysages à couper le souffle de Bejaia.</p>
-                                    <a href="#" class="btn btn-outline-dark rounded-pill">Découvrir</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#cardCarousel" data-bs-slide="prev" aria-label="Précédent">
-                <span class="carousel-control-prev-icon"></span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#cardCarousel" data-bs-slide="next" aria-label="Suivant">
-                <span class="carousel-control-next-icon"></span>
-            </button>
-        </div>
-    </div>
-</section>
-<section class="offers-section mt-5">
-    <div class="container text-center">
-        <h3 class="section-title">Nos Offres</h3>
-        <p class="section-subtitle">Découvrez nos meilleures offres pour vos prochaines aventures.</p>
-        <div id="offerCarousel" class="carousel slide" data-bs-ride="carousel">
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <div class="card big-card mx-auto">
-                        <img src="slides/forest-6364913_1280.jpg" class="card-img-top" alt="Offre Montagnes Enchantées">
-                        <div class="card-body">
-                            <h6 class="card-title">Offre Spéciale : Montagnes Enchantées</h6>
-                            <p class="card-text">Profitez d'une réduction exclusive pour découvrir les sommets majestueux.</p>
-                            <a href="#" class="btn btn-outline-dark rounded-pill">Réserver Maintenant</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <div class="card big-card mx-auto">
-                        <img src="slides/maldives-5071306_1280.jpg" class="card-img-top" alt="Offre Plages de Rêve">
-                        <div class="card-body">
-                            <h6 class="card-title">Offre Plages de Rêve</h6>
-                            <p class="card-text">Évadez-vous vers des plages paradisiaques avec notre offre limitée.</p>
-                            <a href="#" class="btn btn-outline-dark rounded-pill">Réserver Maintenant</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <div class="card big-card mx-auto">
-                        <img src="slides/norway-5215881_1280.jpg" class="card-img-top" alt="Offre Forêts Mystérieuses">
-                        <div class="card-body">
-                            <h6 class="card-title">Offre Forêts Mystérieuses</h6>
-                            <p class="card-text">Explorez les forêts anciennes avec une offre spéciale pour les amateurs de nature.</p>
-                            <a href="#" class="btn btn-outline-dark rounded-pill">Réserver Maintenant</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#offerCarousel" data-bs-slide="prev" aria-label="Précédent">
-                <span class="carousel-control-prev-icon"></span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#offerCarousel" data-bs-slide="next" aria-label="Suivant">
-                <span class="carousel-control-next-icon"></span>
-            </button>
-        </div>
-    </div>
-</section>
-<?php include 'includes/footer.php';?>
+
+<!-- Ligne séparatrice -->
+<hr class="bg-light my-4">
+
+<!-- Copyright -->
+<div class="text-center pb-3">
+    &copy; 2025 Butterfly Voyage - Tous droits réservés
+</div>
+</div>
+</footer>
+</html>

@@ -1,0 +1,184 @@
+Cahier des charges du site web Butterfly Travel
+1. Présentation générale
+
+Nom du projet : Butterfly Travel
+Type de projet : Site vitrine + plateforme de réservation de voyages
+Objectif principal : Promouvoir les destinations et offres de voyage, et permettre la réservation en ligne.
+Public cible : Voyageurs individuels, familles, couples, entreprises (voyages d’affaires ou incentives).
+Style graphique : Léger, moderne, épuré, avec une touche de rêve et d’évasion (couleurs pastel, images immersives, papillon comme symbole du voyage et de la liberté).
+
+2. Objectifs du site
+
+Mettre en valeur les destinations et offres de l’agence.
+
+Permettre la recherche et la réservation de voyages facilement.
+
+Fidéliser les utilisateurs avec un espace client.
+
+Offrir une expérience fluide sur mobile, tablette et PC (site responsive).
+
+Générer des contacts commerciaux via un formulaire ou WhatsApp.
+
+3. Arborescence du site
+
+Accueil
+
+Carrousel de destinations
+
+Filtres de recherche rapide
+
+Sélection de voyages / offres du moment
+
+Destinations
+
+Europe
+
+Asie
+
+Afrique
+
+Amérique
+
+Circuits thématiques (culture, aventure, nature…)
+
+Promotions
+
+Dernière minute
+
+Offres spéciales
+
+Codes promo
+
+À propos
+
+Histoire de l’agence
+
+Valeurs et équipe
+
+Contact
+
+Formulaire de contact
+
+Lien WhatsApp
+
+Adresse et carte Google Maps
+
+Espace client
+
+Connexion / Inscription
+
+Réservations passées et à venir
+
+Profil utilisateur
+
+4. Fonctionnalités principales
+_Fonctionnalités déjà présentes
+
+Barre de navigation responsive
+
+Formulaire de recherche multi-critères (type de voyage, destination, durée, date, etc.)
+
+Carrousels dynamiques de contenu (offres, destinations, promotions)
+
+Pages d’inscription / connexion designées
+
+Intégration Google Maps
+
+Lien WhatsApp
+
+_Fonctionnalités à ajouter
+
+Système de réservation en ligne :
+
+Choix d’une offre → Détails → Réservation (avec formulaire)
+
+Intégration paiement (PayPal, Stripe, ou simple validation par mail)
+
+Espace utilisateur complet :
+
+Tableau de bord avec historique des réservations
+
+Gestion du profil
+
+Téléchargement des confirmations de voyage
+
+Système d’administration (back-office) :
+
+Ajouter/modifier/supprimer des offres
+
+Gérer les utilisateurs
+
+Consulter les réservations
+
+Fonctionnalités d’interactivité :
+
+Chat en ligne ou chatbot (pour conseils de voyage)
+
+Avis clients / témoignages
+
+Newsletter intégrée
+
+Fonctionnalités SEO et marketing :
+
+Blog “Conseils de voyage” pour attirer le trafic naturel
+
+Optimisation SEO (titres, balises, performance)
+
+Intégration Google Analytics
+
+Accessibilité & sécurité :
+
+Respect des normes RGPD
+
+HTTPS / SSL obligatoire
+
+Captcha sur formulaires
+
+Sauvegarde régulière de la base de données
+
+5. Design & charte graphique
+
+Logo : Papillon stylisé, symbole du voyage et de la liberté.
+
+Couleurs dominantes : Bleu clair, beige sable, blanc, or pastel.
+
+Typographie : Combinaison d’une police élégante (Poiret One, Lavishly Yours) et d’une police lisible (Genos).
+
+Ambiance visuelle : Légère, rêveuse, immersive — de grandes images de destinations, animations douces.
+
+Format responsive : Compatible PC, tablette, mobile.
+
+6. Technologies utilisées
+
+Front-end : HTML5, CSS3, Bootstrap 5, JavaScript, jQuery, Flatpickr
+
+Back-end : PHP 8, MySQL (pour la gestion des comptes et réservations)
+
+Autres :
+
+API Google Maps
+
+Intégration de paiement (Stripe ou PayPal)
+
+Font Awesome (icônes)
+
+Google Fonts
+
+7. Maintenance et hébergement
+
+Hébergement mutualisé ou VPS (selon trafic prévu)
+
+Nom de domaine : www.butterfly-travel.com
+
+Sauvegardes automatiques (hebdomadaires)
+
+Maintenance : mise à jour du CMS, sécurité, corrections de bugs
+
+8. Planning prévisionnel
+Étape	Description	Durée estimée
+Analyse & cahier des charges	Définition du besoin, objectifs	1 semaine
+Maquettage & design	UI/UX design du site	2 semaines
+Développement front-end	HTML, CSS, Bootstrap, JS	2-3 semaines
+Développement back-end	PHP, base de données, back-office	3-4 semaines
+Tests & corrections	Vérification des fonctionnalités	1 semaine
+Mise en ligne	Hébergement + domaine	1 jour
