@@ -1,13 +1,13 @@
--- Création de la base
-CREATE DATABASE IF NOT EXISTS bfly CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+
+CREATE DATABASE IF NOT EXISTS bfly ;
 USE bfly;
 
--- ==============================
--- TABLE : utilisateurs
--- ==============================
+--utilisateurs
+
 CREATE TABLE utilisateurs (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    idutil INT AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(50) NOT NULL,
+    prenom VARCHAR(50) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     mot_de_passe VARCHAR(255) NOT NULL,
     telephone VARCHAR(20),
@@ -16,11 +16,11 @@ CREATE TABLE utilisateurs (
     date_modification DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- ==============================
--- TABLE : types_voyage (nouvelle table pour plus de flexibilité)
--- ==============================
+
+--types_voyage
+
 CREATE TABLE types_voyage (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    idtyp INT AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(50) NOT NULL UNIQUE
 );
 
@@ -28,11 +28,11 @@ CREATE TABLE types_voyage (
 INSERT INTO types_voyage (nom) VALUES
 ('Séjour'), ('Aventure'), ('Plage'), ('Culture');
 
--- ==============================
--- TABLE : destinations
--- ==============================
+
+--destinations
+
 CREATE TABLE destinations (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    iddest INT AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(100) NOT NULL,
     pays VARCHAR(100) NOT NULL,
     description TEXT,
@@ -41,11 +41,11 @@ CREATE TABLE destinations (
     date_modification DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- ==============================
--- TABLE : voyages
--- ==============================
+
+--voyages
+
 CREATE TABLE voyages (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    idvoy INT AUTO_INCREMENT PRIMARY KEY,
     id_destination INT NOT NULL,
     id_type INT,
     titre VARCHAR(100) NOT NULL,
@@ -56,18 +56,14 @@ CREATE TABLE voyages (
     date_depart DATE,
     date_creation DATETIME DEFAULT CURRENT_TIMESTAMP,
     date_modification DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_destination) REFERENCES destinations(id) ON DELETE CASCADE,
-    FOREIGN KEY (id_type) REFERENCES types_voyage(id) ON DELETE SET NULL
+    FOREIGN KEY (id_destination) REFERENCES destinations(iddes) ON DELETE CASCADE,
+    FOREIGN KEY (id_type) REFERENCES types_voyage(idtyp) ON DELETE SET NULL
 );
 
-CREATE INDEX idx_voyage_destination ON voyages(id_destination);
-CREATE INDEX idx_voyage_type ON voyages(id_type);
+--reservations
 
--- ==============================
--- TABLE : reservations
--- ==============================
 CREATE TABLE reservations (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    idreserv INT AUTO_INCREMENT PRIMARY KEY,
     id_utilisateur INT NOT NULL,
     id_voyage INT NOT NULL,
     date_depart DATE NOT NULL,
@@ -76,42 +72,39 @@ CREATE TABLE reservations (
     statut ENUM('en_attente','confirmée','annulée') DEFAULT 'en_attente',
     date_creation DATETIME DEFAULT CURRENT_TIMESTAMP,
     date_modification DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_utilisateur) REFERENCES utilisateurs(id) ON DELETE CASCADE,
-    FOREIGN KEY (id_voyage) REFERENCES voyages(id) ON DELETE CASCADE
+    FOREIGN KEY (id_utilisateur) REFERENCES utilisateurs(iduti) ON DELETE CASCADE,
+    FOREIGN KEY (id_voyage) REFERENCES voyages(idvoy) ON DELETE CASCADE
 );
 
-CREATE INDEX idx_reservation_utilisateur ON reservations(id_utilisateur);
-CREATE INDEX idx_reservation_voyage ON reservations(id_voyage);
 
--- ==============================
--- TABLE : avis
--- ==============================
+--avis
+
 CREATE TABLE avis (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    idavi INT AUTO_INCREMENT PRIMARY KEY,
     id_utilisateur INT NOT NULL,
     id_voyage INT NOT NULL,
     note TINYINT NOT NULL CHECK (note BETWEEN 1 AND 5),
     commentaire TEXT,
     date_creation DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_utilisateur) REFERENCES utilisateurs(id) ON DELETE CASCADE,
-    FOREIGN KEY (id_voyage) REFERENCES voyages(id) ON DELETE CASCADE
+    FOREIGN KEY (id_utilisateur) REFERENCES utilisateurs(iduti) ON DELETE CASCADE,
+    FOREIGN KEY (id_voyage) REFERENCES voyages(idvoy) ON DELETE CASCADE
 );
 
--- ==============================
--- TABLE : images_voyage
--- ==============================
+
+--images_voyage
+
 CREATE TABLE images_voyage (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    idimg INT AUTO_INCREMENT PRIMARY KEY,
     id_voyage INT NOT NULL,
     url_image VARCHAR(255) NOT NULL,
-    FOREIGN KEY (id_voyage) REFERENCES voyages(id) ON DELETE CASCADE
+    FOREIGN KEY (id_voyage) REFERENCES voyages(idvoy) ON DELETE CASCADE
 );
 
--- ==============================
--- TABLE : offres (optionnelle mais utile pour "Nos Offres")
--- ==============================
+
+--offres
+
 CREATE TABLE offres (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    idoff INT AUTO_INCREMENT PRIMARY KEY,
     id_voyage INT NOT NULL,
     titre VARCHAR(100) NOT NULL,
     description TEXT,
@@ -119,14 +112,14 @@ CREATE TABLE offres (
     date_debut DATE,
     date_fin DATE,
     image VARCHAR(255),
-    FOREIGN KEY (id_voyage) REFERENCES voyages(id) ON DELETE CASCADE
+    FOREIGN KEY (id_voyage) REFERENCES voyages(idvoy) ON DELETE CASCADE
 );
 
--- ==============================
--- TABLE : contacts (formulaire de contact du site)
--- ==============================
+
+--contacts
+
 CREATE TABLE contacts (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    idcont INT AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(100) NOT NULL,
     email VARCHAR(150) NOT NULL,
     sujet VARCHAR(150),

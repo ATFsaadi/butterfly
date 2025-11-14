@@ -5,71 +5,87 @@
             <h1>Pour un voyage de rêve ...</h1>
         </div>
         <div class="voyage-menu">
-            <div class="voyage-dropdown">
-                <button class="voyage-btn" aria-label="Sélectionner le type de voyage">Type de Voyage
-                    <span class="voyage-suggestion">Séjour</span>
-                </button>
-                <ul class="voyage-dropdown-content">
-                    <li>Séjour</li>
-                    <li>Aventure</li>
-                    <li>Plage</li>
-                    <li>Culture</li>
-                </ul>
-            </div>
-            <div class="voyage-dropdown">
-                <button class="voyage-btn" aria-label="Sélectionner la destination">Destination
-                    <span class="voyage-suggestion">N'importe où</span>
-                </button>
-                <ul class="voyage-dropdown-content">
-                    <li>N'importe où</li>
-                    <li>France</li>
-                    <li>États-Unis</li>
-                    <li>Japon</li>
-                </ul>
-            </div>
-            <div class="voyage-dropdown">
-                <button class="voyage-btn" aria-label="Sélectionner la ville de départ">Ville de Départ
-                    <span class="voyage-suggestion">Tout endroit</span>
-                </button>
-                <ul class="voyage-dropdown-content">
-                    <li>Tout endroit</li>
-                    <li>Paris</li>
-                    <li>Marseille</li>
-                    <li>Lyon</li>
-                </ul>
-            </div>
-            <div class="voyage-dropdown">
-                <button id="dateButton" class="voyage-btn" aria-label="Ouvrir le sélecteur de date de départ">Date de Départ
-                    <span class="voyage-suggestion"></span>
-                </button>
-                <div class="voyage-dropdown-content">
-                    <input type="date" id="dateDepart" class="voyage-date-picker" aria-label="Sélectionner la date de départ">
-                </div>
-            </div>
-            <div class="voyage-dropdown">
-                <button class="voyage-btn" aria-label="Sélectionner la durée du voyage">Durée
-                    <span class="voyage-suggestion">Peu importe</span>
-                </button>
-                <ul class="voyage-dropdown-content">
-                    <li>Peu importe</li>
-                    <li>1 jour</li>
-                    <li>3 jours</li>
-                    <li>1 semaine</li>
-                    <li>2 semaines</li>
-                </ul>
-            </div>
-            <div class="voyage-reset-icon-container">
-                <button class="voyage-reset-icon" aria-label="Réinitialiser les filtres">
-                    <img src="icons/reste.png" width="20" height="20" alt="Réinitialiser">
-                </button>
-            </div>
-            <div class="voyage-search-container">
+    <div class="voyage-dropdown">
+        <button class="voyage-btn" aria-label="Sélectionner le type de voyage">Type de Voyage
+            <span class="voyage-suggestion">Séjour</span>
+        </button>
+    </div>
+
+    <div class="voyage-dropdown">
+        <button class="voyage-btn" aria-label="Sélectionner la destination">Destination
+            <span class="voyage-suggestion">N'importe où</span>
+        </button>
+        <ul class="voyage-dropdown-content">
+            <li>N'importe où</li>
+            <li>France</li>
+            <li>États-Unis</li>
+            <li>Japon</li>
+        </ul>
+    </div>
+
+    <div class="voyage-dropdown">
+        <button class="voyage-btn" aria-label="Sélectionner la ville de départ">Ville de Départ
+            <span class="voyage-suggestion">Tout endroit</span>
+        </button>
+        <ul class="voyage-dropdown-content">
+            <li>Tout endroit</li>
+            <li>Paris</li>
+            <li>Marseille</li>
+            <li>Lyon</li>
+        </ul>
+    </div>
+
+    <div class="voyage-dropdown">
+    <button id="dateButton" class="voyage-btn" aria-label="Ouvrir le sélecteur de dates">
+        Départ / Arrivée
+        <span class="voyage-suggestion"></span>
+    </button>
+
+    <div class="voyage-dropdown-content">
+
+        <!-- Date de départ -->
+        <label for="dateDepart">Départ</label>
+        <input type="date" id="dateDepart" class="voyage-date-picker" aria-label="Sélectionner la date de départ">
+
+        <!-- Date d'arrivée -->
+        <label for="dateArrivee">Arrivée</label>
+        <input type="date" id="dateArrivee" class="voyage-date-picker" aria-label="Sélectionner la date d'arrivée">
+
+    </div>
+</div>
+
+
+    <div class="voyage-dropdown">
+        <button class="voyage-btn" aria-label="Sélectionner la durée du voyage">Durée
+            <span class="voyage-suggestion">Peu importe</span>
+        </button>
+        <ul class="voyage-dropdown-content">
+            <li>Peu importe</li>
+            <li>1 jour</li>
+            <li>3 jours</li>
+            <li>1 semaine</li>
+            <li>2 semaines</li>
+        </ul>
+    </div>
+
+    <!-- Recherche + Reset alignés sur la même ligne -->
+    <table>
+        <tr>
+            <td>
                 <button class="voyage-search-btn" aria-label="Lancer la recherche">
                     <img src="icons/loupe.png" width="18" height="18" alt="Rechercher" class="search-icon">
                     Rechercher
                 </button>
-            </div>
-        </div>
+            </td>
+            <td>
+                <button class="voyage-reset-icon" aria-label="Réinitialiser les filtres">
+                    <img src="icons/reste.png" width="20" height="20" alt="Réinitialiser">
+                </button>
+            </td>
+        </tr>
+    </table>
+</div>
+
     </div>
 </section>
 <div id="carouselExampleIndicators" class="carousel slide mt-4" data-bs-ride="carousel">
@@ -270,3 +286,4 @@
         </div>
     </div>
 </section>
+<script src="js/script.js"></script>
