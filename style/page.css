@@ -1,4 +1,6 @@
-/* VARIABLES (reuse celles du home) */
+/* ====================================
+   VARIABLES GLOBALES
+   ==================================== */
 :root {
     --primary-color: #F27438;
     --secondary-color: #26474E;
@@ -11,24 +13,24 @@
     --shadow: 0 10px 25px rgba(0,0,0,0.08);
 }
 
-
-
-/* SECTION */
+/* ====================================
+   SECTION AUTH
+   ==================================== */
 .auth-section {
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 20px;
+    min-height: 100vh;
+    background: var(--bg-light);
 }
 
-/* CONTAINER */
 .auth-container {
     width: 100%;
     max-width: 700px;
 }
 
-/* CARD */
 .auth-card {
     display: flex;
     background: #fff;
@@ -37,7 +39,9 @@
     overflow: hidden;
 }
 
-/* FORMULAIRE */
+/* ====================================
+   FORMULAIRE
+   ==================================== */
 .auth-form {
     flex: 1;
     padding: 40px 30px;
@@ -45,17 +49,21 @@
     flex-direction: column;
     justify-content: center;
 }
+
 .auth-form h2 {
     text-align: center;
     margin-bottom: 25px;
     color: var(--primary-color);
     font-size: 2rem;
+    font-weight: 600;
 }
+
 .auth-form form {
     display: flex;
     flex-direction: column;
     gap: 15px;
 }
+
 .auth-form input {
     padding: 12px 15px;
     border-radius: var(--border-radius);
@@ -64,12 +72,13 @@
     outline: none;
     transition: all 0.3s;
 }
+
 .auth-form input:focus {
     border-color: var(--primary-color);
-    box-shadow: 0 0 5px rgba(242,116,56,0.5);
+    box-shadow: 0 0 5px rgba(242, 116, 56, 0.5);
 }
 
-/* BOUTON */
+/* Bouton principal */
 .auth-form button {
     padding: 12px 0;
     border: none;
@@ -77,29 +86,35 @@
     background: linear-gradient(135deg, var(--primary-color), #F2A65B);
     color: #fff;
     font-weight: bold;
+    font-size: 1rem;
     cursor: pointer;
     transition: opacity 0.3s;
 }
+
 .auth-form button:hover {
     opacity: 0.9;
 }
 
-/* OPTIONS FORM */
+/* Options (souvenir / mot de passe oublié) */
 .form-options {
     display: flex;
     justify-content: space-between;
     align-items: center;
     font-size: 0.85rem;
-}
-.form-options a {
-    text-decoration: none;
-    color: var(--primary-color);
-}
-.form-options a:hover {
-    color: var(--secondary-color);
+    margin-top: 10px;
 }
 
-/* DIVIDER */
+.form-options a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.form-options a:hover {
+    color: var(--secondary-color);
+    text-decoration: underline;
+}
+
+/* Ligne "OU" */
 .divider {
     text-align: center;
     margin: 20px 0;
@@ -107,6 +122,7 @@
     color: var(--muted-color);
     position: relative;
 }
+
 .divider::before,
 .divider::after {
     content: "";
@@ -116,16 +132,18 @@
     position: absolute;
     top: 50%;
 }
+
 .divider::before { left: 0; }
 .divider::after { right: 0; }
 
-/* SOCIAL BUTTONS */
+/* Boutons sociaux */
 .social-buttons {
     display: flex;
     justify-content: center;
     gap: 15px;
     margin-bottom: 15px;
 }
+
 .social-buttons button {
     width: 45px;
     height: 45px;
@@ -138,32 +156,41 @@
     cursor: pointer;
     transition: all 0.3s;
 }
+
 .social-buttons button:hover {
     transform: scale(1.1);
     border-color: var(--primary-color);
+    box-shadow: 0 0 8px rgba(242, 116, 56, 0.3);
 }
+
 .social-buttons i {
     color: var(--secondary-color);
+    font-size: 1.1rem;
 }
+
 .social-buttons button:hover i {
     color: var(--primary-color);
 }
 
-/* SWITCH LINK */
+/* Lien "S'inscrire" / "Se connecter" */
 .switch-link {
     text-align: center;
     font-size: 0.9rem;
     color: var(--muted-color);
 }
+
 .switch-link a {
     color: var(--primary-color);
     text-decoration: none;
-}
-.switch-link a:hover {
-    color: var(--secondary-color);
+    font-weight: 500;
 }
 
-/* LOGO A DROITE */
+.switch-link a:hover {
+    color: var(--secondary-color);
+    text-decoration: underline;
+}
+
+/* Logo à droite */
 .auth-logo {
     flex: 1;
     background-color: var(--primary-color);
@@ -172,17 +199,76 @@
     align-items: center;
     padding: 20px;
 }
+
 .auth-logo img {
     width: 120px;
     object-fit: contain;
+    filter: brightness(0) invert(1); /* logo blanc sur fond orange */
 }
 
-/* RESPONSIVE */
-@media(max-width: 768px) {
+/* ====================================
+   RESPONSIVE
+   ==================================== */
+@media (max-width: 768px) {
     .auth-card {
         flex-direction: column;
     }
     .auth-logo {
-        padding: 20px 0;
+        padding: 30px 0;
+        order: -1; /* logo en haut sur mobile */
     }
+    .auth-form {
+        padding: 30px 20px;
+    }
+}
+
+
+/* === MODAL === */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1050;
+   
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.361);
+    overflow: auto;
+    padding: 20px;
+    
+}
+
+.modal-content {
+    background:none;
+    margin: 0px auto 0;
+    padding: 0px;
+    border-radius: 12px;
+    max-width: 500px;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    color:var(--primary-color);
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.close:hover {
+    color: #000;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideDown {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
 }

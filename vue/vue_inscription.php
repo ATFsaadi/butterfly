@@ -1,5 +1,4 @@
 
-<section class="auth-section auth-inscription">
   <div class="auth-container">
     <div class="auth-card">
       <div class="auth-form">
@@ -20,13 +19,9 @@
           <button><i class="fab fa-apple"></i></button>
         </div>
         <p class="switch-link">
-          Déjà un compte ? <a href="vue_connexion.php">Connectez-vous</a>
-        </p>
-      </div>
-
-      <div class="auth-logo">
-        <img src="icons/logo-acc.png" alt="Logo de l'agence">
+                Déjà un compte ? <a href="#" id="switchToLogin">Connectez-vous</a>
+            </p>
       </div>
     </div>
   </div>
-</section>
+

@@ -96,14 +96,15 @@ if ($page === 'logout') {
                     </li>
                 <?php else: ?>
                     <li class="nav-item d-flex flex-column align-items-center">
-                        <a class="nav-link signin-nav-link d-flex flex-column align-items-center" href="index.php?page=login" aria-label="Se connecter">
+                        <!-- Bouton modal pour se connecter -->
+                        <button id="openLoginModal" class="nav-link signin-nav-link d-flex flex-column align-items-center" aria-label="Se connecter">
                             <span class="icon-circle">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15">
                                     <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
                                 </svg>
                             </span>
                             <span class="mt-1">Connecter</span>
-                        </a>
+                        </button>
                     </li>
                 <?php endif; ?>
 
@@ -261,9 +262,29 @@ if (!isset($_SESSION['user'])) {
     </div>
 </footer>
 
+<!-- MODAL CONNEXION -->
+<div id="loginModal" class="modal">
+    <div class="modal-content">
+        <span class="close">×</span>
+        <?php if ($error && isset($_POST['Connexion'])): ?>
+            <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
+        <?php endif; ?>
+        <?php require_once("vue/vue_connexion.php"); ?>
+    </div>
+</div>
+
+<!-- MODAL INSCRIPTION -->
+<div id="registerModal" class="modal">
+    <div class="modal-content">
+        <span class="close">×</span>
+        <?php require_once("vue/vue_inscription.php"); ?>
+    </div>
+</div>
+
 <!-- SCRIPTS -->
-<script src="script.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/script.js"></script>
+<script src="js/popup_form.js"></script>
 
 </body>
 </html>
