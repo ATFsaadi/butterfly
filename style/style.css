@@ -91,36 +91,6 @@ nav.custom-navbar {
     fill: var(--primary-color);
 }
 
-/* MAP HOVER */
-.adresse-hover:hover #map-container {
-    opacity: 1;
-    visibility: visible;
-}
-
-#adresse-container {
-    position: relative;
-}
-
-#map-container {
-    opacity: 0;
-    visibility: hidden;
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 300px;
-    height: 135px;
-    margin-top: 20px;
-    overflow: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
-    z-index: 1500;
-}
-
-/* NAVBAR BOTTOM BORDER */
-#navbarNav {
-    border-bottom: 0.5px solid var(--primary-color);
-}
-
 /* VOYAGES */
 .voyage-container {
     background: var(--bg-light);
@@ -570,4 +540,42 @@ footer .text-center {
 
 a:hover img {
     transform: rotate(0deg);
+}
+
+/* Modal Carte */
+#mapModal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    overflow: auto;
+}
+
+#mapModal .modal-content {
+    background: white;
+    margin: 5% auto;
+    padding: 20px;
+    width: 90%;
+    max-width: 700px;
+    border-radius: 12px;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+#mapModal .close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 28px;
+    font-weight: bold;
+    color: #aaa;
+    cursor: pointer;
+}
+
+#mapModal .close:hover {
+    color: #000;
 }

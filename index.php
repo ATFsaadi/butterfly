@@ -58,6 +58,8 @@ if ($page === 'logout') {
     <link href="https://fonts.googleapis.com/css2?family=Genos:ital,wght@0,100..900;1,100..900&family=Lavishly+Yours&family=Meow+Script&family=Poiret+One&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style/style.css">
     <link rel="stylesheet" href="style/page.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
 
@@ -110,19 +112,14 @@ if ($page === 'logout') {
 
                 <li class="nav-item adresse-container d-flex flex-column align-items-center d-none d-lg-block">
                     <div class="adresse-hover d-flex flex-column align-items-center">
-                        <a class="nav-link d-flex flex-column align-items-center" href="#">
+                        <button id="openMapModal" class="nav-link d-flex flex-column align-items-center border-0 bg-transparent p-0" aria-label="Voir notre agence">
                             <span class="icon-circle">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15">
                                     <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
                                 </svg>
                             </span>
                             <span class="mt-1">Notre agence</span>
-                        </a>
-                        <div id="adresse-container">
-                            <div id="map-container">
-                                <iframe width="100%" height="100%" frameborder="0" style="border:0" allowfullscreen="allowfullscreen" loading="lazy" referrerpolicy="no-referrer" src="https://www.google.com/maps/embed?pb=..."></iframe>
-                            </div>
-                        </div>
+                        </button>
                     </div>
                 </li>
 
@@ -244,7 +241,9 @@ if (!isset($_SESSION['user'])) {
                     <a href="#" class="text-light"><i class="fab fa-youtube fa-2x"></i></a>
                 </div>
                 <h5>Contact</h5>
-                <p><i class="fas fa-map-marker-alt me-2"></i> 123 Rue du Voyage, Paris</p>
+                <p class="clickable-address" style="cursor: pointer;">
+                    <i class="fas fa-map-marker-alt me-2"></i> 123 Rue du Voyage, Paris
+                </p>
                 <p><i class="fas fa-phone me-2"></i> +33 1 23 45 67 89</p>
                 <p><i class="fas fa-envelope me-2"></i> contact@butterflyvoyage.com</p>
             </div>
@@ -278,6 +277,14 @@ if (!isset($_SESSION['user'])) {
     <div class="modal-content">
         <span class="close">×</span>
         <?php require_once("vue/vue_inscription.php"); ?>
+    </div>
+</div>
+<!-- MODAL CARTE AGENCE -->
+<div id="mapModal" class="modal">
+    <div class="modal-content">
+        <span class="close">×</span>
+        <h4 class="text-center mb-3">Notre Agence</h4>
+        <div id="map" style="width:100%; height:400px; border-radius:8px;"></div>
     </div>
 </div>
 

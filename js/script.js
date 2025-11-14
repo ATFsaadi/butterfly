@@ -1,58 +1,32 @@
-// Attendre que toute la page soit chargée
+// attendre que le dom soit chargé
 document.addEventListener("DOMContentLoaded", function () {
 
-    // carte maps
-    const adresseContainer = document.getElementById('adresse-container');
-    const mapContainer = document.getElementById('map-container');
+    // menu déroulant au survol
+    document.querySelectorAll('.nav-item.dropdown').forEach(item => {
+        const toggle = item.querySelector('.dropdown-toggle');
+        if (!toggle) return;
 
-    if (adresseContainer && mapContainer) {
-        adresseContainer.addEventListener('mouseenter', () => {
-            mapContainer.style.opacity = '1';
-            mapContainer.style.visibility = 'visible';
-            adresseContainer.setAttribute('aria-expanded', 'true');
-            mapContainer.setAttribute('aria-hidden', 'false');
-        });
-
-        adresseContainer.addEventListener('mouseleave', () => {
-            mapContainer.style.opacity = '0';
-            mapContainer.style.visibility = 'hidden';
-            adresseContainer.setAttribute('aria-expanded', 'false');
-            mapContainer.setAttribute('aria-hidden', 'true');
-        });
-    }
-   
-    // MENU DÉROULANT BOOTSTRAP AU SURVOL
-        document.querySelectorAll('.nav-item.dropdown').forEach(item => {
-        const toggleButton = item.querySelector('.dropdown-toggle');
-        const dropdown = new bootstrap.Dropdown(toggleButton);
-
+        const dropdown = new bootstrap.Dropdown(toggle);
         item.addEventListener('mouseenter', () => dropdown.show());
         item.addEventListener('mouseleave', () => dropdown.hide());
     });
 
-    // LOGIQUE DES DATES : DÉPART & ARRIVÉE
+    // gestion des dates départ/arrivée
     const dateDepart = document.getElementById('dateDepart');
     const dateArrivee = document.getElementById('dateArrivee');
 
     if (dateDepart && dateArrivee) {
-        // Départ : impossible de choisir une date passée
         const today = new Date().toISOString().split("T")[0];
         dateDepart.min = today;
 
-        // Arrivée : dépend de la date de départ
         dateDepart.addEventListener("change", () => {
-            dateArrivee.min = dateDepart.value;
+            const departValue = dateDepart.value;
+            dateArrivee.min = departValue;
 
-            // Si la date d'arrivée devient invalide, on la réinitialise
-            if (dateArrivee.value < dateDepart.value) {
+            if (dateArrivee.value && dateArrivee.value < departValue) {
                 dateArrivee.value = "";
             }
         });
     }
-
-
-   
-    // (Tu peux ajouter ici)
-   
 
 });
