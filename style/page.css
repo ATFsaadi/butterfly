@@ -1,263 +1,436 @@
-/* variables globales */
-:root {
-    --primary-color: #F27438;
-    --secondary-color: #26474E;
-    --text-color: #00353F;
-    --muted-color: #6c757d;
-    --bg-light: #f9f9f9;
-    --border-color: #ccc;
-    --border-radius: 12px;
-    --btn-radius: 50rem;
-    --shadow: 0 10px 25px rgba(0,0,0,0.08);
+/* ========================================
+   VOYAGES - SECTION RECHERCHE
+   ======================================== */
+.voyage-container {
+    background: var(--bg-light);
+    padding: 30px;
+    margin: 20px auto;
+    max-width: 100%;
+    margin-top: 0;
 }
 
-/* section auth */
-.auth-section {
+.voyage-menu-title {
+    font-family: "Lavishly Yours", cursive;
+    font-weight: 400;
+    font-style: italic;
+    font-size: 28px;
+    color: var(--text-color);
+    text-align: center;
+    margin: 0 auto -30px;
+    padding-top: 10px;
+}
+
+.voyage-menu {
     width: 100%;
     display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0;
+    padding: 40px 0;
+    overflow: visible;
+    position: relative;
+}
+
+.voyage-dropdown {
+    position: relative;
+    width: 180px;
+    text-align: center;
+}
+
+.voyage-dropdown button {
+    background: white;
+    border: 1px solid transparent;
+    border-radius: 0;
+    width: 100%;
+    height: 100px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: normal;
+    transition: var(--transition);
+    display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 20px;
-    min-height: 100vh;
-    background: var(--bg-light);
+    gap: 4px;
 }
 
-.auth-container {
-    width: 100%;
-    max-width: 700px;
-}
-
-.auth-card {
-    display: flex;
-    background: #fff;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow);
-    overflow: hidden;
-}
-
-/* formulaire */
-.auth-form {
-    flex: 1;
-    padding: 40px 30px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.auth-form h2 {
-    text-align: center;
-    margin-bottom: 25px;
-    color: var(--primary-color);
-    font-size: 2rem;
-    font-weight: 600;
-}
-
-.auth-form form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.auth-form input {
-    padding: 12px 15px;
-    border-radius: var(--border-radius);
-    border: 1px solid var(--border-color);
-    font-size: 14px;
-    outline: none;
-    transition: all 0.3s;
-}
-
-.auth-form input:focus {
+.voyage-dropdown button:hover {
     border-color: var(--primary-color);
-    box-shadow: 0 0 5px rgba(242, 116, 56, 0.5);
 }
 
-/* bouton principal */
-.auth-form button {
-    padding: 12px 0;
-    border: none;
-    border-radius: var(--btn-radius);
-    background: linear-gradient(135deg, var(--primary-color), #F2A65B);
-    color: #fff;
+.voyage-suggestion {
+    color: var(--secondary-color);
     font-weight: bold;
-    font-size: 1rem;
+    display: block;
+    margin-top: 5px;
+    font-size: 12px;
+}
+
+.voyage-dropdown-content {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: white;
+    list-style: none;
+    padding: 10px 0;
+    margin-top: 2px;
+    z-index: 1000;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.voyage-dropdown:hover .voyage-dropdown-content {
+    display: block;
+    opacity: 1;
+    visibility: visible;
+    animation: fadeIn 0.3s ease;
+}
+
+.voyage-dropdown-content li {
+    padding: 10px;
     cursor: pointer;
-    transition: opacity 0.3s;
+    transition: background 0.3s ease;
+    color: var(--secondary-color);
+    font-size: 16px;
 }
 
-.auth-form button:hover {
-    opacity: 0.9;
+.voyage-dropdown-content li:hover {
+    background: #f0f8ff;
 }
 
-/* options (souvenir / mot de passe oublié) */
-.form-options {
+/* COMPTEUR PERSONNES - FIXE, ALIGNÉ */
+.voyage-dropdown-content.personnes-content {
+    width: 220px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 16px 0;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    margin-top: 8px;
+}
+
+.voyage-dropdown-content .personne-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 0.85rem;
-    margin-top: 10px;
+    padding: 10px 16px;
+    font-size: 0.95rem;
+    color: var(--text-color);
 }
 
-.form-options a {
-    color: var(--primary-color);
-    text-decoration: none;
+.voyage-dropdown-content .personne-row:hover {
+    background: #f0f8ff;
 }
 
-.form-options a:hover {
+.voyage-dropdown-content .label {
     color: var(--secondary-color);
-    text-decoration: underline;
+    font-weight: 600;
 }
 
-/* ligne "ou" */
-.divider {
-    text-align: center;
-    margin: 20px 0;
-    font-size: 0.85rem;
-    color: var(--muted-color);
-    position: relative;
-}
-
-.divider::before,
-.divider::after {
-    content: "";
-    height: 1px;
-    width: 40%;
-    background: var(--border-color);
-    position: absolute;
-    top: 50%;
-}
-
-.divider::before { left: 0; }
-.divider::after { right: 0; }
-
-/* boutons sociaux */
-.social-buttons {
+.voyage-dropdown-content .counter {
     display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-bottom: 15px;
-}
-
-.social-buttons button {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    border: 1px solid var(--border-color);
-    background: #fff;
-    display: flex;
-    justify-content: center;
     align-items: center;
-    cursor: pointer;
-    transition: all 0.3s;
-}
-
-.social-buttons button:hover {
-    transform: scale(1.1);
-    border-color: var(--primary-color);
-    box-shadow: 0 0 8px rgba(242, 116, 56, 0.3);
-}
-
-.social-buttons i {
-    color: var(--secondary-color);
-    font-size: 1.1rem;
-}
-
-.social-buttons button:hover i {
-    color: var(--primary-color);
-}
-
-/* lien s'inscrire / se connecter */
-.switch-link {
-    text-align: center;
-    font-size: 0.9rem;
-    color: var(--muted-color);
-}
-
-.switch-link a {
-    color: var(--primary-color);
-    text-decoration: none;
-    font-weight: 500;
-}
-
-.switch-link a:hover {
-    color: var(--secondary-color);
-    text-decoration: underline;
-}
-
-/* logo à droite */
-.auth-logo {
-    flex: 1;
-    background-color: var(--primary-color);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-}
-
-.auth-logo img {
-    width: 120px;
-    object-fit: contain;
-    filter: brightness(0) invert(1);
-}
-
-/* responsive */
-@media (max-width: 768px) {
-    .auth-card {
-        flex-direction: column;
-    }
-    .auth-logo {
-        padding: 30px 0;
-        order: -1;
-    }
-    .auth-form {
-        padding: 30px 20px;
-    }
-}
-
-/* modal */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1050;
+    justify-content: space-between;
+    gap: 0;
+    background: var(--bg-light);
+    border-radius: var(--btn-radius);
+    padding: 4px 12px;
+    min-width: 104px;
     width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.361);
-    overflow: auto;
-    padding: 20px;
+    height: 40px;
+    box-sizing: border-box;
 }
 
-.modal-content {
-    background:none;
-    margin: 0px auto 0;
-    padding: 0px;
-    border-radius: 12px;
-    max-width: 500px;
-    position: relative;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-}
-
-.close {
-    position: absolute;
-    top: 10px;
-    right: 20px;
-    font-size: 28px;
+.voyage-dropdown-content .btn-counter {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    border: none;
+    border-radius: 50%;
+    background: var(--primary-color);
+    color: white;
     font-weight: bold;
-    color:var(--primary-color);
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
-    transition: color 0.2s;
+    transition: var(--transition);
+    user-select: none;
 }
 
-.close:hover {
-    color: #000;
+.voyage-dropdown-content .btn-counter:hover:not(:disabled) {
+    background: #e55a2b;
+    transform: scale(1.15);
 }
 
-/* animations */
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+.voyage-dropdown-content .btn-counter:disabled {
+    background: #ccc;
+    color: #999;
+    cursor: not-allowed;
+    opacity: 0.7;
 }
 
-@keyframes slideDown {
-    from { transform: translateY(-50px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
+.voyage-dropdown-content .count {
+    min-width: 32px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: var(--secondary-color);
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+/* BTN RECHERCHE */
+.voyage-search-btn {
+    background: linear-gradient(135deg, var(--primary-color), #F2A65B);
+    color: #fff;
+    font-weight: bold;
+    border: none;
+    border-radius: 0;
+    width: 180px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: transform 0.2s ease;
+}
+
+.voyage-search-btn:hover {
+    border-color: var(--primary-color);
+}
+
+.voyage-search-btn:hover .search-icon {
+    transform: translateY(-5px);
+    animation: custom-bounce 1s infinite;
+}
+
+/* DATE PICKER */
+.voyage-date-picker {
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 0;
+    width: 100%;
+    height: 50px;
+    font-size: 14px;
+    padding: 10px;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.voyage-date-picker:hover,
+.voyage-date-picker:focus {
+    border-color: var(--primary-color);
+    outline: none;
+}
+
+.voyage-date-picker::placeholder {
+    color: #aaa;
+    font-style: italic;
+}
+
+.flatpickr-calendar {
+    background: var(--bg-light);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* RESET ICON */
+.voyage-reset-icon-container {
+    position: absolute;
+    top: 20px;
+    left: 79.5%;
+    transform: translateX(-50%);
+    margin-left: 20px;
+    width: 180px;
+    text-align: center;
+    z-index: 1500;
+}
+
+.voyage-reset-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--primary-color);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.voyage-reset-icon:hover {
+    background-color: white;
+}
+
+.voyage-reset-icon img {
+    width: 20px;
+    height: 20px;
+}
+
+.voyage-reset-icon:hover img {
+    transform: rotate(90deg);
+}
+
+/* ========================================
+   CAROUSEL
+   ======================================== */
+.carousel {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.carousel-image {
+    width: 100%;
+    height: 900px;
+    object-fit: cover;
+}
+
+.carousel-indicators {
+    bottom: 20px;
+}
+
+.carousel-indicators .active {
+    background-color: var(--primary-color);
+}
+
+.carousel-caption .btn,
+.card .btn {
+    background: linear-gradient(135deg, var(--primary-color), #F2A65B);
+    color: var(--bg-light);
+    border: 1px solid var(--primary-color);
+    transition: var(--transition);
+    padding: 10px 25px;
+    font-size: 1rem;
+    border-radius: var(--btn-radius);
+}
+
+.carousel-caption .btn:hover,
+.card .btn:hover {
+    background-color: transparent;
+    color: var(--muted-color);
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+    width: 50px;
+    height: 50px;
+    background-color: transparent;
+    border-radius: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: background-color 0.3s ease;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    filter: invert(1);
+}
+
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+    background-color: var(--primary-color);
+}
+
+/* ========================================
+   SECTIONS
+   ======================================== */
+.selection-section,
+.offers-section {
+    padding: 40px 0;
+    background-color: var(--bg-light);
+}
+
+.section-title {
+    font-size: 2.5rem;
+    color: #4b4e26;
+    margin-bottom: 10px;
+}
+
+.section-subtitle {
+    font-size: 1.2rem;
+    color: var(--muted-color);
+    margin-bottom: 40px;
+}
+
+/* ========================================
+   CARDS
+   ======================================== */
+.card {
+    border: none;
+    border-radius: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+}
+
+.card-img-top {
+    width: 100%;
+    height: 650px;
+    object-fit: cover;
+    border-radius: 0;
+}
+
+.card-body {
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card-title {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+.card-text {
+    font-size: 1rem;
+    color: var(--muted-color);
+    margin-bottom: 20px;
+}
+
+.big-card {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.big-card .card-img-top {
+    height: 800px;
+}
+
+.big-card .card-title {
+    font-size: 1.8rem;
+}
+
+.big-card .card-text {
+    font-size: 1.1rem;
+    margin-bottom: 25px;
+}
+
+#offerCarousel .carousel-control-prev,
+#offerCarousel .carousel-control-next {
+    width: 60px;
+    height: 60px;
 }

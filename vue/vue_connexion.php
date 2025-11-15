@@ -1,9 +1,8 @@
 
-  <div class="auth-container">
-    <div class="auth-card">
-      <div class="auth-form">
-        <h2>Connexion</h2>
-        <form method="POST">
+      <div class="auth-card">
+        <div class="auth-form">
+          <h2>Connexion</h2>
+          <form method="POST" action="index.php?page=home">
             <input type="email" name="email" placeholder="Adresse email" required>
             <input type="password" name="mot_de_passe" placeholder="Mot de passe" required>
             <div class="form-options">
@@ -12,16 +11,20 @@
             </div>
             <button type="submit" name="Connexion">Se connecter</button>
           </form>
-
-        <div class="divider">OU</div>
-        <div class="social-buttons">
-          <button><i class="fab fa-google"></i></button>
-          <button><i class="fab fa-facebook-f"></i></button>
-          <button><i class="fab fa-apple"></i></button>
+          <div class="divider">OU</div>
+          <div class="social-buttons">
+            <button><i class="fab fa-google"></i></button>
+            <button><i class="fab fa-facebook-f"></i></button>
+            <button><i class="fab fa-apple"></i></button>
+          </div>
+          <p class="switch-link">
+              pas de compte ? 
+              <a href="#" data-bs-toggle="modal" data-bs-target="#registerModal" data-bs-dismiss="modal">inscrivez-vous</a>
+          </p>
         </div>
-        <p class="switch-link">
-                Pas de compte ? <a href="#" id="switchToRegister">Inscrivez-vous</a>
-            </p>
+
+        <div class="auth-logo">
+          <img src="icons/logo-acc.png" alt="Logo de l'agence">
+        </div>
       </div>
-    </div>
-  </div>
+ 

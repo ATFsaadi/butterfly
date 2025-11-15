@@ -1,30 +1,44 @@
-/* font-face */
+/* ========================================
+   FONT-FACE
+   ======================================== */
 @font-face {
     font-family: 'Brown Pen';
-    src: url('../fonts/BrownPen.ttf') format('truetype');
+    src: url('fonts/BrownPen.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
 }
 
-/* variables */
+/* ========================================
+   VARIABLES GLOBALES
+   ======================================== */
 :root {
-    --primary-color: #F27438;       /* couleur principale */
-    --secondary-color: #26474E;     /* couleur secondaire */
-    --text-color: #00353F;          /* texte général */
-    --muted-color: #6c757d;         /* texte secondaire / sous-titres */
-    --bg-light: #f9f9f9;            /* fond clair sections */
-    --border-color: #ccc;           /* bordures standards */
+    --primary-color: #F27438;
+    --secondary-color: #26474E;
+    --text-color: #00353F;
+    --muted-color: #6c757d;
+    --bg-light: #f9f9f9;
+    --border-color: #ccc;
+    --border-radius: 12px;
+    --btn-radius: 50rem;
+    --shadow: 0 10px 25px rgba(0,0,0,0.08);
+    --transition: all 0.3s ease;
 }
 
-/* body / global styles */
+/* ========================================
+   BODY & TYPO
+   ======================================== */
 body {
     font-family: "Poiret One", sans-serif;
     font-weight: bold;
     background-color: white;
+    margin: 0;
+    padding: 0;
 }
 
-/* logo */
+/* ========================================
+   LOGO
+   ======================================== */
 .logo-size {
     width: 200px;
     height: 100px;
@@ -32,25 +46,31 @@ body {
     margin-left: 0;
 }
 
-/* headings / typography */
+/* ========================================
+   HEADINGS
+   ======================================== */
 h6 {
-    font-family: 'Brown Pen', cursive;
+    font-family: "Poiret One", sans-serif;
     color: var(--primary-color);
     font-size: 50px;
+    margin: 0;
 }
 
 h1 {
-    font-family:'Brown Pen', cursive;
+    font-family: 'Brown Pen';
     font-weight: 100;
     font-size: 50px;
     color: var(--text-color);
+    margin: 0;
 }
 
-/* navbar / navigation */
+/* ========================================
+   NAVBAR
+   ======================================== */
 nav.custom-navbar {
     padding: 0;
     margin-top: 0;
-    background-color: rgb(255, 255, 255);
+    background-color: #fff;
 }
 
 .navbar-nav .nav-item {
@@ -71,7 +91,6 @@ nav.custom-navbar {
     font-size: 10px;
 }
 
-/* icons */
 .icon-circle {
     display: flex;
     justify-content: center;
@@ -83,7 +102,7 @@ nav.custom-navbar {
     border-radius: 50%;
     font-size: 20px;
     color: var(--text-color);
-    transition: all 0.3s ease;
+    transition: var(--transition);
 }
 
 .icon-hover:hover {
@@ -101,400 +120,129 @@ nav.custom-navbar {
     fill: var(--primary-color);
 }
 
-/* voyages / dropdowns / buttons / date picker */
-.voyage-container {
-    background: var(--bg-light);
-    padding: 30px;
-    margin: 20px auto;
-    max-width: 100%;
-    margin-top: 0;
+#navbarNav {
+    border-bottom: 0.5px solid var(--primary-color);
 }
 
-.voyage-menu-title {
-    font-family: "Lavishly Yours", cursive;
-    font-weight: 400;
-    font-style: italic;
-    font-size: 28px;
-    color: var(--text-color);
-    text-align: center;
-    margin: 0 auto -30px;
-    padding-top: 10px;
-}
 
-.voyage-menu {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 0;
-    padding: 40px 0;
-    overflow: visible;
-    position: relative;
-}
 
-/* dropdown */
-.voyage-dropdown {
-    position: relative;
-    width: 180px;
-    text-align: center;
-}
-
-.voyage-dropdown button {
-    background: white;
-    border: 1px solid transparent;
-    border-radius: 0;
-    width: 100%;
-    height: 100px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: normal;
-    transition: all 0.3s ease;
-}
-
-.voyage-dropdown button:hover {
-    border-color: var(--primary-color);
-}
-
-.voyage-suggestion {
-    color: var(--secondary-color);
-    font-weight: bold;
-    display: block;
-    margin-top: 5px;
-    font-size: 12px;
-}
-
-.voyage-dropdown-content {
+/* ========================================
+   MODALE CARTE AGENCE
+   ======================================== */
+.modal {
     display: none;
-    position: absolute;
-    top: 100%;
+    position: fixed;
+    z-index: 2000;
     left: 0;
+    top: 0;
     width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px);
+    animation: fadeInModal 0.4s ease;
+    overflow: auto;
+}
+
+.modal-content {
+    position: relative;
     background: white;
-    list-style: none;
-    padding: 10px 0;
-    margin-top: 2px;
-    z-index: 1000;
-    border: 1px solid var(--border-color);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    transition: opacity 0.3s ease, visibility 0.3s ease;
+    margin: 5% auto;
+    padding: 30px;
+    width: 90%;
+    max-width: 800px;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    animation: slideInModal 0.4s ease;
+    max-height: 90vh;
 }
 
-.voyage-dropdown:hover .voyage-dropdown-content {
-    display: block;
-    opacity: 1;
-    visibility: visible;
-    animation: fadeIn 0.3s ease;
-}
-
-.voyage-dropdown-content li {
-    padding: 10px;
-    cursor: pointer;
-    transition: background 0.3s ease;
-    color: var(--secondary-color);
-    font-size: 16px;
-}
-
-.voyage-dropdown-content li:hover {
-    background: #f0f8ff;
-}
-
-/* personnes : style moderne & propre */
-.voyage-dropdown-content .personne-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 6px 12px;
-    font-size: 13px;
-    color: var(--secondary-color);
-}
-
-.voyage-dropdown-content .label {
-    font-weight: 600;
-    font-size: 12.5px;
-    min-width: 70px;
-}
-
-.voyage-dropdown-content .counter {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.voyage-dropdown-content .btn-counter {
-    width: 26px;
-    height: 26px;
-    background: #fff;
-    border: 1.5px solid var(--border-color);
-    border-radius: 50%;
-    color: var(--secondary-color);
-    font-size: 16px;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    padding: 0;
-    line-height: 1;
-}
-
-.voyage-dropdown-content .btn-counter:hover {
-    background: var(--primary-color);
-    color: white;
-    border-color: var(--primary-color);
-}
-
-.voyage-dropdown-content .count {
-    min-width: 20px;
-    text-align: center;
-    font-weight: bold;
-    font-size: 14px;
-}
-
-/* btn voyage */
-.voyage-search-btn {
-    background: linear-gradient(135deg, var(--primary-color), #F2A65B);
-    color: #fff;
-    font-weight: bold;
-    border: none;
-    border-radius: 0;
-    width: 180px;
-    height: 100px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    transition: transform 0.2s ease;
-}
-
-.voyage-search-btn:hover {
-    border-color: var(--primary-color);
-}
-
-.voyage-search-btn:hover .search-icon {
-    transform: translateY(-5px);
-    animation: custom-bounce 1s infinite;
-}
-
-/* date picker */
-.voyage-date-picker {
-    background: white;
-    border: 1px solid var(--border-color);
-    border-radius: 0;
-    width: 100%;
-    height: 50px;
-    font-size: 14px;
-    padding: 10px;
-    cursor: pointer;
-    transition: border-color 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-.voyage-date-picker:hover,
-.voyage-date-picker:focus {
-    border-color: var(--primary-color);
-    outline: none;
-}
-
-.voyage-date-picker::placeholder {
-    color: #aaa;
+.modal h4 {
+    font-family: "Lavishly Yours", cursive;
     font-style: italic;
-}
-
-.flatpickr-calendar {
-    background: var(--bg-light);
-    border: 1px solid var(--border-color);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-/* reset icon */
-.voyage-reset-icon-container {
-    position: absolute;
-    top: 20px;
-    left: 79.5%;
-    transform: translateX(-50%);
-    margin-left: 20px;
-    width: 180px;
+    color: var(--primary-color);
+    font-size: 1.9rem;
+    margin-bottom: 20px;
     text-align: center;
-    z-index: 1500;
 }
 
-.voyage-reset-icon {
-    display: inline-flex;
+.close {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    color: var(--muted-color);
+    font-size: 32px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: var(--transition);
+    width: 40px;
+    height: 40px;
+    display: flex;
     align-items: center;
     justify-content: center;
-    background-color: var(--primary-color);
-    color: #fff;
-    border: none;
     border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-    transition: all 0.3s ease;
+    background: #f8f9fa;
+    z-index: 10;
 }
 
-.voyage-reset-icon:hover {
-    background-color: white;
-}
-
-.voyage-reset-icon img {
-    width: 20px;
-    height: 20px;
-}
-
-.voyage-reset-icon:hover img {
-    transform: rotate(90deg);
-}
-
-/* carousel */
-.carousel {
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    border-radius: 0;
-    box-shadow: none;
-}
-
-.carousel-image {
-    width: 100%;
-    height: 900px;
-    object-fit: cover;
-}
-
-.carousel-indicators {
-    bottom: 20px;
-}
-
-.carousel-indicators .active {
-    background-color: var(--primary-color);
-}
-
-.carousel-caption .btn,
-.card .btn {
-    background: linear-gradient(135deg, var(--primary-color), #F2A65B);
-    color: var(--bg-light);
-    border: 1px solid var(--primary-color);
-    transition: all 0.3s ease;
-    padding: 10px 25px;
-    font-size: 1rem;
-    border-radius: 50rem;
-}
-
-.carousel-caption .btn:hover,
-.card .btn:hover {
-    background-color: transparent;
-    color: var(--muted-color);
-}
-
-/* carousel controls */
-.carousel-control-prev,
-.carousel-control-next {
-    width: 50px;
-    height: 50px;
-    background-color: transparent;
-    border-radius: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    transition: background-color 0.3s ease;
-}
-
-.carousel-control-prev-icon,
-.carousel-control-next-icon {
-    filter: invert(1);
-}
-
-.carousel-control-prev:hover,
-.carousel-control-next:hover {
-    background-color: var(--primary-color);
-}
-
-/* sections / cards / big cards */
-.selection-section,
-.offers-section {
-    padding: 40px 0;
-    background-color: var(--bg-light);
-}
-
-.section-title {
-    font-size: 2.5rem;
-    color: #4b4e26;
-    margin-bottom: 10px;
-}
-
-.section-subtitle {
-    font-size: 1.2rem;
-    color: var(--muted-color);
-    margin-bottom: 40px;
-}
-
-.card {
-    border: none;
-    border-radius: 0;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-}
-
-.card:hover {
-    transform: translateY(-10px);
-}
-
-.card-img-top {
-    width: 100%;
-    height: 650px;
-    object-fit: cover;
-    border-radius: 0;
-}
-
-.card-body {
-    min-height: 200px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-.card-title {
-    font-size: 1.5rem;
+.close:hover {
     color: var(--primary-color);
-    margin-bottom: 10px;
+    background: #f0f8ff;
+    transform: scale(1.1);
 }
 
-.card-text {
-    font-size: 1rem;
-    color: var(--muted-color);
-    margin-bottom: 20px;
-}
-
-.big-card {
+#map {
     width: 100%;
-    max-width: 600px;
+    height: 400px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* ========================================
+   ANIMATIONS
+   ======================================== */
+@keyframes fadeInModal {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideInModal {
+    from { transform: translateY(-60px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes custom-bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+
+/* Fix image rotation */
+a:hover img {
+    transform: rotate(0deg);
+}
+
+/* ========================================
+   FOOTER
+   ======================================== */
+/* MINI-CARTE FOOTER */
+.mini-map-container {
+    max-width: 300px;
     margin: 0 auto;
 }
 
-.big-card .card-img-top {
-    height: 800px;
-    width: 100%;
+#footerMap {
+    transition: transform 0.2s ease;
 }
 
-.big-card .card-title {
-    font-size: 1.8rem;
+#footerMap:hover {
+    transform: scale(1.02);
 }
-
-.big-card .card-text {
-    font-size: 1.1rem;
-    margin-bottom: 25px;
-}
-
-#offerCarousel .carousel-control-prev,
-#offerCarousel .carousel-control-next {
-    width: 60px;
-    height: 60px;
-}
-
-/* footer */
-footer {
+   footer {
     background-color: var(--secondary-color) !important;
     color: #ffffff;
     padding-top: 40px;
@@ -539,106 +287,4 @@ footer .text-center {
     font-size: 0.9rem;
     color: #d4d4d4;
     padding-bottom: 20px;
-}
-
-/* media queries */
-@media (max-width: 991.98px) {
-    .custom-navbar .navbar-toggler {
-        margin-right: 10px;
-    }
-
-    .custom-navbar .navbar-brand {
-        margin-left: 0;
-    }
-
-    .voyage-menu {
-        gap: 10px;
-        padding: 20px 0;
-    }
-
-    .voyage-dropdown,
-    .voyage-search-btn {
-        width: 100%;
-        max-width: 180px;
-    }
-
-    .voyage-reset-icon-container {
-        position: static;
-        transform: none;
-        margin: 10px auto;
-    }
-}
-
-@media (max-width: 768px) {
-    footer .col-md-6 {
-        text-align: left;
-    }
-
-    footer .col-md-6 h5 {
-        text-align: center;
-    }
-}
-
-/* animations / keyframes */
-@keyframes custom-bounce {
-    0%, 100% {
-        transform: translateY(0);
-    }
-    50% {
-        transform: translateY(-10px);
-    }
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* modals */
-#mapModal {
-    display: none;
-    position: fixed;
-    z-index: 9999;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.5);
-    overflow: auto;
-}
-
-#mapModal .modal-content {
-    background: white;
-    margin: 5% auto;
-    padding: 20px;
-    width: 90%;
-    max-width: 700px;
-    border-radius: 12px;
-    position: relative;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-}
-
-#mapModal .close {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    font-size: 28px;
-    font-weight: bold;
-    color: #aaa;
-    cursor: pointer;
-}
-
-#mapModal .close:hover {
-    color: #000;
-}
-
-/* a hover images */
-a:hover img {
-    transform: rotate(0deg);
 }

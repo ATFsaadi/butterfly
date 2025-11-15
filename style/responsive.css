@@ -1,0 +1,272 @@
+/* ========================================
+   RESPONSIVE - MOBILE FIRST (320px → 1920px)
+   ======================================== */
+
+/* ——— XS : < 576px (Mobile S) ——— */
+@media (max-width: 575.98px) {
+    /* Navbar */
+    .navbar-brand.logo-spacing {
+        display: none;
+    }
+    .navbar-toggler {
+        padding: 4px 8px;
+    }
+    .icon-circle {
+        width: 32px;
+        height: 32px;
+        font-size: 16px;
+    }
+    .nav-link span {
+        font-size: 9px;
+    }
+
+    /* Voyage Menu */
+    .voyage-menu-title {
+        font-size: 20px;
+        margin-bottom: -20px;
+    }
+    .voyage-menu {
+        flex-direction: column;
+        padding: 20px 10px;
+        gap: 12px;
+    }
+    .voyage-dropdown,
+    .voyage-search-btn {
+        width: 100%;
+        max-width: 300px;
+        height: 80px;
+    }
+    .voyage-dropdown button {
+        font-size: 14px;
+        height: 80px;
+    }
+    .voyage-suggestion {
+        font-size: 11px;
+    }
+
+    /* Reset Icon */
+    .voyage-reset-icon-container {
+        position: static;
+        margin: 10px auto;
+        width: 100%;
+        text-align: center;
+    }
+    .voyage-reset-icon {
+        width: 24px;
+        height: 24px;
+    }
+
+    /* Carousel */
+    .carousel-image {
+        height: 300px;
+    }
+    .carousel-caption {
+        padding: 10px;
+    }
+    .carousel-caption h5 {
+        font-size: 1.2rem;
+    }
+    .carousel-caption p {
+        font-size: 0.9rem;
+    }
+    .carousel-caption .btn {
+        padding: 8px 16px;
+        font-size: 0.9rem;
+    }
+
+    /* Sections */
+    .selection-section,
+    .offers-section {
+        padding: 30px 15px;
+    }
+    .section-title {
+        font-size: 1.8rem;
+    }
+    .section-subtitle {
+        font-size: 1rem;
+    }
+
+    /* Cards */
+    .card-img-top {
+        height: 250px;
+    }
+    .card-body {
+        padding: 15px;
+    }
+    .card-title {
+        font-size: 1.3rem;
+    }
+    .card-text {
+        font-size: 0.9rem;
+    }
+
+    /* Big Card */
+    .big-card .card-img-top {
+        height: 300px;
+    }
+
+    /* Footer */
+    footer .col-md-6,
+    footer .col-md-3 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    footer h5 {
+        font-size: 1.1rem;
+    }
+    footer p,
+    footer a {
+        font-size: 0.9rem;
+    }
+
+    /* Modale */
+    .modal-content {
+        margin: 10% auto;
+        padding: 20px;
+        width: 95%;
+    }
+    .modal h4 {
+        font-size: 1.5rem;
+    }
+    #map {
+        height: 250px;
+    }
+
+    /* Compteur */
+    .voyage-dropdown-content.personnes-content {
+        width: 90%;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    .voyage-dropdown-content .personne-row {
+        padding: 8px 12px;
+    }
+    .voyage-dropdown-content .counter {
+        height: 36px;
+        padding: 4px 8px;
+        min-width: 96px;
+    }
+    .voyage-dropdown-content .btn-counter,
+    .voyage-dropdown-content .count {
+        width: 28px;
+        height: 28px;
+        font-size: 0.9rem;
+    }
+}
+
+/* ——— SM : 576px → 767px (Mobile L) ——— */
+@media (min-width: 576px) and (max-width: 767.98px) {
+    .voyage-menu {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+    }
+    .voyage-dropdown,
+    .voyage-search-btn {
+        width: 150px;
+        height: 90px;
+    }
+    .carousel-image {
+        height: 400px;
+    }
+    .card-img-top {
+        height: 300px;
+    }
+    .big-card .card-img-top {
+        height: 400px;
+    }
+    .modal-content {
+        width: 90%;
+        max-width: 500px;
+    }
+}
+
+/* ——— MD : 768px → 991px (Tablet) ——— */
+@media (min-width: 768px) and (max-width: 991.98px) {
+    .voyage-menu {
+        gap: 10px;
+    }
+    .voyage-dropdown,
+    .voyage-search-btn {
+        width: 160px;
+        height: 90px;
+    }
+    .carousel-image {
+        height: 500px;
+    }
+    .card-img-top {
+        height: 400px;
+    }
+    .big-card .card-img-top {
+        height: 500px;
+    }
+    footer .col-md-6 {
+        text-align: center;
+    }
+    .modal-content {
+        max-width: 600px;
+    }
+}
+
+/* ——— LG : 992px → 1199px (Desktop S) ——— */
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    .voyage-dropdown,
+    .voyage-search-btn {
+        width: 170px;
+    }
+    .carousel-image {
+        height: 700px;
+    }
+    .card-img-top {
+        height: 550px;
+    }
+}
+
+/* ——— XL : ≥ 1200px (Desktop L) ——— */
+@media (min-width: 1200px) {
+    .container,
+    .container-fluid {
+        max-width: 1320px;
+    }
+    .voyage-menu {
+        gap: 0;
+    }
+    .carousel-image {
+        height: 900px;
+    }
+    .card-img-top {
+        height: 650px;
+    }
+    .big-card .card-img-top {
+        height: 800px;
+    }
+}
+
+/* ——— XXL : ≥ 1400px (Ultra Wide) ——— */
+@media (min-width: 1400px) {
+    .container,
+    .container-fluid {
+        max-width: 1500px;
+    }
+}
+
+/* ——— HAUTEUR D'ÉCRAN PETITE (ex: mobile en paysage) ——— */
+@media (max-height: 500px) {
+    .modal-content {
+        margin: 2% auto;
+        max-height: 96vh;
+    }
+}
+
+/* ——— IMPRESSION ——— */
+@media print {
+    .navbar,
+    .carousel-control,
+    .voyage-reset-icon-container,
+    footer {
+        display: none !important;
+    }
+    .card {
+        break-inside: avoid;
+    }
+}
