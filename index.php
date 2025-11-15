@@ -43,6 +43,12 @@ if ($page === 'logout') {
     header("Location: index.php?page=login");
     exit;
 }
+// déconnexion
+if ($page === 'logout') {
+    session_destroy();
+    header("Location: index.php?page=login");
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -56,14 +62,16 @@ if ($page === 'logout') {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin">
     <link href="https://fonts.googleapis.com/css2?family=Genos:ital,wght@0,100..900;1,100..900&family=Lavishly+Yours&family=Meow+Script&family=Poiret+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Merienda:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style/style.css">
     <link rel="stylesheet" href="style/page.css">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
 
-<!-- NAVBAR HAUT -->
+<!-- navbar haut -->
 <nav class="custom-navbar navbar-expand-lg">
     <div class="container-fluid d-flex justify-content-between" style="padding: 20px 100px;">
         <div class="d-flex align-items-center">
@@ -98,7 +106,7 @@ if ($page === 'logout') {
                     </li>
                 <?php else: ?>
                     <li class="nav-item d-flex flex-column align-items-center">
-                        <!-- Bouton modal pour se connecter -->
+                        <!-- bouton modal pour se connecter -->
                         <button id="openLoginModal" class="nav-link signin-nav-link d-flex flex-column align-items-center" aria-label="Se connecter">
                             <span class="icon-circle">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15">
@@ -138,12 +146,12 @@ if ($page === 'logout') {
     </div>
 </nav>
 
-<!-- NAVBAR BOTTOM -->
+<!-- navbar bottom -->
 <div class="custom-navbar navbar-expand-lg navbar-light bg-white sticky-top" role="navigation" aria-label="Menu principal">
     <div class="container-fluid">
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mx-auto">
-                <li class="nav-item me-4 d-lg-none"><a class="nav-link" href="#">Notre agence</a></li>
+                <li class="nav-item me-4 d-lg-none"><a class="nav-link" href="#">Notre Agence</a></li>
                 <li class="nav-item me-4 d-lg-none"><a class="nav-link" href="about.php">À propos</a></li>
                 <li class="nav-item dropdown me-4">
                     <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
@@ -167,7 +175,7 @@ if ($page === 'logout') {
                 </li>
                 <li class="nav-item dropdown me-4">
                     <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
-                        <i data-feather="clock" class="nav-icon"></i> Dernière Minute
+                        <i data-feather="clock" class="nav-icon"></i> Dernière minute
                     </a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="#">Offres spéciales</a></li>
@@ -187,12 +195,12 @@ if ($page === 'logout') {
                 </li>
                 <li class="nav-item dropdown me-4">
                     <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
-                        <i data-feather="briefcase" class="nav-icon"></i> Séjours
+                        <i data-feather="briefcase" class="nav-icon"></i> séjours
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Séjours en Europe</a></li>
-                        <li><a class="dropdown-item" href="#">Séjours en Asie</a></li>
-                        <li><a class="dropdown-item" href="#">Séjours en Amérique</a></li>
+                        <li><a class="dropdown-item" href="#">Séjours en europe</a></li>
+                        <li><a class="dropdown-item" href="#">Séjours en asie</a></li>
+                        <li><a class="dropdown-item" href="#">Séjours en amérique</a></li>
                     </ul>
                 </li>
             </ul>
@@ -200,13 +208,12 @@ if ($page === 'logout') {
     </div>
 </div>
 
-<!-- MAIN CONTENT -->
+<!-- main content -->
 <main>
 <?php
 if (!isset($_SESSION['user'])) {
-    if($page === 'login') {
-        require_once("vue/vue_connexion.php");
-    } elseif($page === 'inscription') {
+    // on ne charge plus vue_connexion.php ici
+    if($page === 'inscription') {
         require_once("controleur/gestion_inscription.php");
     } else {
         require_once("vue/home.php");
@@ -217,16 +224,17 @@ if (!isset($_SESSION['user'])) {
 ?>
 </main>
 
-<!-- FOOTER -->
+
+<!-- footer -->
 <footer class="text-light pt-4 mt-5">
     <div class="container">
         <div class="row">
             <div class="col-md-3">
-                <h5>Liens Utiles</h5>
+                <h5>liens utiles</h5>
                 <ul class="list-unstyled">
                     <li><a href="#" class="text-light text-decoration-none">Accueil</a></li>
                     <li><a href="#" class="text-light text-decoration-none">Destinations</a></li>
-                    <li><a href="#" class="text-light text-decoration-none">Nos Offres</a></li>
+                    <li><a href="#" class="text-light text-decoration-none">Nos offres</a></li>
                     <li><a href="#" class="text-light text-decoration-none">Contact</a></li>
                 </ul>
                 <img src="icons/bfly.png" width="60px" alt="">
@@ -242,26 +250,26 @@ if (!isset($_SESSION['user'])) {
                 </div>
                 <h5>Contact</h5>
                 <p class="clickable-address" style="cursor: pointer;">
-                    <i class="fas fa-map-marker-alt me-2"></i> 123 Rue du Voyage, Paris
+                    <i class="fas fa-map-marker-alt me-2"></i> 123 rue du voyage, paris
                 </p>
                 <p><i class="fas fa-phone me-2"></i> +33 1 23 45 67 89</p>
                 <p><i class="fas fa-envelope me-2"></i> contact@butterflyvoyage.com</p>
             </div>
 
             <div class="col-md-3">
-                <h5>À Propos de Nous</h5>
+                <h5>À propos de nous</h5>
                 <p>
-                    Butterfly Voyage est une agence spécialisée dans les voyages sur mesure.
-                    Notre mission est de créer des expériences uniques et inoubliables pour nos clients.
+                    ButterFly voyage est une agence spécialisée dans les voyages sur mesure.
+                    notre mission est de créer des expériences uniques et inoubliables pour nos clients.
                 </p>
             </div>
         </div>
         <hr class="bg-light my-4">
-        <div class="text-center pb-3">&copy; 2025 Butterfly Voyage - Tous droits réservés</div>
+        <div class="text-center pb-3">&copy; 2025 ButterFly voyage - Tous droits réservés</div>
     </div>
 </footer>
 
-<!-- MODAL CONNEXION -->
+<!-- modal connexion -->
 <div id="loginModal" class="modal">
     <div class="modal-content">
         <span class="close">×</span>
@@ -272,23 +280,24 @@ if (!isset($_SESSION['user'])) {
     </div>
 </div>
 
-<!-- MODAL INSCRIPTION -->
+<!-- modal inscription -->
 <div id="registerModal" class="modal">
     <div class="modal-content">
         <span class="close">×</span>
         <?php require_once("vue/vue_inscription.php"); ?>
     </div>
 </div>
-<!-- MODAL CARTE AGENCE -->
+
+<!-- modal carte agence -->
 <div id="mapModal" class="modal">
     <div class="modal-content">
         <span class="close">×</span>
-        <h4 class="text-center mb-3">Notre Agence</h4>
+        <h4 class="text-center mb-3">Notre agence</h4>
         <div id="map" style="width:100%; height:400px; border-radius:8px;"></div>
     </div>
 </div>
 
-<!-- SCRIPTS -->
+<!-- scripts -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="js/script.js"></script>
 <script src="js/popup_form.js"></script>

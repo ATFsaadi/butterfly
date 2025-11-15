@@ -1,6 +1,4 @@
-/* ====================================
-   VARIABLES GLOBALES
-   ==================================== */
+/* variables globales */
 :root {
     --primary-color: #F27438;
     --secondary-color: #26474E;
@@ -13,9 +11,7 @@
     --shadow: 0 10px 25px rgba(0,0,0,0.08);
 }
 
-/* ====================================
-   SECTION AUTH
-   ==================================== */
+/* section auth */
 .auth-section {
     width: 100%;
     display: flex;
@@ -39,9 +35,7 @@
     overflow: hidden;
 }
 
-/* ====================================
-   FORMULAIRE
-   ==================================== */
+/* formulaire */
 .auth-form {
     flex: 1;
     padding: 40px 30px;
@@ -78,7 +72,7 @@
     box-shadow: 0 0 5px rgba(242, 116, 56, 0.5);
 }
 
-/* Bouton principal */
+/* bouton principal */
 .auth-form button {
     padding: 12px 0;
     border: none;
@@ -95,7 +89,7 @@
     opacity: 0.9;
 }
 
-/* Options (souvenir / mot de passe oublié) */
+/* options (souvenir / mot de passe oublié) */
 .form-options {
     display: flex;
     justify-content: space-between;
@@ -114,7 +108,7 @@
     text-decoration: underline;
 }
 
-/* Ligne "OU" */
+/* ligne "ou" */
 .divider {
     text-align: center;
     margin: 20px 0;
@@ -136,7 +130,7 @@
 .divider::before { left: 0; }
 .divider::after { right: 0; }
 
-/* Boutons sociaux */
+/* boutons sociaux */
 .social-buttons {
     display: flex;
     justify-content: center;
@@ -172,7 +166,7 @@
     color: var(--primary-color);
 }
 
-/* Lien "S'inscrire" / "Se connecter" */
+/* lien s'inscrire / se connecter */
 .switch-link {
     text-align: center;
     font-size: 0.9rem;
@@ -190,7 +184,7 @@
     text-decoration: underline;
 }
 
-/* Logo à droite */
+/* logo à droite */
 .auth-logo {
     flex: 1;
     background-color: var(--primary-color);
@@ -203,38 +197,33 @@
 .auth-logo img {
     width: 120px;
     object-fit: contain;
-    filter: brightness(0) invert(1); /* logo blanc sur fond orange */
+    filter: brightness(0) invert(1);
 }
 
-/* ====================================
-   RESPONSIVE
-   ==================================== */
+/* responsive */
 @media (max-width: 768px) {
     .auth-card {
         flex-direction: column;
     }
     .auth-logo {
         padding: 30px 0;
-        order: -1; /* logo en haut sur mobile */
+        order: -1;
     }
     .auth-form {
         padding: 30px 20px;
     }
 }
 
-
-/* === MODAL === */
+/* modal */
 .modal {
     display: none;
     position: fixed;
     z-index: 1050;
-   
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.361);
     overflow: auto;
     padding: 20px;
-    
 }
 
 .modal-content {
@@ -262,7 +251,7 @@
     color: #000;
 }
 
-/* Animations */
+/* animations */
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }

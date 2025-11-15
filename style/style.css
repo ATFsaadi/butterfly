@@ -1,21 +1,30 @@
-/* VARIABLES */
-:root {
-    --primary-color: #F27438;       /* Couleur principale */
-    --secondary-color: #26474E;     /* Couleur secondaire */
-    --text-color: #00353F;          /* Texte général */
-    --muted-color: #6c757d;         /* Texte secondaire / sous-titres */
-    --bg-light: #f9f9f9;            /* Fond clair sections */
-    --border-color: #ccc;           /* Bordures standards */
+/* font-face */
+@font-face {
+    font-family: 'Brown Pen';
+    src: url('../fonts/BrownPen.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
 }
 
-/* BODY */
+/* variables */
+:root {
+    --primary-color: #F27438;       /* couleur principale */
+    --secondary-color: #26474E;     /* couleur secondaire */
+    --text-color: #00353F;          /* texte général */
+    --muted-color: #6c757d;         /* texte secondaire / sous-titres */
+    --bg-light: #f9f9f9;            /* fond clair sections */
+    --border-color: #ccc;           /* bordures standards */
+}
+
+/* body / global styles */
 body {
     font-family: "Poiret One", sans-serif;
     font-weight: bold;
     background-color: white;
 }
 
-/* LOGO */
+/* logo */
 .logo-size {
     width: 200px;
     height: 100px;
@@ -23,21 +32,21 @@ body {
     margin-left: 0;
 }
 
-/* HEADINGS */
+/* headings / typography */
 h6 {
-    font-family: "Poiret One", sans-serif;
+    font-family: 'Brown Pen', cursive;
     color: var(--primary-color);
     font-size: 50px;
 }
 
 h1 {
-    font-family: "Meow Script", cursive;
+    font-family:'Brown Pen', cursive;
     font-weight: 100;
     font-size: 50px;
     color: var(--text-color);
 }
 
-/* NAVBAR */
+/* navbar / navigation */
 nav.custom-navbar {
     padding: 0;
     margin-top: 0;
@@ -62,6 +71,7 @@ nav.custom-navbar {
     font-size: 10px;
 }
 
+/* icons */
 .icon-circle {
     display: flex;
     justify-content: center;
@@ -91,7 +101,7 @@ nav.custom-navbar {
     fill: var(--primary-color);
 }
 
-/* VOYAGES */
+/* voyages / dropdowns / buttons / date picker */
 .voyage-container {
     background: var(--bg-light);
     padding: 30px;
@@ -122,6 +132,7 @@ nav.custom-navbar {
     position: relative;
 }
 
+/* dropdown */
 .voyage-dropdown {
     position: relative;
     width: 180px;
@@ -187,7 +198,60 @@ nav.custom-navbar {
     background: #f0f8ff;
 }
 
-/* BTN VOYAGE */
+/* personnes : style moderne & propre */
+.voyage-dropdown-content .personne-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 12px;
+    font-size: 13px;
+    color: var(--secondary-color);
+}
+
+.voyage-dropdown-content .label {
+    font-weight: 600;
+    font-size: 12.5px;
+    min-width: 70px;
+}
+
+.voyage-dropdown-content .counter {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.voyage-dropdown-content .btn-counter {
+    width: 26px;
+    height: 26px;
+    background: #fff;
+    border: 1.5px solid var(--border-color);
+    border-radius: 50%;
+    color: var(--secondary-color);
+    font-size: 16px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 0;
+    line-height: 1;
+}
+
+.voyage-dropdown-content .btn-counter:hover {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.voyage-dropdown-content .count {
+    min-width: 20px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+/* btn voyage */
 .voyage-search-btn {
     background: linear-gradient(135deg, var(--primary-color), #F2A65B);
     color: #fff;
@@ -212,7 +276,7 @@ nav.custom-navbar {
     animation: custom-bounce 1s infinite;
 }
 
-/* DATE PICKER */
+/* date picker */
 .voyage-date-picker {
     background: white;
     border: 1px solid var(--border-color);
@@ -243,7 +307,7 @@ nav.custom-navbar {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* RESET ICON */
+/* reset icon */
 .voyage-reset-icon-container {
     position: absolute;
     top: 20px;
@@ -282,7 +346,7 @@ nav.custom-navbar {
     transform: rotate(90deg);
 }
 
-/* CAROUSEL */
+/* carousel */
 .carousel {
     width: 100%;
     margin: 0;
@@ -323,7 +387,7 @@ nav.custom-navbar {
     color: var(--muted-color);
 }
 
-/* CAROUSEL CONTROLS */
+/* carousel controls */
 .carousel-control-prev,
 .carousel-control-next {
     width: 50px;
@@ -345,7 +409,7 @@ nav.custom-navbar {
     background-color: var(--primary-color);
 }
 
-/* SECTIONS */
+/* sections / cards / big cards */
 .selection-section,
 .offers-section {
     padding: 40px 0;
@@ -364,7 +428,6 @@ nav.custom-navbar {
     margin-bottom: 40px;
 }
 
-/* CARD */
 .card {
     border: none;
     border-radius: 0;
@@ -404,7 +467,6 @@ nav.custom-navbar {
     margin-bottom: 20px;
 }
 
-/* BIG CARD */
 .big-card {
     width: 100%;
     max-width: 600px;
@@ -431,7 +493,7 @@ nav.custom-navbar {
     height: 60px;
 }
 
-/* FOOTER */
+/* footer */
 footer {
     background-color: var(--secondary-color) !important;
     color: #ffffff;
@@ -479,7 +541,7 @@ footer .text-center {
     padding-bottom: 20px;
 }
 
-/* MEDIA QUERIES */
+/* media queries */
 @media (max-width: 991.98px) {
     .custom-navbar .navbar-toggler {
         margin-right: 10px;
@@ -517,7 +579,7 @@ footer .text-center {
     }
 }
 
-/* ANIMATIONS */
+/* animations / keyframes */
 @keyframes custom-bounce {
     0%, 100% {
         transform: translateY(0);
@@ -538,11 +600,7 @@ footer .text-center {
     }
 }
 
-a:hover img {
-    transform: rotate(0deg);
-}
-
-/* Modal Carte */
+/* modals */
 #mapModal {
     display: none;
     position: fixed;
@@ -578,4 +636,9 @@ a:hover img {
 
 #mapModal .close:hover {
     color: #000;
+}
+
+/* a hover images */
+a:hover img {
+    transform: rotate(0deg);
 }
