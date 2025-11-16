@@ -1,6 +1,6 @@
-/* ========================================
-   FONT-FACE
-   ======================================== */
+/* ==========================================
+   FONTS & VARIABLES
+========================================== */
 @font-face {
     font-family: 'Brown Pen';
     src: url('fonts/BrownPen.ttf') format('truetype');
@@ -9,51 +9,27 @@
     font-display: swap;
 }
 
-/* ========================================
-   VARIABLES GLOBALES
-   ======================================== */
 :root {
-    --primary-color: #F27438;
-    --secondary-color: #26474E;
-    --text-color: #00353F;
-    --muted-color: #6c757d;
-    --bg-light: #f9f9f9;
-    --border-color: #ccc;
-    --border-radius: 12px;
-    --btn-radius: 50rem;
-    --shadow: 0 10px 25px rgba(0,0,0,0.08);
-    --transition: all 0.3s ease;
+    --primary-color: #F27438;     
+    --secondary-color: #007F8C;    
+    --text-color: #2C3E50;         
+    --muted-color: #7FA7A9;        
+    --bg-light: #F4F9F9;           
+    --border-color: #DCE6E6;       
+    --border-radius: 14px;         
+    --btn-radius: 50rem;           
+    --shadow: 0 8px 20px rgba(0, 127, 140, 0.15);
 }
 
-/* ========================================
-   BODY & TYPO
-   ======================================== */
+/* ==========================================
+   GLOBAL STYLES
+========================================== */
 body {
     font-family: "Poiret One", sans-serif;
     font-weight: bold;
     background-color: white;
     margin: 0;
     padding: 0;
-}
-
-/* ========================================
-   LOGO
-   ======================================== */
-.logo-size {
-    width: 200px;
-    height: 100px;
-    margin-top: -10px;
-    margin-left: 0;
-}
-
-/* ========================================
-   HEADINGS
-   ======================================== */
-h6 {
-    font-family: "Poiret One", sans-serif;
-    color: var(--primary-color);
-    font-size: 50px;
-    margin: 0;
 }
 
 h1 {
@@ -64,33 +40,60 @@ h1 {
     margin: 0;
 }
 
-/* ========================================
-   NAVBAR
-   ======================================== */
+h6 {
+    font-family: "Poiret One", sans-serif;
+    color: var(--primary-color);
+    font-size: 50px;
+    margin: 0;
+}
+
+.logo-size {
+    width: 200px;
+    height: 100px;
+    margin-top: -10px;
+    margin-left: 0;
+}
+
+/* ==========================================
+   NAVBAR & DROPDOWNS
+========================================== */
 nav.custom-navbar {
     padding: 0;
-    margin-top: 0;
     background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    z-index: 1050;
+}
+
+.navbar-nav {
+    display: flex;
+    justify-content: center; 
+    gap: 2rem;  
+    margin-left: 0;
+    margin-right: 0;
 }
 
 .navbar-nav .nav-item {
-    margin: 0 10px;
+    margin: 0;
 }
 
 .nav-link {
     font-size: 15px;
     color: var(--secondary-color);
-    transition: color 0.3s ease;
+    font-weight: 500;
+    transition: color 0.3s ease, background 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    position: relative;
 }
 
 .nav-link:hover {
     color: var(--primary-color);
+    background: transparent;
 }
 
-.nav-link span {
-    font-size: 10px;
-}
-
+/* Icons in nav */
 .icon-circle {
     display: flex;
     justify-content: center;
@@ -105,30 +108,61 @@ nav.custom-navbar {
     transition: var(--transition);
 }
 
-.icon-hover:hover {
-    transform: scale(1.1);
-    background: #f0f8ff;
-    border-color: var(--text-color);
-}
-
 .icon-circle svg {
     fill: var(--secondary-color);
     transition: fill 0.3s ease;
+}
+
+.icon-circle:hover {
+    transform: scale(1.1);
+    background: #f0f8ff;
+    border-color: var(--text-color);
 }
 
 .icon-circle:hover svg {
     fill: var(--primary-color);
 }
 
+/* Navbar border bottom */
 #navbarNav {
     border-bottom: 0.5px solid var(--primary-color);
 }
 
+/* Dropdown positioning */
+.navbar-nav .dropdown {
+    position: relative;
+}
 
+.navbar-nav .dropdown-menu {
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    top: 100% !important;
+    margin-top: 0.25rem;
+    min-width: 180px;
+    text-align: center;
+    transition: all 0.2s ease;
+}
 
-/* ========================================
-   MODALE CARTE AGENCE
-   ======================================== */
+.navbar-nav .dropdown-item {
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+.navbar-nav .dropdown-item:hover {
+    background-color: rgba(255,179,71,0.1);
+    color: var(--primary-color);
+}
+
+@media (max-width: 991px) {
+    .navbar-nav .dropdown-menu {
+        left: 0 !important;
+        transform: none !important;
+        width: 100%;
+    }
+}
+
+/* ==========================================
+   MODALS & MAPS
+========================================== */
 .modal {
     display: none;
     position: fixed;
@@ -197,9 +231,9 @@ nav.custom-navbar {
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-/* ========================================
+/* ==========================================
    ANIMATIONS
-   ======================================== */
+========================================== */
 @keyframes fadeInModal {
     from { opacity: 0; }
     to { opacity: 1; }
@@ -220,16 +254,14 @@ nav.custom-navbar {
     50% { transform: translateY(-10px); }
 }
 
-
-/* Fix image rotation */
+/* fix image rotation */
 a:hover img {
     transform: rotate(0deg);
 }
 
-/* ========================================
+/* ==========================================
    FOOTER
-   ======================================== */
-/* MINI-CARTE FOOTER */
+========================================== */
 .mini-map-container {
     max-width: 300px;
     margin: 0 auto;
@@ -242,7 +274,8 @@ a:hover img {
 #footerMap:hover {
     transform: scale(1.02);
 }
-   footer {
+
+footer {
     background-color: var(--secondary-color) !important;
     color: #ffffff;
     padding-top: 40px;
@@ -288,3 +321,10 @@ footer .text-center {
     color: #d4d4d4;
     padding-bottom: 20px;
 }
+/* Supprimer le carré gris sur hover des nav-links */
+.nav-link   {
+    background: transparent !important; /* pas de fond sur hover */
+    box-shadow: none !important;        /* pas d’ombre */
+}
+
+

@@ -122,7 +122,12 @@ if ($page === 'logout') {
                         </li>
                         <li class="nav-item d-flex flex-column align-items-center">
                             <a class="nav-link d-flex flex-column align-items-center" href="index.php?page=logout">
-                                <span class="icon-circle"><i class="fas fa-sign-out-alt"></i></span>
+                                <span class="icon-circle">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15">
+                                        <path d="M10 17l5-5-5-5v10zM4 19h6v2H4c-1.1 0-2-.9-2-2V5c0-1.1.9-2 2-2h6v2H4v14z"/>
+                                    </svg>
+                                </span>
+
                                 <span class="mt-1">deconnexion</span>
                             </a>
                         </li>
@@ -294,7 +299,7 @@ if ($page === 'logout') {
                         <a href="#" class="text-light"><i class="fab fa-youtube fa-2x"></i></a>
                     </div>
                     <h5>contact</h5>
-                    <p><i class="fas fa-map-marker-alt me-2"></i> 123 rue du voyage, paris</p>
+                    <p><i class="fas fa-map-marker-alt me-2"></i> 40 Bd Haussmann 75009 Paris </p>
                     <p><i class="fas fa-phone me-2"></i> +33 1 23 45 67 89</p>
                     <p><i class="fas fa-envelope me-2"></i> contact@butterflyvoyage.com</p>
                 </div>

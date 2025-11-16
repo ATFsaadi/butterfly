@@ -1,14 +1,18 @@
-<!-- section menu voyage -->
 <section class="voyage-menu-section">
     <div class="voyage-container">
-        <div class="voyage-menu-title">
+        <!-- titre normal -->
+        <div class="voyage-menu-title" id="voyageTitle">
             <h1>Pour un Voyage inoubliable ...</h1>
         </div>
-        <div class="voyage-menu">
+    </div>
+</section>
 
+        <!-- menu sticky -->
+    <div class="voyage-menu-wrapper">
+        <div class="voyage-menu" id="voyageBar">
             <!-- ville de départ -->
             <div class="voyage-dropdown">
-                <button id="departBtn" class="voyage-btn" aria-label="sélectionner la ville de départ">
+                <button id="departBtn" class="voyage-btn">
                     Ville de départ
                     <span id="departSuggestion" class="voyage-suggestion">Tout endroit</span>
                 </button>
@@ -19,96 +23,82 @@
                     <li onclick="selectOption('depart', this)">Lyon</li>
                 </ul>
             </div>
-            
+
             <!-- destination -->
             <div class="voyage-dropdown">
-                <button id="destinationBtn" class="voyage-btn" aria-label="sélectionner la destination">
-                    destination
+                <button id="destinationBtn" class="voyage-btn">
+                    Destination
                     <span id="destinationSuggestion" class="voyage-suggestion">N'importe où</span>
                 </button>
                 <ul class="voyage-dropdown-content">
                     <li onclick="selectOption('destination', this)">N'importe où</li>
                     <li onclick="selectOption('destination', this)">France</li>
-                    <li onclick="selectOption('destination', this)">États-unis</li>
+                    <li onclick="selectOption('destination', this)">États-Unis</li>
                     <li onclick="selectOption('destination', this)">Japon</li>
                 </ul>
             </div>
-
-            <!-- dates départ /  retour -->
+            
+                 <!-- personnes -->
             <div class="voyage-dropdown">
-                <button id="dateButton" class="voyage-btn" aria-label="ouvrir le sélecteur de dates">
-                    Départ / Retour
-                    <span id="dateSuggestion" class="voyage-suggestion"></span>
-                </button>
-                <div class="voyage-dropdown-content p-3">
-                    <div class="mb-2">
-                        <label for="dateDepart" class="form-label small">Départ</label>
-                        <input type="date" id="dateDepart" class="form-control form-control-sm" onchange="updateDateSuggestion()">
-                    </div>
-                    <div>
-                        <label for="dateArrivee" class="form-label small">Retour</label>
-                        <input type="date" id="dateArrivee" class="form-control form-control-sm" onchange="updateDateSuggestion()">
-                    </div>
-                </div>
-            </div>
-
-            <!-- personnes -->
-            <div class="voyage-dropdown">
-                <button id="personnesBtn" class="voyage-btn" aria-label="sélectionner le nombre de personnes">
+                <button id="personnesBtn" class="voyage-btn">
                     Personnes
                     <span id="personnesSuggestion" class="voyage-suggestion">1 adulte</span>
                 </button>
                 <div class="voyage-dropdown-content p-2">
-                    <!-- Adultes -->
                     <div class="personne-row">
                         <span class="label">Adultes</span>
                         <div class="counter">
-                            <button type="button" class="btn-counter" onclick="updateCount('adultes', -1)">−</button>
+                            <button class="btn-counter" onclick="updateCount('adultes', -1)">−</button>
                             <span id="adultesCount" class="count">1</span>
-                            <button type="button" class="btn-counter" onclick="updateCount('adultes', 1)">+</button>
+                            <button class="btn-counter" onclick="updateCount('adultes', 1)">+</button>
                         </div>
                     </div>
-                    <!-- Enfants -->
                     <div class="personne-row">
                         <span class="label">Enfants</span>
                         <div class="counter">
-                            <button type="button" class="btn-counter" onclick="updateCount('enfants', -1)">−</button>
+                            <button class="btn-counter" onclick="updateCount('enfants', -1)">−</button>
                             <span id="enfantsCount" class="count">0</span>
-                            <button type="button" class="btn-counter" onclick="updateCount('enfants', 1)">+</button>
+                            <button class="btn-counter" onclick="updateCount('enfants', 1)">+</button>
                         </div>
                     </div>
-                    <!-- Bébés -->
                     <div class="personne-row">
                         <span class="label">Bébés</span>
                         <div class="counter">
-                            <button type="button" class="btn-counter" onclick="updateCount('bebes', -1)">−</button>
+                            <button class="btn-counter" onclick="updateCount('bebes', -1)">−</button>
                             <span id="bebesCount" class="count">0</span>
-                            <button type="button" class="btn-counter" onclick="updateCount('bebes', 1)">+</button>
+                            <button class="btn-counter" onclick="updateCount('bebes', 1)">+</button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- boutons rechercher / reset -->
-            <table>
-                <tr>
-                    <td>
-                        <button class="voyage-search-btn" aria-label="lancer la recherche">
-                            <img src="icons/loupe.png" width="18" height="18" alt="rechercher" class="search-icon">
-                            Rechercher
-                        </button>
-                    </td>
-                    <td>
-                        <button class="voyage-reset-icon" aria-label="réinitialiser les filtres">
-                            <img src="icons/reste.png" width="20" height="20" alt="réinitialiser">
-                        </button>
-                    </td>
-                </tr>
-            </table>
+            <!-- dates -->
+           <div class="voyage-dropdown">
+                <button id="dateButton" class="voyage-btn">
+                    Départ / Retour
+                    <span id="dateSuggestion" class="voyage-suggestion">Aujourd'hui</span>
+                </button>
 
+                <div class="voyage-dropdown-content p-3">
+                    <label for="dateDepart" class="form-label small">Départ</label>
+                    <input type="date" id="dateDepart" class="form-control form-control-sm" onchange="updateDateSuggestion()">
+
+                    <label for="dateArrivee" class="form-label small mt-2">Retour</label>
+                    <input type="date" id="dateArrivee" class="form-control form-control-sm" onchange="updateDateSuggestion()">
+                </div>
+            </div>
+
+            <!-- bouton rechercher / reset -->
+            <div class="voyage-search-btn">
+                <div class="search-left">
+                    <img src="icons/loupe.png" alt="rechercher" class="search-icon">
+                    <span>Rechercher</span>
+                </div>
+                <button class="voyage-reset-icon">
+                    <img src="icons/reste.png" width="18" height="18" alt="réinitialiser">
+                </button>
+            </div>
         </div>
-    </div>
-</section>
 
 <!-- carousel principal -->
 <div id="mainCarousel" class="carousel slide mt-4" data-bs-ride="carousel">

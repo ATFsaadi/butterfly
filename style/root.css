@@ -48,3 +48,26 @@
     --btn-radius: 50rem;
     --shadow: 0 8px 18px rgba(30, 30, 47, 0.1);
 }
+:root {
+    --primary-color: #F27438;
+    --secondary-color: #26474E;
+    --text-color: #00353F;
+    --muted-color: #6c757d;
+    --bg-light: #f9f9f9;
+    --border-color: #ccc;
+    --border-radius: 12px;
+    --btn-radius: 50rem;
+    --shadow: 0 10px 25px rgba(0,0,0,0.08);
+    --transition: all 0.3s ease;
+}
+:root {
+    --primary-color: #FFB347;      /* Soleil doré – chaleureux et accueillant */
+    --secondary-color: #007F8C;    /* Océan profond – couleur de confiance et de calme */
+    --text-color: #2C3E50;         /* Gris bleu foncé – lisible et professionnel */
+    --muted-color: #7FA7A9;        /* Brume côtière – pour les textes secondaires */
+    --bg-light: #F4F9F9;           /* Sable clair – fond doux et apaisant */
+    --border-color: #DCE6E6;       /* Gris très pâle – pour une touche raffinée */
+    --border-radius: 14px;         /* Légèrement plus doux */
+    --btn-radius: 50rem;           /* Capsules modernes */
+    --shadow: 0 8px 20px rgba(0, 127, 140, 0.15); /* Ombre subtile colorée */
+}

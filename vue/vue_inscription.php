@@ -13,16 +13,15 @@
             <input type="hidden" name="inscription_submit" value="1">
             <button type="submit">s'inscrire</button>
         </form>
-        <div class="divider">OU</div>
-        <div class="social-buttons">
-          <button><i class="fab fa-google"></i></button>
-          <button><i class="fab fa-facebook-f"></i></button>
-          <button><i class="fab fa-apple"></i></button>
-        </div>
+        <div class="divider"></div>
+      
         <p class="switch-link">
             deja un compte ? 
             <a href="#" data-bs-toggle="modal" data-bs-target="#loginModal" data-bs-dismiss="modal">connectez-vous</a>
         </p>
       </div>
+      <div class="auth-logo">
+          <img src="icons/logo-acc.png" alt="Logo de l'agence">
+        </div>
     </div>
 
