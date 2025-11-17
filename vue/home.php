@@ -7,15 +7,100 @@
     </div>
 </section>
 
-        <!-- menu sticky -->
-<div id="voyageBar">
-    <div class="voyage-menu">
-            <!-- ville de départ -->
+<!-- MENU STICKY – VERSION PARFAITE & SYNCHRONISÉE -->
+<div id="voyageBar" class="position-sticky top-0 start-0 w-100 bg-white" style="z-index: 1030; border-bottom: 1px solid #eee;">
+
+    <!-- VERSION DESKTOP : menu horizontal -->
+    <div class="voyage-menu d-none d-lg-flex container-fluid py-3 justify-content-center align-items-center gap-3">
+        <!-- Ville de départ -->
+        <div class="voyage-dropdown">
+            <button id="departBtn" class="voyage-btn">
+                Ville de départ
+                <span id="departSuggestion" class="voyage-suggestion">Tout endroit</span>
+            </button>
+            <ul class="voyage-dropdown-content">
+                <li onclick="selectOption('depart', this)">Tout endroit</li>
+                <li onclick="selectOption('depart', this)">Paris</li>
+                <li onclick="selectOption('depart', this)">Marseille</li>
+                <li onclick="selectOption('depart', this)">Lyon</li>
+            </ul>
+        </div>
+
+        <!-- Destination -->
+        <div class="voyage-dropdown">
+            <button id="destinationBtn" class="voyage-btn">
+                Destination
+                <span id="destinationSuggestion" class="voyage-suggestion">N'importe où</span>
+            </button>
+            <ul class="voyage-dropdown-content">
+                <li onclick="selectOption('destination', this)">N'importe où</li>
+                <li onclick="selectOption('destination', this)">France</li>
+                <li onclick="selectOption('destination', this)">États-Unis</li>
+                <li onclick="selectOption('destination', this)">Japon</li>
+            </ul>
+        </div>
+
+        <!-- Personnes -->
+        <div class="voyage-dropdown">
+            <button id="personnesBtn" class="voyage-btn">
+                Personnes
+                <span id="personnesSuggestion" class="voyage-suggestion">1 adulte</span>
+            </button>
+            <div class="voyage-dropdown-content p-3">
+                <div class="personne-row"><span class="label">Adultes</span><div class="counter"><button class="btn-counter" onclick="updateCount('adultes', -1)">−</button><span id="adultesCount" class="count">1</span><button class="btn-counter" onclick="updateCount('adultes', 1)">+</button></div></div>
+                <div class="personne-row"><span class="label">Enfants</span><div class="counter"><button class="btn-counter" onclick="updateCount('enfants', -1)">−</button><span id="enfantsCount" class="count">0</span><button class="btn-counter" onclick="updateCount('enfants', 1)">+</button></div></div>
+                <div class="personne-row"><span class="label">Bébés</span><div class="counter"><button class="btn-counter" onclick="updateCount('bebes', -1)">−</button><span id="bebesCount" class="count">0</span><button class="btn-counter" onclick="updateCount('bebes', 1)">+</button></div></div>
+            </div>
+        </div>
+
+        <!-- Dates -->
+        <div class="voyage-dropdown">
+            <button id="dateButton" class="voyage-btn">
+                Départ / Retour
+                <span id="dateSuggestion" class="voyage-suggestion">Aujourd'hui</span>
+            </button>
+            <div class="voyage-dropdown-content p-3">
+                <label class="form-label small">Départ</label>
+                <input type="date" id="dateDepart" class="form-control form-control-sm" onchange="updateDateSuggestion()">
+                <label class="form-label small mt-2">Retour</label>
+                <input type="date" id="dateArrivee" class="form-control form-control-sm" onchange="updateDateSuggestion()">
+            </div>
+        </div>
+
+        <!-- Boutons -->
+        <div class="voyage-search-group">
+            <div class="voyage-search-btn">
+                <span>Rechercher</span>
+                <img src="icons/loupe.png" alt="rechercher" class="search-icon">
+            </div>
+            <button class="voyage-reset-icon" onclick="resetFilters()">
+                <img src="icons/reste.png" width="18" height="18" alt="reset">
+            </button>
+        </div>
+    </div>
+
+    <!-- VERSION MOBILE : Bouton unique -->
+    <button class="mobile-search-toggle d-lg-none mx-auto d-flex align-items-center justify-content-center gap-3" onclick="openDrawer()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <span>Rechercher un voyage</span>
+    </button>
+
+    <!-- DRAWER MOBILE – Utilise les MÊMES IDs que desktop → tout est synchronisé ! -->
+    <div class="voyage-mobile-drawer" id="voyageDrawer">
+        <div class="drawer-header">
+            <h4 style="margin:0; color:var(--primary-color); font-family:'Lavishly Yours',cursive; font-size:2rem;">
+                Rechercher votre voyage
+            </h4>
+            <button class="close-drawer" onclick="closeDrawer()">×</button>
+        </div>
+
+        <div class="container py-4">
+            <!-- On réutilise exactement les mêmes éléments (IDs identiques) -->
             <div class="voyage-dropdown">
-                <button id="departBtn" class="voyage-btn">
-                    Ville de départ
-                    <span id="departSuggestion" class="voyage-suggestion">Tout endroit</span>
-                </button>
+                <button class="voyage-btn w-100 text-start">Ville de départ <span id="departSuggestion" class="voyage-suggestion float-end">Tout endroit</span></button>
                 <ul class="voyage-dropdown-content">
                     <li onclick="selectOption('depart', this)">Tout endroit</li>
                     <li onclick="selectOption('depart', this)">Paris</li>
@@ -24,12 +109,8 @@
                 </ul>
             </div>
 
-            <!-- destination -->
             <div class="voyage-dropdown">
-                <button id="destinationBtn" class="voyage-btn">
-                    Destination
-                    <span id="destinationSuggestion" class="voyage-suggestion">N'importe où</span>
-                </button>
+                <button class="voyage-btn w-100 text-start">Destination <span id="destinationSuggestion" class="voyage-suggestion float-end">N'importe où</span></button>
                 <ul class="voyage-dropdown-content">
                     <li onclick="selectOption('destination', this)">N'importe où</li>
                     <li onclick="selectOption('destination', this)">France</li>
@@ -37,111 +118,33 @@
                     <li onclick="selectOption('destination', this)">Japon</li>
                 </ul>
             </div>
-            
-                 <!-- personnes -->
+
             <div class="voyage-dropdown">
-                <button id="personnesBtn" class="voyage-btn">
-                    Personnes
-                    <span id="personnesSuggestion" class="voyage-suggestion">1 adulte</span>
-                </button>
-                <div class="voyage-dropdown-content p-2">
-                    <div class="personne-row">
-                        <span class="label">Adultes</span>
-                        <div class="counter">
-                            <button class="btn-counter" onclick="updateCount('adultes', -1)">−</button>
-                            <span id="adultesCount" class="count">1</span>
-                            <button class="btn-counter" onclick="updateCount('adultes', 1)">+</button>
-                        </div>
-                    </div>
-                    <div class="personne-row">
-                        <span class="label">Enfants</span>
-                        <div class="counter">
-                            <button class="btn-counter" onclick="updateCount('enfants', -1)">−</button>
-                            <span id="enfantsCount" class="count">0</span>
-                            <button class="btn-counter" onclick="updateCount('enfants', 1)">+</button>
-                        </div>
-                    </div>
-                    <div class="personne-row">
-                        <span class="label">Bébés</span>
-                        <div class="counter">
-                            <button class="btn-counter" onclick="updateCount('bebes', -1)">−</button>
-                            <span id="bebesCount" class="count">0</span>
-                            <button class="btn-counter" onclick="updateCount('bebes', 1)">+</button>
-                        </div>
-                    </div>
+                <button class="voyage-btn w-100 text-start">Personnes <span id="personnesSuggestion" class="voyage-suggestion float-end">1 adulte</span></button>
+                <div class="voyage-dropdown-content p-3">
+                    <div class="personne-row"><span class="label">Adultes</span><div class="counter"><button class="btn-counter" onclick="updateCount('adultes', -1)">−</button><span id="adultesCount" class="count">1</span><button class="btn-counter" onclick="updateCount('adultes', 1)">+</button></div></div>
+                    <div class="personne-row"><span class="label">Enfants</span><div class="counter"><button class="btn-counter" onclick="updateCount('enfants', -1)">−</button><span id="enfantsCount" class="count">0</span><button class="btn-counter" onclick="updateCount('enfants', 1)">+</button></div></div>
+                    <div class="personne-row"><span class="label">Bébés</span><div class="counter"><button class="btn-counter" onclick="updateCount('bebes', -1)">−</button><span id="bebesCount" class="count">0</span><button class="btn-counter" onclick="updateCount('bebes', 1)">+</button></div></div>
                 </div>
             </div>
 
-            <!-- dates -->
-           <div class="voyage-dropdown">
-                <button id="dateButton" class="voyage-btn">
-                    Départ / Retour
-                    <span id="dateSuggestion" class="voyage-suggestion">Aujourd'hui</span>
-                </button>
-
+            <div class="voyage-dropdown">
+                <button class="voyage-btn w-100 text-start">Départ / Retour <span id="dateSuggestion" class="voyage-suggestion float-end">Aujourd'hui</span></button>
                 <div class="voyage-dropdown-content p-3">
-                    <label for="dateDepart" class="form-label small">Départ</label>
+                    <label class="form-label small">Départ</label>
                     <input type="date" id="dateDepart" class="form-control form-control-sm" onchange="updateDateSuggestion()">
-
-                    <label for="dateArrivee" class="form-label small mt-2">Retour</label>
+                    <label class="form-label small mt-2">Retour</label>
                     <input type="date" id="dateArrivee" class="form-control form-control-sm" onchange="updateDateSuggestion()">
                 </div>
             </div>
 
-            <!-- bouton rechercher / reset -->
-            <div class="voyage-search-group">
-                <div class="voyage-search-btn">
-                    <div class="search-left">
-                        <span>Rechercher</span>
-                    </div>
-                    <img src="icons/loupe.png" alt="rechercher" class="search-icon">
-                </div>
-
-                <button class="voyage-reset-icon">
-                    <img src="icons/reste.png" width="18" height="18" alt="réinitialiser">
-                </button>
+            <div class="d-flex flex-column gap-3 mt-5">
+                <button class="voyage-search-btn w-100 py-4 fs-5">Rechercher</button>
+                <button class="btn btn-outline-secondary mx-auto px-5" onclick="resetFilters()">Réinitialiser</button>
             </div>
-
         </div>
+    </div>
 </div>
-
-    <!-- carousel principal -->
-    <div id="mainCarousel" class="carousel slide mt-4" data-bs-ride="carousel">
-    <div class="carousel-indicators">
-        <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="0" class="active"></button>
-        <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="1"></button>
-        <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="2"></button>
-        <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="3"></button>
-    </div>
-    <div class="carousel-inner">
-        <?php
-        $slides = [
-            ['oran2.jpg', 'decouvrir oran', 'el bahia, ville cotiere algerienne...'],
-            ['motagne.png', 'magnifique montagne', 'la beaute des montagnes...'],
-            ['mer.jpg', 'voyage en mer', 'explorez les horizons marins...'],
-            ['le monde.png', 'explorer le monde', 'un voyage inoubliable...']
-        ];
-        foreach ($slides as $i => [$img, $title, $text]):
-        ?>
-        <div class="carousel-item <?= $i === 0 ? 'active' : '' ?>">
-            <img src="images/slides/<?= $img ?>" class="d-block w-100 carousel-image" alt="<?= $title ?>">
-            <div class="carousel-caption d-flex h-100 align-items-center justify-content-center">
-                <div class="text-center text-white">
-                    <h6><?= $title ?></h6>
-                    <p class="d-none d-md-block"><?= $text ?></p>
-                    <button class="btn btn-outline-light rounded-pill px-4 mt-2">decouvrir</button>
-                </div>
-            </div>
-        </div>
-        <?php endforeach; ?>
-    </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon"></span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
-        <span class="carousel-control-next-icon"></span>
-    </button>
-    </div>
 
 <!-- section selection -->
 <section class="selection-section mt-5 py-5 bg-light">

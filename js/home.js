@@ -115,3 +115,24 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.querySelector('.voyage-reset-icon')?.addEventListener('click', resetFilters);
 });
+// Ouvrir/Fermer le drawer mobile
+function openDrawer() {
+    document.getElementById('voyageDrawer').classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+function closeDrawer() {
+    document.getElementById('voyageDrawer').classList.remove('open');
+    document.body.style.overflow = '';
+}
+
+// Fermer en cliquant dehors
+document.getElementById('voyageDrawer').addEventListener('click', function(e) {
+    if (e.target === this) closeDrawer();
+});
+
+// Ouvrir les dropdowns au clic sur mobile
+document.querySelectorAll('.voyage-mobile-drawer .voyage-dropdown > button').forEach(btn => {
+    btn.addEventListener('click', function() {
+        this.parentElement.querySelector('.voyage-dropdown-content').classList.toggle('show');
+    });
+});
