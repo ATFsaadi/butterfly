@@ -18,13 +18,9 @@
     display: flex;
     background: #fff;
     border-radius: var(--border-radius);
-    box-shadow: var(--shadow);
+    /*box-shadow: var(--shadow);*/
     overflow: hidden;
     transition: transform 0.3s ease;
-}
-
-.auth-card:hover {
-    transform: translateY(-5px);
 }
 
 .auth-form {
@@ -67,7 +63,7 @@
 
 .auth-form input:focus {
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(242, 116, 56, 0.2);
+    box-shadow: 0 0 0 1px  #f2733827;
 }
 
 .auth-form button {
@@ -75,7 +71,7 @@
     border: none;
     border-radius: var(--btn-radius);
     background: linear-gradient(135deg, var(--primary-color), #F2A65B);
-    color: #fff;
+    color: #ffffff;
     font-weight: bold;
     cursor: pointer;
     transition: var(--transition);
@@ -204,45 +200,11 @@
 }
 
 /* SECTION RECHERCHE */
-.voyage-menu-section {
-    position: relative;
-    background-image: url('images/background-voyage.jpg');
-    background-size: cover;
-    background-position: center;
-    padding: 60px 0;
-    transition: all 0.3s ease;
-}
-
 /* TITRE */
 .voyage-menu-title {
-    font-family: "Lavishly Yours", cursive;
-    font-weight: 400;
-    font-style: italic;
-    font-size: 28px;
-    color: #fff;
     text-align: center;
-    margin: 0 auto -30px;
-    padding-top: 10px;
-}
-
-.voyage-menu-title h1 {
-    font-size: 50px;
-    margin-bottom: 30px;
-}
-
-/* MENU PRINCIPAL */
-.voyage-menu {
-    width: 100%;
-    max-width: 1100px; /* 6 blocs de 180px + gap */
-    margin: 0 auto;
-    display: flex;
-    justify-content: center;
-    flex-wrap: nowrap;   /* empêche retour à la ligne */
-    gap: 0px;
-    padding: 0;
-    background: transparent;
-    border-radius: 0;
-    align-items: stretch;
+    margin: 30px;
+    padding-top: 20px;
 }
 
 /* DROPDOWN STANDARD */
@@ -256,7 +218,7 @@
 }
 
 .voyage-dropdown button {
-    background: white;
+    background: rgb(255, 255, 255);
     border: 1px solid transparent;
     width: 100%;
     height: 100px;
@@ -264,15 +226,10 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 4px;
+    gap: 16px;
     cursor: pointer;
     font-size: 16px;
     transition: var(--transition);
-}
-
-.voyage-dropdown button:hover {
-    border-color: var(--primary-color);
-    box-shadow: 0 4px 12px rgba(242,116,56,0.15);
 }
 
 .voyage-suggestion {
@@ -289,13 +246,12 @@
     top: 100%;
     left: 0;
     width: 100%;
-    background: white;
+    background: rgb(255, 255, 255);
     list-style: none;
     padding: 10px 0;
     margin-top: 2px;
     z-index: 1000;
     border: 1px solid var(--border-color);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .voyage-dropdown:hover .voyage-dropdown-content {
@@ -338,7 +294,7 @@
     justify-content: center;
     cursor: pointer;
     background: var(--primary-color);
-    color: #fff;
+    color: #ffffff;
     transition: var(--transition);
     flex-shrink: 0;
 }
@@ -382,16 +338,13 @@
     width: 180px;
     height: 100px;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    padding: 0 20px;
+    flex-direction: column;
+    align-items: center;   
+    justify-content: center;
+    gap: 16px;               
+    padding: 0;
     cursor: pointer;
     transition: transform 0.2s ease;
-}
-
-.voyage-search-btn:hover {
-    box-shadow: 0 8px 20px rgba(242,116,56,0.3);
 }
 
 .search-left {
@@ -406,8 +359,8 @@
 }
 
 .voyage-reset-icon {
-    width: 50px;
-    height: 50px;
+    width: 20px;
+    height: 20px;
     border-radius: 50%;
     background: var(--primary-color);
     border: none;
@@ -416,29 +369,12 @@
     justify-content: center;
     cursor: pointer;
     transition: 0.3s ease;
+    margin-top: 40px; /* ← pousse l’icône en bas du conteneur */
 }
 
 .voyage-reset-icon:hover {
     transform: rotate(90deg);
 }
-
-/* BARRE STICKY */
-.voyage-menu-section.fixed {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    padding: 0;
-    margin: 0;
-    z-index: 1050;
-    background: #fff;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-}
-
-.voyage-menu-section.fixed .voyage-menu-title {
-    display: none;
-}
-
 .voyage-menu-section.fixed .voyage-menu {
     width: 100%;
     max-width: none;
@@ -451,20 +387,16 @@
 }
 
 /* FIXATION DU MENU */
+
+
 #voyageBar {
     position: sticky;
     top: 0;
-    z-index: 10;
-}
-
-#voyageBar {
-    position: sticky;  /* ou fixed si tu veux toujours visible */
-    top: 0;
     left: 0;
-    width: 100%;        /* prend toute la largeur du viewport */
-    z-index: 9999;
-    background-color: #d10707; /* ton rouge */
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    width: 100%;
+    z-index: 5;
+    background-color: #ffffff; ;
+    /*box-shadow: 0 1px 1px greenyellow;*/
 }
 
 #voyageBar .voyage-menu {
@@ -473,12 +405,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 10px;
+    /*gap: 10px;*/
     padding: 0 20px;   /* espace intérieur si nécessaire */
 }
-
-
-
 /* Carousel */
 .carousel {
     width: 100%;
@@ -551,8 +480,8 @@
 }
 
 .card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 15px 30px rgba(0,0,0,0.12);
+    transform: translateY(-5px);
+    /*box-shadow: 0 15px 30px greenyellow;*/
 }
 
 .card-img-top {

@@ -26,48 +26,46 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     /// === DATES ===
-const dateDepart = document.getElementById('dateDepart');
-const dateArrivee = document.getElementById('dateArrivee');
-const dateSuggestion = document.getElementById('dateSuggestion');
+    const dateDepart = document.getElementById('dateDepart');
+    const dateArrivee = document.getElementById('dateArrivee');
+    const dateSuggestion = document.getElementById('dateSuggestion');
 
-if (dateDepart && dateArrivee && dateSuggestion) {
+    let datesModifiees = false; // 🔹 Déclarée ici pour être accessible partout
 
-    const today = new Date().toISOString().split('T')[0];
-    dateDepart.min = today;
-    dateDepart.value = today;
-    dateArrivee.value = today;
+    if (dateDepart && dateArrivee && dateSuggestion) {
 
-    let datesModifiees = false;
+        const today = new Date().toISOString().split('T')[0];
+        dateDepart.min = today;
+        dateDepart.value = today;
+        dateArrivee.value = today;
 
-    window.updateDateSuggestion = function () {
-        const format = d => d ? new Date(d).toLocaleDateString('fr-FR', {
-            day: 'numeric',
-            month: 'short'
-        }) : '';
+        window.updateDateSuggestion = function () {
+            const format = d => d ? new Date(d).toLocaleDateString('fr-FR', {
+                day: 'numeric',
+                month: 'short'
+            }) : '';
 
-        const text = !datesModifiees
-            ? "Aujourd'hui"
-            : `${format(dateDepart.value)} - ${format(dateArrivee.value)}`;
+            const text = !datesModifiees
+                ? "Aujourd'hui"
+                : `${format(dateDepart.value)} - ${format(dateArrivee.value)}`;
 
-        dateSuggestion.textContent = text;
-    };
+            dateSuggestion.textContent = text;
+        };
 
-    dateDepart.addEventListener('change', () => {
-        datesModifiees = true;
-        dateArrivee.min = dateDepart.value;
-        if (dateArrivee.value && dateArrivee.value < dateDepart.value) dateArrivee.value = '';
+        dateDepart.addEventListener('change', () => {
+            datesModifiees = true;
+            dateArrivee.min = dateDepart.value;
+            if (dateArrivee.value && dateArrivee.value < dateDepart.value) dateArrivee.value = '';
+            updateDateSuggestion();
+        });
+
+        dateArrivee.addEventListener('change', () => {
+            datesModifiees = true;
+            updateDateSuggestion();
+        });
+
         updateDateSuggestion();
-    });
-
-    dateArrivee.addEventListener('change', () => {
-        datesModifiees = true;
-        updateDateSuggestion();
-    });
-
-    updateDateSuggestion();
-}
-
-
+    }
 
     // === PERSONNES ===
     window.updateCount = function (type, change) {
@@ -93,18 +91,25 @@ if (dateDepart && dateArrivee && dateSuggestion) {
 
     // === RESET ===
     window.resetFilters = function () {
-        if (dateDepart) dateDepart.value = '';
-        if (dateArrivee) dateArrivee.value = '';
-        if (dateSuggestion) dateSuggestion.textContent = '';
+        const today = new Date().toISOString().split('T')[0];
+
+        if (dateDepart) dateDepart.value = today;
+        if (dateArrivee) dateArrivee.value = today;
+
+        datesModifiees = false;          // 🔹 réinitialise le flag
+        updateDateSuggestion();          // 🔹 remet "Aujourd'hui"
+
         ['adultes','enfants','bebes'].forEach(t => {
             const el = document.getElementById(t + 'Count');
             if (el) el.textContent = t === 'adultes' ? '1' : '0';
         });
         updatePersonnesSuggestion();
+
         ['destinationSuggestion','departSuggestion'].forEach(id => {
             const el = document.getElementById(id);
             if (el) el.textContent = id === 'destinationSuggestion' ? "N'importe où" : "Tout endroit";
         });
+
         document.querySelectorAll('.voyage-dropdown-content').forEach(c => c.style.display = 'none');
     };
 
