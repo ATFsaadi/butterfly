@@ -8,8 +8,8 @@
 </section>
 
         <!-- menu sticky -->
-    <div class="voyage-menu-wrapper">
-        <div class="voyage-menu" id="voyageBar">
+<div id="voyageBar">
+    <div class="voyage-menu">
             <!-- ville de départ -->
             <div class="voyage-dropdown">
                 <button id="departBtn" class="voyage-btn">
@@ -89,19 +89,24 @@
             </div>
 
             <!-- bouton rechercher / reset -->
-            <div class="voyage-search-btn">
-                <div class="search-left">
+            <div class="voyage-search-group">
+                <div class="voyage-search-btn">
+                    <div class="search-left">
+                        <span>Rechercher</span>
+                    </div>
                     <img src="icons/loupe.png" alt="rechercher" class="search-icon">
-                    <span>Rechercher</span>
                 </div>
+
                 <button class="voyage-reset-icon">
                     <img src="icons/reste.png" width="18" height="18" alt="réinitialiser">
                 </button>
             </div>
-        </div>
 
-<!-- carousel principal -->
-<div id="mainCarousel" class="carousel slide mt-4" data-bs-ride="carousel">
+        </div>
+</div>
+
+    <!-- carousel principal -->
+    <div id="mainCarousel" class="carousel slide mt-4" data-bs-ride="carousel">
     <div class="carousel-indicators">
         <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="0" class="active"></button>
         <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="1"></button>
@@ -136,12 +141,12 @@
     <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
         <span class="carousel-control-next-icon"></span>
     </button>
-</div>
+    </div>
 
 <!-- section selection -->
 <section class="selection-section mt-5 py-5 bg-light">
     <div class="container text-center">
-        <h3 class="section-title">notre selection</h3>
+         <h3 class="section-title">notre selection</h3>
         <p class="section-subtitle">decouvrez nos destinations preferees</p>
         <div id="selectionCarousel" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-inner">

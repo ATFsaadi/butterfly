@@ -203,7 +203,7 @@
     transform: scale(1.05);
 }
 
-/* Section recherche et barre sticky */
+/* SECTION RECHERCHE */
 .voyage-menu-section {
     position: relative;
     background-image: url('images/background-voyage.jpg');
@@ -213,6 +213,7 @@
     transition: all 0.3s ease;
 }
 
+/* TITRE */
 .voyage-menu-title {
     font-family: "Lavishly Yours", cursive;
     font-weight: 400;
@@ -229,30 +230,29 @@
     margin-bottom: 30px;
 }
 
+/* MENU PRINCIPAL */
 .voyage-menu {
     width: 100%;
-    max-width: 900px;
+    max-width: 1100px; /* 6 blocs de 180px + gap */
     margin: 0 auto;
     display: flex;
     justify-content: center;
-    flex-wrap: wrap;
-    gap: 10px;
-    padding: 0px 0;
+    flex-wrap: nowrap;   /* empêche retour à la ligne */
+    gap: 0px;
+    padding: 0;
     background: transparent;
-    border-radius:0;
-    position: relative;
+    border-radius: 0;
     align-items: stretch;
 }
 
+/* DROPDOWN STANDARD */
 .voyage-dropdown {
     position: relative;
     width: 180px;
-    text-align: center;
-
-    /* Centrage vertical et horizontal du contenu */
     display: flex;
-    justify-content: center;  /* centre horizontalement */
-    align-items: center;      /* centre verticalement */
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }
 
 .voyage-dropdown button {
@@ -261,9 +261,9 @@
     width: 100%;
     height: 100px;
     display: flex;
-    flex-direction: column; /* ou row selon le design */
-    justify-content: center; /* centre verticalement */
-    align-items: center;     /* centre horizontalement */
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     gap: 4px;
     cursor: pointer;
     font-size: 16px;
@@ -282,6 +282,7 @@
     margin-top: 5px;
 }
 
+/* DROPDOWN CONTENT */
 .voyage-dropdown-content {
     display: none;
     position: absolute;
@@ -299,8 +300,6 @@
 
 .voyage-dropdown:hover .voyage-dropdown-content {
     display: block;
-    opacity: 1;
-    visibility: visible;
     animation: fadeIn 0.3s ease;
 }
 
@@ -316,21 +315,18 @@
     background: #f0f8ff;
 }
 
-/* Compteur personnes */
+/* DROPDOWN PERSONNES (compteurs) */
 .voyage-dropdown .counter {
     display: flex;
-    align-items: center;       /* centre verticalement les éléments internes */
-    justify-content: center;   /* centre les boutons et le chiffre horizontalement */
-    gap: 6px;                  /* espace entre -, chiffre et + */
-    width: auto;               /* prend juste la place nécessaire */
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
     padding: 0 4px;
     height: 28px;
     background: var(--bg-light);
     border-radius: 14px;
 }
 
-
-/* Boutons - et + */
 .voyage-dropdown .btn-counter {
     width: 24px;
     height: 24px;
@@ -344,7 +340,7 @@
     background: var(--primary-color);
     color: #fff;
     transition: var(--transition);
-    flex-shrink: 0;  /* empêcher le rétrécissement */
+    flex-shrink: 0;
 }
 
 .voyage-dropdown .btn-counter:hover:not(:disabled) {
@@ -359,7 +355,6 @@
     opacity: 0.7;
 }
 
-/* Chiffre au centre */
 .voyage-dropdown .count {
     width: 28px;
     text-align: center;
@@ -369,24 +364,23 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-shrink: 0;
-}
-.voyage-dropdown .btn-counter,
-.voyage-dropdown .count {
-    flex-shrink: 0; /* facultatif */
 }
 
+/* BOUTON RECHERCHER + RESET */
+.voyage-search-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    height: 100px;
+}
 
-
-
-/* Bouton recherche / reset */
 .voyage-search-btn {
     background: linear-gradient(135deg, var(--primary-color), #F2A65B);
     color: #fff;
     font-weight: bold;
     border: none;
     width: 180px;
-    height: 100%;
+    height: 100px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -412,10 +406,10 @@
 }
 
 .voyage-reset-icon {
-    width: 22px;
-    height: 22px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
-    background-color: var(--primary-color);
+    background: var(--primary-color);
     border: none;
     display: flex;
     align-items: center;
@@ -428,52 +422,61 @@
     transform: rotate(90deg);
 }
 
-/* Barre sticky */
+/* BARRE STICKY */
 .voyage-menu-section.fixed {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;       /* prend toute la largeur */
-    padding: 0;        /* enlever tout padding */
+    width: 100%;
+    padding: 0;
     margin: 0;
     z-index: 1050;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05); /* optionnel */
-    background: transparent; /* pas de fond global */
+    background: #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
-
 
 .voyage-menu-section.fixed .voyage-menu-title {
     display: none;
 }
 
 .voyage-menu-section.fixed .voyage-menu {
-    width: 100%;           /* prend toute la largeur */
-    max-width: none;       /* enlever la limitation */
-    margin: 0;             /* coller aux bords */
-    padding: 0px 20px;    /* espace intérieur si besoin */
-    background: #fff;      /* fond blanc de la barre seulement */
-    border-radius: 0;      /* coins droits */
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0 20px;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 10px;
 }
 
-.voyage-menu > .voyage-dropdown,
-.voyage-menu > .voyage-search-btn {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    height: 70px;
-}
-/* menu sticky */
+/* FIXATION DU MENU */
 #voyageBar {
-    position: sticky; /* fixe le menu au scroll */
-    top: 0;           /* distance depuis le haut */
-    z-index: 10;    /* au-dessus du contenu */
-    background-color: #bb0909; /* garde le fond blanc */
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05); /* léger ombrage */
+    position: sticky;
+    top: 0;
+    z-index: 10;
 }
+
+#voyageBar {
+    position: sticky;  /* ou fixed si tu veux toujours visible */
+    top: 0;
+    left: 0;
+    width: 100%;        /* prend toute la largeur du viewport */
+    z-index: 9999;
+    background-color: #d10707; /* ton rouge */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+#voyageBar .voyage-menu {
+    max-width: 1100px;  /* largeur des boutons centrés */
+    margin: 0 auto;     /* centre le menu dans la barre */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 0 20px;   /* espace intérieur si nécessaire */
+}
+
 
 
 /* Carousel */

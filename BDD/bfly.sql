@@ -1,8 +1,29 @@
 
-CREATE DATABASE IF NOT EXISTS bfly ;
+Utilisateurs (clients/admins)
+
+Voyages (séjour avec hôtel et vol, prix, durée, date de départ)
+
+Types de voyage (Séjour, Aventure, Plage, Culture)
+
+Destinations (pays, ville, description, image)
+
+
+
+Réservations (par utilisateur, nombre de personnes, prix total, statut)
+
+Avis (notes et commentaires par voyage et utilisateur)
+
+Images supplémentaires pour chaque voyage
+
+Offres (réductions, dates, image)
+
+
+DROP DATABASE IF EXISTS bfly;
+CREATE DATABASE bfly;
 USE bfly;
 
---utilisateurs
+
+-- UTILISATEURS
 
 CREATE TABLE utilisateurs (
     idutil INT AUTO_INCREMENT PRIMARY KEY,
@@ -17,7 +38,7 @@ CREATE TABLE utilisateurs (
 );
 
 
---types_voyage
+-- TYPES DE VOYAGE
 
 CREATE TABLE types_voyage (
     idtyp INT AUTO_INCREMENT PRIMARY KEY,
@@ -29,20 +50,22 @@ INSERT INTO types_voyage (nom) VALUES
 ('Séjour'), ('Aventure'), ('Plage'), ('Culture');
 
 
---destinations
+-- DESTINATIONS
 
 CREATE TABLE destinations (
     iddest INT AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(100) NOT NULL,
     pays VARCHAR(100) NOT NULL,
+    ville VARCHAR(100) NOT NULL,
     description TEXT,
     image VARCHAR(255),
+    type_destination ENUM('ville','plage','montagne','culture','autre') DEFAULT 'ville',
     date_creation DATETIME DEFAULT CURRENT_TIMESTAMP,
     date_modification DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 
---voyages
+-- VOYAGES
 
 CREATE TABLE voyages (
     idvoy INT AUTO_INCREMENT PRIMARY KEY,
@@ -50,17 +73,20 @@ CREATE TABLE voyages (
     id_type INT,
     titre VARCHAR(100) NOT NULL,
     description TEXT,
-    duree INT, -- en jours
+    duree INT,
     prix DECIMAL(10,2) NOT NULL,
+    hotel VARCHAR(100),
+    vol VARCHAR(100),
     image VARCHAR(255),
     date_depart DATE,
     date_creation DATETIME DEFAULT CURRENT_TIMESTAMP,
     date_modification DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_destination) REFERENCES destinations(iddes) ON DELETE CASCADE,
+    FOREIGN KEY (id_destination) REFERENCES destinations(iddest) ON DELETE CASCADE,
     FOREIGN KEY (id_type) REFERENCES types_voyage(idtyp) ON DELETE SET NULL
 );
 
---reservations
+
+-- RESERVATIONS
 
 CREATE TABLE reservations (
     idreserv INT AUTO_INCREMENT PRIMARY KEY,
@@ -72,12 +98,12 @@ CREATE TABLE reservations (
     statut ENUM('en_attente','confirmée','annulée') DEFAULT 'en_attente',
     date_creation DATETIME DEFAULT CURRENT_TIMESTAMP,
     date_modification DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_utilisateur) REFERENCES utilisateurs(iduti) ON DELETE CASCADE,
+    FOREIGN KEY (id_utilisateur) REFERENCES utilisateurs(idutil) ON DELETE CASCADE,
     FOREIGN KEY (id_voyage) REFERENCES voyages(idvoy) ON DELETE CASCADE
 );
 
 
---avis
+-- AVIS
 
 CREATE TABLE avis (
     idavi INT AUTO_INCREMENT PRIMARY KEY,
@@ -86,12 +112,12 @@ CREATE TABLE avis (
     note TINYINT NOT NULL CHECK (note BETWEEN 1 AND 5),
     commentaire TEXT,
     date_creation DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_utilisateur) REFERENCES utilisateurs(iduti) ON DELETE CASCADE,
+    FOREIGN KEY (id_utilisateur) REFERENCES utilisateurs(idutil) ON DELETE CASCADE,
     FOREIGN KEY (id_voyage) REFERENCES voyages(idvoy) ON DELETE CASCADE
 );
 
 
---images_voyage
+-- IMAGES DES VOYAGES
 
 CREATE TABLE images_voyage (
     idimg INT AUTO_INCREMENT PRIMARY KEY,
@@ -101,7 +127,7 @@ CREATE TABLE images_voyage (
 );
 
 
---offres
+-- OFFRES
 
 CREATE TABLE offres (
     idoff INT AUTO_INCREMENT PRIMARY KEY,
@@ -113,16 +139,4 @@ CREATE TABLE offres (
     date_fin DATE,
     image VARCHAR(255),
     FOREIGN KEY (id_voyage) REFERENCES voyages(idvoy) ON DELETE CASCADE
-);
-
-
---contacts
-
-CREATE TABLE contacts (
-    idcont INT AUTO_INCREMENT PRIMARY KEY,
-    nom VARCHAR(100) NOT NULL,
-    email VARCHAR(150) NOT NULL,
-    sujet VARCHAR(150),
-    message TEXT NOT NULL,
-    date_envoi DATETIME DEFAULT CURRENT_TIMESTAMP
 );
