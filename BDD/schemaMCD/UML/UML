@@ -1,0 +1,65 @@
+┌─────────────────┐        ┌─────────────────┐
+│   utilisateurs  │        │   destinations  │
+├─────────────────┤        ├─────────────────┤
+│ idutil PK       │◄───────│ iddest PK       │
+│ nom             │        │ nom             │
+│ prenom          │        │ pays            │
+│ email           │        │ ville           │
+│ mot_de_passe    │        │ description     │
+│ telephone       │        │ image           │
+│ role            │        │ type_destination│
+│ date_creation   │        │ date_creation   │
+│ date_modif      │        │ date_modification│
+└─────────────────┘        └─────────────────┘
+
+           │
+           │ 1..* FK
+           ▼
+┌─────────────────┐
+│     voyages     │
+├─────────────────┤
+│ idvoy PK        │
+│ id_destination FK│
+│ titre           │
+│ description     │
+│ duree           │
+│ prix            │
+│ hotel           │
+│ vol             │
+│ image           │
+│ date_depart     │
+│ date_creation   │
+│ date_modif      │
+└─────────────────┘
+       │
+       │ 1..* FK
+       ▼
+┌───────────────┐     ┌───────────────┐     ┌───────────────┐
+│ images_voyage │     │ avis          │     │ reservations  │
+├───────────────┤     ├───────────────┤     ├───────────────┤
+│ idimg PK      │     │ idavi PK      │     │ idreserv PK   │
+│ id_voyage FK  │     │ id_utilisateur│ FK  │ id_utilisateur│ FK
+│ url_image     │     │ id_voyage FK  │     │ id_voyage FK  │
+└───────────────┘     │ note          │     │ date_depart   │
+                      │ commentaire   │     │ nb_personnes  │
+                      │ date_creation │     │ prix_total    │
+                      └───────────────┘     │ statut        │
+                                             │ date_creation │
+                                             │ date_modif    │
+                                             └───────────────┘
+
+                    │
+                    │ 1..* FK
+                    ▼
+               ┌─────────────┐
+               │  offres     │
+               ├─────────────┤
+               │ idoff PK    │
+               │ id_voyage FK│
+               │ titre       │
+               │ description │
+               │ reduction   │
+               │ date_debut  │
+               │ date_fin    │
+               │ image       │
+               └─────────────┘
