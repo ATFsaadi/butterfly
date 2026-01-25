@@ -16,6 +16,10 @@ class Modele {
         }
     }
 
+    public function getPdo() {
+        return $this->unPdo;
+    }
+
     // --- Utilisateurs ---
     public function select_user($email) {
         $sql = "SELECT * FROM utilisateurs WHERE email = :email";
@@ -32,11 +36,16 @@ class Modele {
             ':nom' => $nom,
             ':prenom' => $prenom,
             ':email' => $email,
-            ':mot_de_passe' => $mdp,
+            ':mot_de_passe' => password_hash($mdp, PASSWORD_DEFAULT),
             ':telephone' => $telephone,
             ':role' => $role
         ]);
     }
 
+    public function getAllUsers() {
+        $sql = "SELECT * FROM utilisateurs ORDER BY date_creation DESC";
+        $stmt = $this->unPdo->query($sql);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
 ?>
