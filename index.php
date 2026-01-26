@@ -1,27 +1,28 @@
 <?php
-session_start();
-require_once("controleur/controleur.class.php");
+if (session_status() === PHP_SESSION_NONE) session_start();
+
+require_once "controleur/controleur.class.php";
 $unControleur = new Controleur();
 
-// Gestion page
+// --- Gestion page ---
 $page = $_GET['page'] ?? 'home';
 $error = '';
 $inscription_error = '';
 $inscription_success = '';
 
-// Gestion deconnexion
+// --- Déconnexion ---
 if ($page === 'logout') {
     session_destroy();
     header("Location: index.php?page=home");
     exit;
 }
 
-// Gestion connexion
+// --- Gestion connexion ---
 if (isset($_POST['Connexion']) && isset($_POST['email'], $_POST['mot_de_passe'])) {
     $email = trim($_POST['email']);
     $mdp = $_POST['mot_de_passe'];
 
-    $unUser = $unControleur->select_user($email, $mdp);
+    $unUser = $unControleur->select_user($email);
 
     if (!$unUser || !password_verify($mdp, $unUser['mot_de_passe'])) {
         $error = "Email ou mot de passe incorrect";
@@ -34,8 +35,8 @@ if (isset($_POST['Connexion']) && isset($_POST['email'], $_POST['mot_de_passe'])
             'role' => $unUser['role']
         ];
 
-        $redirect = ($unUser['role'] === 'admin') 
-            ? "index.php?page=dashboard_admin" 
+        $redirect = ($unUser['role'] === 'admin')
+            ? "index.php?page=dashboard_admin"
             : "index.php?page=dashboard_client";
 
         header("Location: $redirect");
@@ -43,7 +44,7 @@ if (isset($_POST['Connexion']) && isset($_POST['email'], $_POST['mot_de_passe'])
     }
 }
 
-// Gestion inscription
+// --- Gestion inscription ---
 if (isset($_POST['inscription_submit'])) {
     $nom = trim($_POST['nom'] ?? '');
     $prenom = trim($_POST['prenom'] ?? '');
@@ -55,7 +56,7 @@ if (isset($_POST['inscription_submit'])) {
     if ($mdp !== $confirmer_mdp) {
         $inscription_error = "Les mots de passe ne correspondent pas";
     } else {
-        $userExist = $unControleur->select_user($email, $mdp);
+        $userExist = $unControleur->select_user($email);
         if ($userExist) {
             $inscription_error = "Cet email est déjà utilisé";
         } else {
@@ -66,10 +67,38 @@ if (isset($_POST['inscription_submit'])) {
     }
 }
 
-// Détermination de la vue à inclure
+// --- Données spécifiques au HOME ---
+if ($page === 'home') {
+    $slides = $unControleur->getSlidesActifs();
+    $voyages = method_exists($unControleur, 'getAllVoyages') ? $unControleur->getAllVoyages() : [];
+    $villesDepart = [];
+    $destinations = $unControleur->getAllDestinations();
+}
+
+// --- LOGIQUE ADMIN ---
+if (str_starts_with($page, 'admin')) {
+
+    // Sécurité globale admin
+    if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
+        header('Location: index.php?page=home');
+        exit();
+    }
+
+    if ($page === 'admin_selection') {
+        require_once __DIR__ . '/controleur/gestion.selection.php';
+    }
+
+    if ($page === 'admin_destinations') {
+    require_once __DIR__ . '/controleur/gestion.destinations.php';
+}
+
+}
+
+// --- Détermination de la vue ---
 $viewFile = "vue/{$page}.php";
 if (!file_exists($viewFile)) {
     $viewFile = "vue/home.php";
 }
 
-require_once("vue/layout.php");
+// --- Chargement du layout (HTML) ---
+require_once "vue/layout.php";

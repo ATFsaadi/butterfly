@@ -1,0 +1,348 @@
+🧱 1️⃣ UTILISATEURS (clients + admin)
+📌 Fonctions côté site
+
+Inscription
+
+Connexion
+
+Déconnexion
+
+Session utilisateur
+
+Rôles (admin / client)
+
+Sécurité mot de passe (hash)
+
+📌 Fonctions BDD / Modèle
+
+insert_user($tab)
+
+select_user_by_email($email)
+
+select_user_by_id($id)
+
+selectAll_users()
+
+update_user($tab)
+
+delete_user($id)
+
+📌 Pages / fichiers
+
+gestion.login.php
+
+gestion.register.php
+
+gestion.logout.php
+
+gestion.user.php (admin)
+
+🎞️ 2️⃣ SLIDES (Carousel page d’accueil)
+📌 Fonctions côté site
+
+Affichage dynamique du slider
+
+Gestion depuis admin :
+
+Ajouter slide
+
+Modifier slide
+
+Supprimer slide
+
+Activer / désactiver slide
+
+📌 Champs BDD typiques
+
+id
+
+titre
+
+description
+
+image
+
+actif
+
+date_creation
+
+📌 Fonctions Modèle
+
+selectAll_slides()
+
+selectActive_slides()
+
+insert_slide($tab)
+
+update_slide($tab)
+
+delete_slide($id)
+
+selectWhere_slide($id)
+
+📌 Pages
+
+gestion.slide.php
+
+admin.slides.php
+
+🌍 3️⃣ DESTINATIONS
+📌 Fonctions côté site
+
+Liste des destinations
+
+Affichage par continent / pays
+
+Filtrage destinations
+
+📌 Champs BDD
+
+id
+
+nom
+
+pays
+
+continent
+
+image
+
+description
+
+📌 Fonctions Modèle
+
+selectAll_destinations()
+
+selectWhere_destination($id)
+
+insert_destination($tab)
+
+update_destination($tab)
+
+delete_destination($id)
+
+✈️ 4️⃣ VOYAGES (élément central du site)
+📌 Fonctions côté site
+
+Liste des voyages
+
+Détails d’un voyage
+
+Filtre par :
+
+destination
+
+prix
+
+date
+
+durée
+
+Recherche par mot-clé
+
+Pagination
+
+📌 Champs BDD
+
+id
+
+titre
+
+description
+
+prix_adulte
+
+prix_enfant
+
+prix_bebe
+
+date_depart
+
+date_retour
+
+duree
+
+ville_depart
+
+image
+
+id_destination
+
+places_disponibles
+
+actif
+
+📌 Fonctions Modèle
+
+selectAll_voyages()
+
+selectWhere_voyage($id)
+
+insert_voyage($tab)
+
+update_voyage($tab)
+
+delete_voyage($id)
+
+search_voyages($mot)
+
+filter_voyages($destination, $prix_min, $prix_max)
+
+🔍 5️⃣ RECHERCHE & FILTRES (IMPORTANT POUR LE PROJET)
+📌 Recherche
+
+Par nom de voyage
+
+Par destination
+
+Par pays
+
+📌 Filtres
+
+Prix min / max
+
+Date départ
+
+Durée
+
+Ville de départ
+
+📌 Méthodes Modèle
+
+search_voyages($keyword)
+
+filter_voyages($data)
+
+👉 Très bien vu, c’est un gros + pour la note.
+
+📅 6️⃣ RÉSERVATIONS
+📌 Fonctions côté site
+
+Réserver un voyage
+
+Calcul automatique du prix
+
+Historique des réservations
+
+Statut réservation
+
+📌 Champs BDD
+
+id
+
+id_user
+
+id_voyage
+
+nb_adultes
+
+nb_enfants
+
+nb_bebes
+
+prix_total
+
+statut (en attente / validée / annulée)
+
+date_reservation
+
+📌 Fonctions Modèle
+
+insert_reservation($tab)
+
+select_reservations_by_user($id_user)
+
+selectAll_reservations()
+
+update_reservation_status($id, $statut)
+
+delete_reservation($id)
+
+🧾 7️⃣ DASHBOARD ADMIN
+📌 Fonctions
+
+Statistiques :
+
+nombre utilisateurs
+
+nombre réservations
+
+chiffre d’affaires
+
+Gestion :
+
+utilisateurs
+
+voyages
+
+slides
+
+destinations
+
+réservations
+
+🔐 8️⃣ SÉCURITÉ (souvent oubliée)
+
+Vérification session admin
+
+Protection pages admin
+
+require_once config.php
+
+session_start() centralisé
+
+Validation des données
+
+📂 9️⃣ STRUCTURE FINALE DES FICHIERS
+/modele
+  modele.class.php
+
+/controleur
+  controleur.class.php
+  gestion.login.php
+  gestion.register.php
+  gestion.logout.php
+  gestion.slide.php
+  gestion.voyage.php
+  gestion.destination.php
+  gestion.reservation.php
+
+/vue
+  home.php
+  voyages.php
+  voyage.details.php
+  admin/
+
+✅ Ce que ton prof va aimer
+
+✔ Architecture MVC claire
+✔ CRUD complet
+✔ Recherche & filtres
+✔ Sécurité
+✔ Code structuré
+
+🔥 Prochaine étape (choisis 👇)
+
+1️⃣ On commence le modèle + contrôleur SLIDES
+2️⃣ On fait VOYAGES + filtres
+3️⃣ On finalise UTILISATEURS + sécurité
+
+👉 Dis-moi le numéro et on code DIRECTEMENT 💻💪
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1️⃣ CRUD Slides (admin)
+2️⃣ Destinations + affichage
+3️⃣ Voyages + filtres (prix, durée, ville)
+4️⃣ Réservations (client)
