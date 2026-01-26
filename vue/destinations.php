@@ -24,8 +24,12 @@ if (!isset($destinations)) $destinations = [];
                         <div class="card-body">
                             <h5 class="card-title mb-1"><?= htmlspecialchars((string)$d['nom']) ?></h5>
 
+                            <!-- ✅ NOUVEAU : Ville + Continent -->
                             <div class="text-muted mb-2" style="font-size: 0.95rem;">
-                                <?= htmlspecialchars((string)($d['continent_nom'] ?? '')) ?>
+                                <?= htmlspecialchars((string)($d['ville'] ?? '')) ?>
+                                <?php if (!empty($d['continent_nom'])): ?>
+                                    — <?= htmlspecialchars((string)$d['continent_nom']) ?>
+                                <?php endif; ?>
                             </div>
 
                             <p class="card-text">

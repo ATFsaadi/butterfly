@@ -10,10 +10,10 @@ $continentActif = isset($_GET['continent']) ? (int)$_GET['continent'] : 0;
 <!-- NAVBAR SUPÉRIEURE -->
 <nav class="custom-navbar navbar-expand-lg">
     <div class="container-fluid d-flex justify-content-between" style="padding: 20px 100px;">
-        
+
         <!-- Logo et menu mobile -->
         <div class="d-flex align-items-center">
-            <button class="navbar-toggler d-lg-none nav-link d-flex flex-column align-items-center" 
+            <button class="navbar-toggler d-lg-none nav-link d-flex flex-column align-items-center"
                     type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="icon-circle">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15">
@@ -37,6 +37,7 @@ $continentActif = isset($_GET['continent']) ? (int)$_GET['continent'] : 0;
                     </li>
 
                     <?php if ($_SESSION['user']['role'] === 'admin'): ?>
+
                         <li class="nav-item d-flex flex-column align-items-center">
                             <a class="nav-link d-flex flex-column align-items-center" href="index.php?page=admin_destinations">
                                 <span class="icon-circle">
@@ -47,6 +48,7 @@ $continentActif = isset($_GET['continent']) ? (int)$_GET['continent'] : 0;
                                 <span class="mt-1">Destinations</span>
                             </a>
                         </li>
+
                         <li class="nav-item d-flex flex-column align-items-center">
                             <a class="nav-link d-flex flex-column align-items-center" href="index.php?page=admin_slides">
                                 <span class="icon-circle">
@@ -57,6 +59,31 @@ $continentActif = isset($_GET['continent']) ? (int)$_GET['continent'] : 0;
                                 <span class="mt-1">Gestion Slides</span>
                             </a>
                         </li>
+
+                        <!-- ✅ VOYAGES -->
+                        <li class="nav-item d-flex flex-column align-items-center">
+                            <a class="nav-link d-flex flex-column align-items-center" href="index.php?page=admin_voyages">
+                                <span class="icon-circle">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15">
+                                        <path d="M20 8h-3V4H7v4H4v2h16V8zm-5-4v4H9V4h6zm-9 8h16v8H4v-8zm2 2v4h12v-4H6z"/>
+                                    </svg>
+                                </span>
+                                <span class="mt-1">Voyages</span>
+                            </a>
+                        </li>
+
+                        <!-- ✅ OFFRES -->
+                        <li class="nav-item d-flex flex-column align-items-center">
+                            <a class="nav-link d-flex flex-column align-items-center" href="index.php?page=admin_offres">
+                                <span class="icon-circle">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15">
+                                        <path d="M12 2l9 4v6c0 5-4 9-9 10C7 21 3 17 3 12V6l9-4zm4 7H8v2h8V9zm0 4H8v2h8v-2z"/>
+                                    </svg>
+                                </span>
+                                <span class="mt-1">Offres</span>
+                            </a>
+                        </li>
+
                     <?php endif; ?>
 
                     <li class="nav-item d-flex flex-column align-items-center">
@@ -72,7 +99,7 @@ $continentActif = isset($_GET['continent']) ? (int)$_GET['continent'] : 0;
 
                 <?php else: ?>
                     <li class="nav-item d-flex flex-column align-items-center">
-                        <button class="nav-link signin-nav-link d-flex flex-column align-items-center btn p-0" 
+                        <button class="nav-link signin-nav-link d-flex flex-column align-items-center btn p-0"
                                 data-bs-toggle="modal" data-bs-target="#loginModal">
                             <span class="icon-circle">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15">
@@ -83,7 +110,7 @@ $continentActif = isset($_GET['continent']) ? (int)$_GET['continent'] : 0;
                         </button>
                     </li>
                     <li class="nav-item d-flex flex-column align-items-center">
-                        <button class="nav-link d-flex flex-column align-items-center btn p-0" 
+                        <button class="nav-link d-flex flex-column align-items-center btn p-0"
                                 data-bs-toggle="modal" data-bs-target="#registerModal">
                             <span class="icon-circle">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15">

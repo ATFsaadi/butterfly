@@ -95,3 +95,19 @@ ALTER TABLE destinations
   ON UPDATE CASCADE
   ON DELETE SET NULL;
 
+CREATE TABLE offres (
+    id_offre INT AUTO_INCREMENT PRIMARY KEY,
+    titre VARCHAR(150) NOT NULL,
+    reduction INT NOT NULL,
+    date_debut DATE NOT NULL,
+    date_fin DATE NOT NULL,
+    description TEXT,
+    actif TINYINT(1) DEFAULT 1,
+    id_voyage INT NOT NULL,
+
+    CONSTRAINT fk_offres_voyages
+        FOREIGN KEY (id_voyage)
+        REFERENCES voyages(id_voyage)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);

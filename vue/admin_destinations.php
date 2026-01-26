@@ -20,6 +20,10 @@ if (!isset($continents)) $continents = [];
     <input type="text" name="nom" placeholder="Nom" required class="form-control mb-2"
            value="<?= htmlspecialchars((string)($destinationToEdit['nom'] ?? '')) ?>">
 
+    <!-- ✅ NOUVEAU : Ville -->
+    <input type="text" name="ville" placeholder="Ville" required class="form-control mb-2"
+           value="<?= htmlspecialchars((string)($destinationToEdit['ville'] ?? '')) ?>">
+
     <!-- Dropdown Continents -->
     <select name="id_continent" required class="form-control mb-2">
         <option value="">-- Choisir un continent --</option>
@@ -60,6 +64,7 @@ if (!isset($continents)) $continents = [];
         <tr>
             <th>Image</th>
             <th>Nom</th>
+            <th>Ville</th> <!-- ✅ NOUVEAU -->
             <th>Continent</th>
             <th>Description</th>
             <th>Actions</th>
@@ -77,6 +82,9 @@ if (!isset($continents)) $continents = [];
 
                 <td><?= htmlspecialchars((string)($dest['nom'] ?? '')) ?></td>
 
+                <!-- ✅ NOUVEAU : Ville -->
+                <td><?= htmlspecialchars((string)($dest['ville'] ?? '')) ?></td>
+
                 <!-- Continent affiché : continent_nom (JOIN), sinon fallback ancien champ continent -->
                 <td><?= htmlspecialchars((string)($dest['continent_nom'] ?? $dest['continent'] ?? '')) ?></td>
 
@@ -91,7 +99,7 @@ if (!isset($continents)) $continents = [];
             </tr>
             <?php endforeach; ?>
         <?php else: ?>
-            <tr><td colspan="5">Aucune destination pour le moment</td></tr>
+            <tr><td colspan="6">Aucune destination pour le moment</td></tr>
         <?php endif; ?>
     </tbody>
 </table>

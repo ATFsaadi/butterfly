@@ -41,7 +41,7 @@ class Modele {
             ':nom' => $nom,
             ':prenom' => $prenom,
             ':email' => $email,
-            ':mot_de_passe' => $mdp, // déjà hashé
+            ':mot_de_passe' => $mdp,
             ':telephone' => $telephone,
             ':role' => $role
         ]);
@@ -135,16 +135,18 @@ class Modele {
     /* ========================= */
 
     public function insertDestination(array $tab): void {
-        $sql = "INSERT INTO destinations (nom, id_continent, description, image)
-                VALUES (:nom, :id_continent, :description, :image)";
-        $stmt = $this->unPdo->prepare($sql);
-        $stmt->execute([
-            ':nom' => $tab['nom'],
-            ':id_continent' => (int)$tab['id_continent'],
-            ':description' => $tab['description'],
-            ':image' => $tab['image']
-        ]);
-    }
+    $sql = "INSERT INTO destinations (nom, ville, id_continent, description, image)
+            VALUES (:nom, :ville, :id_continent, :description, :image)";
+    $stmt = $this->unPdo->prepare($sql);
+    $stmt->execute([
+        ':nom' => $tab['nom'],
+        ':ville' => $tab['ville'],
+        ':id_continent' => (int)$tab['id_continent'],
+        ':description' => $tab['description'],
+        ':image' => $tab['image']
+    ]);
+}
+
 
     public function selectAllDestinations(): array {
         $sql = "SELECT d.*, c.nom AS continent_nom
@@ -164,22 +166,25 @@ class Modele {
         return $stmt->fetch();
     }
 
-    public function updateDestination(array $tab): void {
-        $sql = "UPDATE destinations
-                SET nom = :nom,
-                    id_continent = :id_continent,
-                    description = :description,
-                    image = :image
-                WHERE id_destination = :id";
-        $stmt = $this->unPdo->prepare($sql);
-        $stmt->execute([
-            ':nom' => $tab['nom'],
-            ':id_continent' => (int)$tab['id_continent'],
-            ':description' => $tab['description'],
-            ':image' => $tab['image'],
-            ':id' => $tab['id_destination']
-        ]);
-    }
+  public function updateDestination(array $tab): void {
+    $sql = "UPDATE destinations
+            SET nom = :nom,
+                ville = :ville,
+                id_continent = :id_continent,
+                description = :description,
+                image = :image
+            WHERE id_destination = :id";
+    $stmt = $this->unPdo->prepare($sql);
+    $stmt->execute([
+        ':nom' => $tab['nom'],
+        ':ville' => $tab['ville'],
+        ':id_continent' => (int)$tab['id_continent'],
+        ':description' => $tab['description'],
+        ':image' => $tab['image'],
+        ':id' => (int)$tab['id_destination']
+    ]);
+}
+
 
     public function deleteDestination(int $id): void {
         $sql = "DELETE FROM destinations WHERE id_destination = :id";
@@ -197,5 +202,152 @@ class Modele {
         $stmt->execute([':id_continent' => $id_continent]);
         return $stmt->fetchAll();
     }
+
+    /* ========================= */
+    /* ====== VOYAGES ========== */
+    /* ========================= */
+
+    public function selectAllVoyages(): array {
+        $sql = "SELECT v.*, d.nom AS destination_nom
+                FROM voyages v
+                JOIN destinations d ON d.id_destination = v.id_destination
+                ORDER BY v.id_voyage DESC";
+        return $this->unPdo->query($sql)->fetchAll();
+    }
+
+    public function selectVoyageById(int $id): array|false {
+        $sql = "SELECT v.*, d.nom AS destination_nom
+                FROM voyages v
+                JOIN destinations d ON d.id_destination = v.id_destination
+                WHERE v.id_voyage = :id";
+        $stmt = $this->unPdo->prepare($sql);
+        $stmt->execute([':id' => $id]);
+        return $stmt->fetch();
+    }
+
+  public function insertVoyage(array $tab): void {
+    $sql = "INSERT INTO voyages (titre, prix_adulte, prix_enfant, prix_bebe, date_depart, date_retour, description, image, id_destination)
+            VALUES (:titre, :prix_adulte, :prix_enfant, :prix_bebe, :date_depart, :date_retour, :description, :image, :id_destination)";
+    $stmt = $this->unPdo->prepare($sql);
+    $stmt->execute([
+        ':titre' => $tab['titre'],
+        ':prix_adulte' => $tab['prix_adulte'],
+        ':prix_enfant' => $tab['prix_enfant'],
+        ':prix_bebe' => $tab['prix_bebe'],
+        ':date_depart' => $tab['date_depart'],
+        ':date_retour' => $tab['date_retour'],
+        ':description' => $tab['description'],
+        ':image' => $tab['image'],
+        ':id_destination' => (int)$tab['id_destination']
+    ]);
+}
+
+
+public function updateVoyage(array $tab): void {
+    $sql = "UPDATE voyages
+            SET titre = :titre,
+                prix_adulte = :prix_adulte,
+                prix_enfant = :prix_enfant,
+                prix_bebe = :prix_bebe,
+                date_depart = :date_depart,
+                date_retour = :date_retour,
+                description = :description,
+                image = :image,
+                id_destination = :id_destination
+            WHERE id_voyage = :id_voyage";
+    $stmt = $this->unPdo->prepare($sql);
+    $stmt->execute([
+        ':titre' => $tab['titre'],
+        ':prix_adulte' => $tab['prix_adulte'],
+        ':prix_enfant' => $tab['prix_enfant'],
+        ':prix_bebe' => $tab['prix_bebe'],
+        ':date_depart' => $tab['date_depart'],
+        ':date_retour' => $tab['date_retour'],
+        ':description' => $tab['description'],
+        ':image' => $tab['image'],
+        ':id_destination' => (int)$tab['id_destination'],
+        ':id_voyage' => (int)$tab['id_voyage']
+    ]);
+}
+
+
+    public function deleteVoyage(int $id): void {
+        $sql = "DELETE FROM voyages WHERE id_voyage = :id";
+        $stmt = $this->unPdo->prepare($sql);
+        $stmt->execute([':id' => $id]);
+    }
+    /* ========================= */
+/* ======= OFFRES ========== */
+/* ========================= */
+
+public function selectAllOffres(): array {
+    $sql = "SELECT o.*, v.titre AS voyage_titre
+            FROM offres o
+            JOIN voyages v ON v.id_voyage = o.id_voyage
+            ORDER BY o.date_debut DESC";
+    return $this->unPdo->query($sql)->fetchAll();
+}
+
+public function selectOffreById(int $id): array|false {
+    $sql = "SELECT * FROM offres WHERE id_offre = :id";
+    $stmt = $this->unPdo->prepare($sql);
+    $stmt->execute([':id' => $id]);
+    return $stmt->fetch();
+}
+
+public function insertOffre(array $tab): void {
+    $sql = "INSERT INTO offres (titre, reduction, date_debut, date_fin, description, actif, id_voyage)
+            VALUES (:titre, :reduction, :date_debut, :date_fin, :description, :actif, :id_voyage)";
+    $stmt = $this->unPdo->prepare($sql);
+    $stmt->execute([
+        ':titre' => $tab['titre'],
+        ':reduction' => $tab['reduction'],
+        ':date_debut' => $tab['date_debut'],
+        ':date_fin' => $tab['date_fin'],
+        ':description' => $tab['description'],
+        ':actif' => $tab['actif'],
+        ':id_voyage' => (int)$tab['id_voyage']
+    ]);
+}
+
+public function updateOffre(array $tab): void {
+    $sql = "UPDATE offres
+            SET titre = :titre,
+                reduction = :reduction,
+                date_debut = :date_debut,
+                date_fin = :date_fin,
+                description = :description,
+                actif = :actif,
+                id_voyage = :id_voyage
+            WHERE id_offre = :id_offre";
+    $stmt = $this->unPdo->prepare($sql);
+    $stmt->execute([
+        ':titre' => $tab['titre'],
+        ':reduction' => $tab['reduction'],
+        ':date_debut' => $tab['date_debut'],
+        ':date_fin' => $tab['date_fin'],
+        ':description' => $tab['description'],
+        ':actif' => $tab['actif'],
+        ':id_voyage' => (int)$tab['id_voyage'],
+        ':id_offre' => (int)$tab['id_offre']
+    ]);
+}
+
+public function deleteOffre(int $id): void {
+    $sql = "DELETE FROM offres WHERE id_offre = :id";
+    $stmt = $this->unPdo->prepare($sql);
+    $stmt->execute([':id' => $id]);
+}
+public function selectOffresActives(): array {
+    $sql = "SELECT o.*, v.titre AS voyage_titre, v.description AS voyage_description, v.image AS voyage_image,
+                   v.prix_adulte, v.prix_enfant, v.prix_bebe
+            FROM offres o
+            JOIN voyages v ON v.id_voyage = o.id_voyage
+            WHERE o.actif = 1
+            ORDER BY o.date_debut DESC";
+    return $this->unPdo->query($sql)->fetchAll();
+}
+
+
 }
 ?>

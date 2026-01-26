@@ -107,4 +107,56 @@ class Controleur {
     public function getDestinationsByContinent($id_continent) {
         return $this->unModele->selectDestinationsByContinent((int)$id_continent);
     }
+    /* ========================= */
+/* ====== VOYAGES ========== */
+/* ========================= */
+
+public function getAllVoyages() {
+    return $this->unModele->selectAllVoyages();
+}
+
+public function getVoyageById($id) {
+    return $this->unModele->selectVoyageById((int)$id);
+}
+
+public function addVoyage($tab) {
+    $this->unModele->insertVoyage($tab);
+}
+
+public function updateVoyage($tab) {
+    $this->unModele->updateVoyage($tab);
+}
+
+public function deleteVoyage($id) {
+    $this->unModele->deleteVoyage((int)$id);
+}
+/* ========================= */
+/* ======= OFFRES ========== */
+/* ========================= */
+
+public function getAllOffres() {
+    return $this->unModele->selectAllOffres();
+}
+
+public function getOffreById($id) {
+    return $this->unModele->selectOffreById((int)$id);
+}
+
+public function addOffre($tab) {
+    $this->unModele->insertOffre($tab);
+}
+
+public function updateOffre($tab) {
+    $this->unModele->updateOffre($tab);
+}
+
+public function deleteOffre($id) {
+    $this->unModele->deleteOffre((int)$id);
+}
+public function getOffresActives() {
+    return $this->unModele->selectOffresActives();
+}
+
+
+
 }

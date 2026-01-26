@@ -73,7 +73,10 @@ if ($page === 'home') {
     $voyages = method_exists($unControleur, 'getAllVoyages') ? $unControleur->getAllVoyages() : [];
     $villesDepart = [];
     $destinations = $unControleur->getAllDestinations();
+
+    $offres = $unControleur->getOffresActives(); // ✅ AJOUT ICI
 }
+
 // --- Données spécifiques à la page DESTINATIONS (CLIENT) ---
 if ($page === 'destinations') {
     $idContinent = isset($_GET['continent']) && $_GET['continent'] !== '' ? (int)$_GET['continent'] : null;
@@ -105,6 +108,13 @@ if (str_starts_with($page, 'admin')) {
     if ($page === 'admin_destinations') {
     require_once __DIR__ . '/controleur/gestion.destinations.php';
 }
+if ($page === 'admin_voyages') {
+    require_once __DIR__ . '/controleur/gestion.voyages.php';
+}
+if ($page === 'admin_offres') {
+    require_once __DIR__ . '/controleur/gestion.offres.php';
+}
+
 
 }
 

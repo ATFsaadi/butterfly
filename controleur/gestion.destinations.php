@@ -22,12 +22,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     $id = !empty($_POST['id_destination']) ? (int)$_POST['id_destination'] : null;
 
     $nom = trim($_POST['nom'] ?? '');
+    $ville = trim($_POST['ville'] ?? ''); // ✅ AJOUT
     $id_continent = isset($_POST['id_continent']) && $_POST['id_continent'] !== '' ? (int)$_POST['id_continent'] : null;
 
     $description = trim($_POST['description'] ?? '');
     $imageName = $_POST['existing_image'] ?? null;
 
     if ($nom === '') $errors[] = "Le nom est obligatoire.";
+    if ($ville === '') $errors[] = "La ville est obligatoire."; // ✅ AJOUT
     if ($id_continent === null) $errors[] = "Le continent est obligatoire.";
 
     // Upload nouvelle image si présente
@@ -71,6 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     if (empty($errors)) {
         $data = [
             'nom' => $nom,
+            'ville' => $ville,              // ✅ AJOUT
             'id_continent' => $id_continent,
             'description' => $description,
             'image' => $imageName
