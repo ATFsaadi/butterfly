@@ -4,8 +4,10 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// le fichier de vue principal doit être défini dans index.php
-// Exemple : $viewFile = __DIR__ . "/home.php";
+// Charger les continents pour le menu (avant la navbar)
+require_once __DIR__ . "/../controleur/controleur.class.php";
+$unControleur = new Controleur();
+$continents = $unControleur->getAllContinents();
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -33,10 +35,8 @@ if (session_status() === PHP_SESSION_NONE) {
 <body>
 
 <?php
-// inclusion de la navbar
+// navbar + modales (1 seule fois)
 require_once(__DIR__ . "/components/navbar.php");
-
-// inclusion des modales
 require_once(__DIR__ . "/modales/login.php");
 require_once(__DIR__ . "/modales/register.php");
 require_once(__DIR__ . "/modales/map.php");
@@ -54,7 +54,7 @@ require_once(__DIR__ . "/modales/map.php");
 </main>
 
 <?php
-// inclusion du footer
+// footer
 require_once(__DIR__ . "/components/footer.php");
 ?>
 

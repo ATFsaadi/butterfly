@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_slide'])) {
             $unControleur->addSlide($data);
         }
 
-        header('Location: index.php?page=admin_selection&success=1');
+        header('Location: index.php?page=admin_slides&success=1');
         exit();
     }
 }
@@ -71,7 +71,7 @@ if (isset($_GET['delete'])) {
         $unControleur->deleteSlide($id_slide);
     }
 
-    header('Location: index.php?page=admin_selection&deleted=1');
+    header('Location: index.php?page=admin_slides&deleted=1');
     exit();
 }
 

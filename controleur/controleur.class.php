@@ -25,6 +25,7 @@ class Controleur {
     /* ================= SÉCURITÉ ================= */
 
     public function verifConnexion() {
+        if (session_status() === PHP_SESSION_NONE) session_start();
         if (!isset($_SESSION['user'])) {
             header('Location: index.php?page=home');
             exit();
@@ -32,13 +33,14 @@ class Controleur {
     }
 
     public function verifAdmin() {
+        if (session_status() === PHP_SESSION_NONE) session_start();
         if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
             header('Location: index.php?page=home');
             exit();
         }
     }
 
-        /* ===================== */
+    /* ===================== */
     /* ====== SLIDES ======= */
     /* ===================== */
 
@@ -65,29 +67,44 @@ class Controleur {
     public function getSlidesActifs() {
         return $this->unModele->selectSlidesActifs();
     }
+
     /* ========================= */
-/* ===== DESTINATIONS ===== */
-/* ========================= */
+    /* ===== CONTINENTS ======== */
+    /* ========================= */
 
-public function addDestination($tab) {
-    $this->unModele->insertDestination($tab);
-}
+    public function getAllContinents() {
+        return $this->unModele->selectAllContinents();
+    }
 
-public function getAllDestinations() {
-    return $this->unModele->selectAllDestinations();
-}
+    public function getContinentById($id) {
+        return $this->unModele->selectContinentById((int)$id);
+    }
 
-public function getDestinationById($id) {
-    return $this->unModele->selectDestinationById($id);
-}
+    /* ========================= */
+    /* ===== DESTINATIONS ====== */
+    /* ========================= */
 
-public function updateDestination($tab) {
-    $this->unModele->updateDestination($tab);
-}
+    public function addDestination($tab) {
+        $this->unModele->insertDestination($tab);
+    }
 
-public function deleteDestination($id) {
-    $this->unModele->deleteDestination($id);
-}
+    public function getAllDestinations() {
+        return $this->unModele->selectAllDestinations();
+    }
 
+    public function getDestinationById($id) {
+        return $this->unModele->selectDestinationById((int)$id);
+    }
 
+    public function updateDestination($tab) {
+        $this->unModele->updateDestination($tab);
+    }
+
+    public function deleteDestination($id) {
+        $this->unModele->deleteDestination((int)$id);
+    }
+
+    public function getDestinationsByContinent($id_continent) {
+        return $this->unModele->selectDestinationsByContinent((int)$id_continent);
+    }
 }

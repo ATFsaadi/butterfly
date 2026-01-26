@@ -21,7 +21,7 @@ $slides = $slides ?? [];
 </div>
 
 <!-- SECTION SELECTION (Slides dynamiques) -->
-<?php include __DIR__ . '/components/carouselSelection.php'; ?>
+<?php include __DIR__ . '/components/carouselSlides.php'; ?>
 
 <!-- SECTION OFFRES (Voyages dynamiques) -->
 <?php include __DIR__ . '/components/carouselOffres.php'; ?>

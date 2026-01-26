@@ -3,6 +3,9 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+
+$pageActuelle = $_GET['page'] ?? '';
+$continentActif = isset($_GET['continent']) ? (int)$_GET['continent'] : 0;
 ?>
 <!-- NAVBAR SUPÉRIEURE -->
 <nav class="custom-navbar navbar-expand-lg">
@@ -29,13 +32,11 @@ if (session_status() === PHP_SESSION_NONE) {
             <ul class="navbar-nav flex-row align-items-center gap-3">
 
                 <?php if (isset($_SESSION['user'])): ?>
-                    <!-- Utilisateur connecté -->
                     <li class="nav-item d-flex flex-column align-items-center">
                         <span class="nav-link"><?= htmlspecialchars($_SESSION['user']['prenom']) ?></span>
                     </li>
 
                     <?php if ($_SESSION['user']['role'] === 'admin'): ?>
-                        <!-- Boutons admin -->
                         <li class="nav-item d-flex flex-column align-items-center">
                             <a class="nav-link d-flex flex-column align-items-center" href="index.php?page=admin_destinations">
                                 <span class="icon-circle">
@@ -47,7 +48,7 @@ if (session_status() === PHP_SESSION_NONE) {
                             </a>
                         </li>
                         <li class="nav-item d-flex flex-column align-items-center">
-                            <a class="nav-link d-flex flex-column align-items-center" href="index.php?page=admin_selection">
+                            <a class="nav-link d-flex flex-column align-items-center" href="index.php?page=admin_slides">
                                 <span class="icon-circle">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15">
                                         <path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 8h14v-2H7v2zm0-4h14v-2H7v2zm0-6v2h14V7H7z"/>
@@ -58,7 +59,6 @@ if (session_status() === PHP_SESSION_NONE) {
                         </li>
                     <?php endif; ?>
 
-                    <!-- Déconnexion -->
                     <li class="nav-item d-flex flex-column align-items-center">
                         <a class="nav-link d-flex flex-column align-items-center" href="index.php?page=logout">
                             <span class="icon-circle">
@@ -71,7 +71,6 @@ if (session_status() === PHP_SESSION_NONE) {
                     </li>
 
                 <?php else: ?>
-                    <!-- Utilisateur non connecté -->
                     <li class="nav-item d-flex flex-column align-items-center">
                         <button class="nav-link signin-nav-link d-flex flex-column align-items-center btn p-0" 
                                 data-bs-toggle="modal" data-bs-target="#loginModal">
@@ -96,7 +95,6 @@ if (session_status() === PHP_SESSION_NONE) {
                     </li>
                 <?php endif; ?>
 
-                <!-- Adresse avec carte -->
                 <li class="nav-item adresse-container d-flex flex-column align-items-center d-none d-lg-block">
                     <div class="adresse-hover d-flex flex-column align-items-center">
                         <a class="nav-link d-flex flex-column align-items-center" href="#" onclick="openAgenceMap(); return false;">
@@ -110,7 +108,6 @@ if (session_status() === PHP_SESSION_NONE) {
                     </div>
                 </li>
 
-                <!-- À propos -->
                 <li class="nav-item d-flex flex-column align-items-center d-none d-lg-block">
                     <a class="nav-link d-flex flex-column align-items-center" href="about.php">
                         <span class="icon-circle">
@@ -132,66 +129,31 @@ if (session_status() === PHP_SESSION_NONE) {
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mx-auto">
 
-                <!-- Liens mobiles (d-lg-none) -->
-                <li class="nav-item me-4 d-lg-none"><a class="nav-link" href="#">Notre agence</a></li>
-                <li class="nav-item me-4 d-lg-none"><a class="nav-link" href="about.php">À propos</a></li>
-
-                <!-- Menu principal -->
                 <li class="nav-item dropdown me-4">
                     <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
-                        <i class="fas fa-hotel nav-icon"></i> Hotels
+                        <i class="fas fa-map-marked-alt nav-icon"></i> Destinations
                     </a>
+
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Hotels de luxe</a></li>
-                        <li><a class="dropdown-item" href="#">Hotels économiques</a></li>
-                        <li><a class="dropdown-item" href="#">Hotels tout inclus</a></li>
+                        <li><a class="dropdown-item" href="index.php?page=destinations">Toutes les destinations</a></li>
+                        <li><hr class="dropdown-divider"></li>
+
+                        <?php if (!empty($continents)): ?>
+                            <?php foreach ($continents as $c): ?>
+                                <li>
+                                    <a class="dropdown-item"
+                                       href="index.php?page=destinations&continent=<?= (int)$c['id_continent'] ?>">
+                                        <?= htmlspecialchars((string)$c['nom']) ?>
+                                    </a>
+                                </li>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <li><span class="dropdown-item-text text-muted">Aucun continent</span></li>
+                        <?php endif; ?>
                     </ul>
                 </li>
 
-                <li class="nav-item dropdown me-4">
-                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
-                        <i class="fas fa-tags nav-icon"></i> Promo
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Réductions spéciales</a></li>
-                        <li><a class="dropdown-item" href="#">Codes promo</a></li>
-                        <li><a class="dropdown-item" href="#">Offres de saison</a></li>
-                    </ul>
-                </li>
-
-                <li class="nav-item dropdown me-4">
-                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
-                        <i class="fas fa-clock nav-icon"></i> Dernière minute
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Offres spéciales</a></li>
-                        <li><a class="dropdown-item" href="#">Voyages à petit prix</a></li>
-                        <li><a class="dropdown-item" href="#">Destinations populaires</a></li>
-                    </ul>
-                </li>
-
-                <li class="nav-item dropdown me-4">
-                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
-                        <i class="fas fa-map nav-icon"></i> Circuits
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Circuits classiques</a></li>
-                        <li><a class="dropdown-item" href="#">Circuits aventure</a></li>
-                        <li><a class="dropdown-item" href="#">Circuits culturels</a></li>
-                    </ul>
-                </li>
-
-                <li class="nav-item dropdown me-4">
-                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
-                        <i class="fas fa-briefcase nav-icon"></i> Séjours
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Séjours en Europe</a></li>
-                        <li><a class="dropdown-item" href="#">Séjours en Asie</a></li>
-                        <li><a class="dropdown-item" href="#">Séjours en Amérique</a></li>
-                    </ul>
-                </li>
-
+                <!-- autres menus inchangés -->
             </ul>
         </div>
     </div>

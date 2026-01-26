@@ -1,14 +1,16 @@
 <?php
 class Modele {
-    private $unPdo;
+    private PDO $unPdo;
 
     public function __construct() {
-        $url = "mysql:host=localhost;dbname=bfly";
+        $url = "mysql:host=localhost;dbname=bfly;charset=utf8mb4";
         $user = "root";
         $mdp = "";
-        try { 
+
+        try {
             $this->unPdo = new PDO($url, $user, $mdp);
             $this->unPdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $this->unPdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
         } catch (PDOException $exp) {
             echo "Erreur de connexion à " . $url . "<br>";
             echo $exp->getMessage();
@@ -16,45 +18,45 @@ class Modele {
         }
     }
 
-    public function getPdo() {
+    public function getPdo(): PDO {
         return $this->unPdo;
     }
 
-    // --- Utilisateurs ---
-    public function select_user($email) {
+    /* ========================= */
+    /* ====== UTILISATEURS ===== */
+    /* ========================= */
+
+    public function select_user(string $email): array|false {
         $sql = "SELECT * FROM utilisateurs WHERE email = :email";
         $stmt = $this->unPdo->prepare($sql);
-        $stmt->execute([':email' => $email]);  
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt->execute([':email' => $email]);
+        return $stmt->fetch();
     }
 
-    public function addUser($nom, $prenom, $email, $mdp, $telephone = null, $role = 'client') {
-    $sql = "INSERT INTO utilisateurs (nom, prenom, email, mot_de_passe, telephone, role)
-            VALUES (:nom, :prenom, :email, :mot_de_passe, :telephone, :role)";
-    $stmt = $this->unPdo->prepare($sql);
-    return $stmt->execute([
-        ':nom' => $nom,
-        ':prenom' => $prenom,
-        ':email' => $email,
-        ':mot_de_passe' => $mdp, // DÉJÀ HASHÉ
-        ':telephone' => $telephone,
-        ':role' => $role
-    ]);
-}
+    public function addUser(string $nom, string $prenom, string $email, string $mdp, ?string $telephone = null, string $role = 'client'): bool {
+        $sql = "INSERT INTO utilisateurs (nom, prenom, email, mot_de_passe, telephone, role)
+                VALUES (:nom, :prenom, :email, :mot_de_passe, :telephone, :role)";
+        $stmt = $this->unPdo->prepare($sql);
+        return $stmt->execute([
+            ':nom' => $nom,
+            ':prenom' => $prenom,
+            ':email' => $email,
+            ':mot_de_passe' => $mdp, // déjà hashé
+            ':telephone' => $telephone,
+            ':role' => $role
+        ]);
+    }
 
-
-    public function getAllUsers() {
+    public function getAllUsers(): array {
         $sql = "SELECT * FROM utilisateurs ORDER BY date_creation DESC";
-        $stmt = $this->unPdo->query($sql);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $this->unPdo->query($sql)->fetchAll();
     }
 
-        /* ===================== */
+    /* ===================== */
     /* ====== SLIDES ======= */
     /* ===================== */
 
-    // Ajouter un slide
-    public function insertSlide($tab) {
+    public function insertSlide(array $tab): void {
         $sql = "INSERT INTO slides (titre, description, image, lien, ordre, actif)
                 VALUES (:titre, :description, :image, :lien, :ordre, :actif)";
         $stmt = $this->unPdo->prepare($sql);
@@ -68,23 +70,20 @@ class Modele {
         ]);
     }
 
-    // Récupérer tous les slides
-    public function selectAllSlides() {
+    public function selectAllSlides(): array {
         $sql = "SELECT * FROM slides ORDER BY ordre ASC";
-        return $this->unPdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+        return $this->unPdo->query($sql)->fetchAll();
     }
 
-    // Récupérer un slide
-    public function selectSlideById($id_slide) {
+    public function selectSlideById(int $id_slide): array|false {
         $sql = "SELECT * FROM slides WHERE id_slide = :id";
         $stmt = $this->unPdo->prepare($sql);
         $stmt->execute([':id' => $id_slide]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        return $stmt->fetch();
     }
 
-    // Modifier un slide
-    public function updateSlide($tab) {
-        $sql = "UPDATE slides 
+    public function updateSlide(array $tab): void {
+        $sql = "UPDATE slides
                 SET titre = :titre,
                     description = :description,
                     image = :image,
@@ -104,69 +103,99 @@ class Modele {
         ]);
     }
 
-    // Supprimer un slide
-    public function deleteSlide($id_slide) {
+    public function deleteSlide(int $id_slide): void {
         $sql = "DELETE FROM slides WHERE id_slide = :id";
         $stmt = $this->unPdo->prepare($sql);
         $stmt->execute([':id' => $id_slide]);
     }
 
-    // Slides actifs (FRONT)
-    public function selectSlidesActifs() {
+    public function selectSlidesActifs(): array {
         $sql = "SELECT * FROM slides WHERE actif = 1 ORDER BY ordre ASC";
-        return $this->unPdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+        return $this->unPdo->query($sql)->fetchAll();
     }
+
     /* ========================= */
-/* ===== DESTINATIONS ===== */
-/* ========================= */
+    /* ====== CONTINENTS ======= */
+    /* ========================= */
 
-public function insertDestination($tab) {
-    $sql = "INSERT INTO destinations (nom, continent, description, image)
-            VALUES (:nom, :continent, :description, :image)";
-    $stmt = $this->unPdo->prepare($sql);
-    $stmt->execute([
-        ':nom' => $tab['nom'],
-        ':continent' => $tab['continent'],
-        ':description' => $tab['description'],
-        ':image' => $tab['image']
-    ]);
-}
+    public function selectAllContinents(): array {
+        $sql = "SELECT id_continent, nom FROM continents ORDER BY nom ASC";
+        return $this->unPdo->query($sql)->fetchAll();
+    }
 
-public function selectAllDestinations() {
-    $sql = "SELECT * FROM destinations ORDER BY nom ASC";
-    return $this->unPdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
-}
+    public function selectContinentById(int $id): array|false {
+        $sql = "SELECT id_continent, nom FROM continents WHERE id_continent = :id";
+        $stmt = $this->unPdo->prepare($sql);
+        $stmt->execute([':id' => $id]);
+        return $stmt->fetch();
+    }
 
-public function selectDestinationById($id) {
-    $sql = "SELECT * FROM destinations WHERE id_destination = :id";
-    $stmt = $this->unPdo->prepare($sql);
-    $stmt->execute([':id' => $id]);
-    return $stmt->fetch(PDO::FETCH_ASSOC);
-}
+    /* ========================= */
+    /* ===== DESTINATIONS ====== */
+    /* ========================= */
 
-public function updateDestination($tab) {
-    $sql = "UPDATE destinations 
-            SET nom = :nom,
-                continent = :continent,
-                description = :description,
-                image = :image
-            WHERE id_destination = :id";
-    $stmt = $this->unPdo->prepare($sql);
-    $stmt->execute([
-        ':nom' => $tab['nom'],
-        ':continent' => $tab['continent'],
-        ':description' => $tab['description'],
-        ':image' => $tab['image'],
-        ':id' => $tab['id_destination']
-    ]);
-}
+    public function insertDestination(array $tab): void {
+        $sql = "INSERT INTO destinations (nom, id_continent, description, image)
+                VALUES (:nom, :id_continent, :description, :image)";
+        $stmt = $this->unPdo->prepare($sql);
+        $stmt->execute([
+            ':nom' => $tab['nom'],
+            ':id_continent' => (int)$tab['id_continent'],
+            ':description' => $tab['description'],
+            ':image' => $tab['image']
+        ]);
+    }
 
-public function deleteDestination($id) {
-    $sql = "DELETE FROM destinations WHERE id_destination = :id";
-    $stmt = $this->unPdo->prepare($sql);
-    $stmt->execute([':id' => $id]);
-}
+    public function selectAllDestinations(): array {
+        $sql = "SELECT d.*, c.nom AS continent_nom
+                FROM destinations d
+                LEFT JOIN continents c ON c.id_continent = d.id_continent
+                ORDER BY d.nom ASC";
+        return $this->unPdo->query($sql)->fetchAll();
+    }
 
+    public function selectDestinationById(int $id): array|false {
+        $sql = "SELECT d.*, c.nom AS continent_nom
+                FROM destinations d
+                LEFT JOIN continents c ON c.id_continent = d.id_continent
+                WHERE d.id_destination = :id";
+        $stmt = $this->unPdo->prepare($sql);
+        $stmt->execute([':id' => $id]);
+        return $stmt->fetch();
+    }
 
+    public function updateDestination(array $tab): void {
+        $sql = "UPDATE destinations
+                SET nom = :nom,
+                    id_continent = :id_continent,
+                    description = :description,
+                    image = :image
+                WHERE id_destination = :id";
+        $stmt = $this->unPdo->prepare($sql);
+        $stmt->execute([
+            ':nom' => $tab['nom'],
+            ':id_continent' => (int)$tab['id_continent'],
+            ':description' => $tab['description'],
+            ':image' => $tab['image'],
+            ':id' => $tab['id_destination']
+        ]);
+    }
+
+    public function deleteDestination(int $id): void {
+        $sql = "DELETE FROM destinations WHERE id_destination = :id";
+        $stmt = $this->unPdo->prepare($sql);
+        $stmt->execute([':id' => $id]);
+    }
+
+    public function selectDestinationsByContinent(int $id_continent): array {
+        $sql = "SELECT d.*, c.nom AS continent_nom
+                FROM destinations d
+                LEFT JOIN continents c ON c.id_continent = d.id_continent
+                WHERE d.id_continent = :id_continent
+                ORDER BY d.nom ASC";
+        $stmt = $this->unPdo->prepare($sql);
+        $stmt->execute([':id_continent' => $id_continent]);
+        return $stmt->fetchAll();
+    }
 }
 ?>

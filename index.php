@@ -74,6 +74,20 @@ if ($page === 'home') {
     $villesDepart = [];
     $destinations = $unControleur->getAllDestinations();
 }
+// --- Données spécifiques à la page DESTINATIONS (CLIENT) ---
+if ($page === 'destinations') {
+    $idContinent = isset($_GET['continent']) && $_GET['continent'] !== '' ? (int)$_GET['continent'] : null;
+
+    if ($idContinent) {
+        $destinations = $unControleur->getDestinationsByContinent($idContinent);
+    } else {
+        $destinations = $unControleur->getAllDestinations();
+    }
+
+    // Optionnel : pour afficher le nom du continent sélectionné
+    // $continentActuel = $idContinent ? $unControleur->getContinentById($idContinent) : null;
+}
+
 
 // --- LOGIQUE ADMIN ---
 if (str_starts_with($page, 'admin')) {
@@ -84,8 +98,8 @@ if (str_starts_with($page, 'admin')) {
         exit();
     }
 
-    if ($page === 'admin_selection') {
-        require_once __DIR__ . '/controleur/gestion.selection.php';
+    if ($page === 'admin_slides') {
+        require_once __DIR__ . '/controleur/gestion.slides.php';
     }
 
     if ($page === 'admin_destinations') {

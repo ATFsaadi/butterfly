@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../controleur/gestion.selection.php';
+require_once __DIR__ . '/../controleur/gestion.slides.php';
 
 ?>
 
@@ -59,12 +59,12 @@ require_once __DIR__ . '/../controleur/gestion.selection.php';
             <td><?= htmlspecialchars($slide['ordre']) ?></td>
             <td><?= $slide['actif'] ? 'Oui' : 'Non' ?></td>
             <td>
-                <a href="index.php?page=admin_selection&edit=<?= $slide['id_slide'] ?>"
+                <a href="index.php?page=admin_slides&edit=<?= $slide['id_slide'] ?>"
    class="btn btn-warning btn-sm">
    Modifier
 </a>
 
-<a href="index.php?page=admin_selection&delete=<?= $slide['id_slide'] ?>"
+<a href="index.php?page=admin_slides&delete=<?= $slide['id_slide'] ?>"
    onclick="return confirm('Supprimer ce slide ?');"
    class="btn btn-danger btn-sm">
    Supprimer

@@ -72,3 +72,26 @@ CREATE TABLE slides (
     actif TINYINT(1) DEFAULT 1,
     PRIMARY KEY (id_slide)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
+CREATE TABLE IF NOT EXISTS continents (
+  id_continent INT AUTO_INCREMENT PRIMARY KEY,
+  nom VARCHAR(50) NOT NULL UNIQUE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT IGNORE INTO continents (nom) VALUES
+('Afrique'), ('Amérique du Nord'), ('Amérique du Sud'),
+('Asie'), ('Europe'), ('Océanie');
+
+ALTER TABLE destinations
+  ADD COLUMN id_continent INT NULL;
+
+
+
+ALTER TABLE destinations
+  ADD CONSTRAINT fk_destinations_continents
+  FOREIGN KEY (id_continent) REFERENCES continents(id_continent)
+  ON UPDATE CASCADE
+  ON DELETE SET NULL;
+
