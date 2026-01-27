@@ -1,6 +1,4 @@
-/* ==========================================
-   FONTS & VARIABLES
-========================================== */
+/* font face */
 @font-face {
     font-family: 'Brown Pen';
     src: url('fonts/BrownPen.ttf') format('truetype');
@@ -9,6 +7,7 @@
     font-display: swap;
 }
 
+/* variables */
 :root {
     --primary-color: #F27438;     
     --secondary-color: #007F8C;    
@@ -21,9 +20,7 @@
     --shadow: 0 8px 20px rgba(0, 127, 140, 0.15);
 }
 
-/* ==========================================
-   GLOBAL STYLES
-========================================== */
+/* body */
 body {
     font-family: "Poiret One", sans-serif;
     font-weight: bold;
@@ -32,6 +29,7 @@ body {
     padding: 0;
 }
 
+/* titres */
 h1 {
     font-family: 'Brown Pen';
     font-weight: 100;
@@ -47,16 +45,15 @@ h6 {
     margin: 0;
 }
 
+/* logo */
 .logo-size {
-    width: 200px;
-    height: 100px;
+    width: 240px !important;
+    height: 120px;
     margin-top: -10px;
     margin-left: 0;
 }
 
-/* ==========================================
-   NAVBAR & DROPDOWNS
-========================================== */
+/* navbar */
 nav.custom-navbar {
     padding: 0;
     background-color: #fff;
@@ -64,18 +61,21 @@ nav.custom-navbar {
     z-index: 1050;
 }
 
+/* liste navbar */
 .navbar-nav {
     display: flex;
-    justify-content: center; 
-    gap: 2rem;  
+    justify-content: center;
+    gap: 2rem;
     margin-left: 0;
     margin-right: 0;
 }
 
+/* item navbar */
 .navbar-nav .nav-item {
     margin: 0;
 }
 
+/* liens navbar */
 .nav-link {
     font-size: 15px;
     color: var(--secondary-color);
@@ -88,12 +88,13 @@ nav.custom-navbar {
     position: relative;
 }
 
+/* hover liens navbar */
 .nav-link:hover {
     color: var(--primary-color);
     background: transparent;
 }
 
-/* Icons in nav */
+/* icones navbar */
 .icon-circle {
     display: flex;
     justify-content: center;
@@ -108,31 +109,35 @@ nav.custom-navbar {
     transition: var(--transition);
 }
 
+/* svg icones */
 .icon-circle svg {
     fill: var(--secondary-color);
     transition: fill 0.3s ease;
 }
 
+/* hover icones */
 .icon-circle:hover {
     transform: scale(1.1);
     background: #f0f8ff;
     border-color: var(--text-color);
 }
 
+/* hover svg icones */
 .icon-circle:hover svg {
     fill: var(--primary-color);
 }
 
-/* Navbar border bottom */
+/* separateur navbar */
 #navbarNav {
     border-bottom: 0.5px solid var(--primary-color);
 }
 
-/* Dropdown positioning */
+/* dropdown container */
 .navbar-nav .dropdown {
     position: relative;
 }
 
+/* dropdown menu */
 .navbar-nav .dropdown-menu {
     left: 50% !important;
     transform: translateX(-50%) !important;
@@ -143,15 +148,18 @@ nav.custom-navbar {
     transition: all 0.2s ease;
 }
 
+/* dropdown item */
 .navbar-nav .dropdown-item {
     transition: background 0.3s ease, color 0.3s ease;
 }
 
+/* hover dropdown item */
 .navbar-nav .dropdown-item:hover {
     background-color: rgba(255,179,71,0.1);
     color: var(--primary-color);
 }
 
+/* dropdown mobile */
 @media (max-width: 991px) {
     .navbar-nav .dropdown-menu {
         left: 0 !important;
@@ -160,9 +168,7 @@ nav.custom-navbar {
     }
 }
 
-/* ==========================================
-   MODALS & MAPS
-========================================== */
+/* modale */
 .modal {
     display: none;
     position: fixed;
@@ -177,6 +183,7 @@ nav.custom-navbar {
     overflow: auto;
 }
 
+/* contenu modale */
 .modal-content {
     position: relative;
     background: white;
@@ -190,6 +197,7 @@ nav.custom-navbar {
     max-height: 90vh;
 }
 
+/* titre modale */
 .modal h4 {
     font-family: "Lavishly Yours", cursive;
     font-style: italic;
@@ -199,6 +207,7 @@ nav.custom-navbar {
     text-align: center;
 }
 
+/* bouton fermer */
 .close {
     position: absolute;
     top: 15px;
@@ -218,12 +227,14 @@ nav.custom-navbar {
     z-index: 10;
 }
 
+/* hover bouton fermer */
 .close:hover {
     color: var(--primary-color);
     background: #f0f8ff;
     transform: scale(1.1);
 }
 
+/* carte map */
 #map {
     width: 100%;
     height: 400px;
@@ -231,9 +242,7 @@ nav.custom-navbar {
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-/* ==========================================
-   ANIMATIONS
-========================================== */
+/* animations */
 @keyframes fadeInModal {
     from { opacity: 0; }
     to { opacity: 1; }
@@ -254,27 +263,28 @@ nav.custom-navbar {
     50% { transform: translateY(-10px); }
 }
 
-/* fix image rotation */
+/* fix hover image */
 a:hover img {
     transform: rotate(0deg);
 }
 
-/* ==========================================
-   FOOTER
-========================================== */
+/* mini map */
 .mini-map-container {
     max-width: 300px;
     margin: 0 auto;
 }
 
+/* footer map */
 #footerMap {
     transition: transform 0.2s ease;
 }
 
+/* hover footer map */
 #footerMap:hover {
     transform: scale(1.02);
 }
 
+/* footer */
 footer {
     background-color: var(--secondary-color) !important;
     color: #ffffff;
@@ -282,49 +292,57 @@ footer {
     margin-top: 50px;
 }
 
+/* footer titres */
 footer h5 {
     font-size: 1.2rem;
     color: var(--primary-color);
     margin-bottom: 15px;
 }
 
+/* footer liens */
 footer a {
     color: #ffffff;
     transition: color 0.3s ease;
 }
 
+/* hover footer liens */
 footer a:hover {
     color: var(--primary-color);
     text-decoration: none;
 }
 
+/* footer liste */
 footer .list-unstyled li {
     margin-bottom: 10px;
 }
 
+/* footer icones */
 footer i.fab {
     transition: transform 0.3s ease, color 0.3s ease;
 }
 
+/* hover footer icones */
 footer i.fab:hover {
     transform: scale(1.2);
     color: var(--primary-color);
 }
 
+/* footer hr */
 footer hr {
     border-color: var(--primary-color);
     margin: 20px 0;
 }
 
+/* footer texte */
 footer .text-center {
     font-size: 0.9rem;
     color: #d4d4d4;
     padding-bottom: 20px;
 }
-/* Supprimer le carré gris sur hover des nav-links */
-.nav-link   {
-    background: transparent !important; /* pas de fond sur hover */
-    box-shadow: none !important;        /* pas d’ombre */
-}
 
+/* navlink fond */
+.nav-link {
+    background: transparent !important;
+    box-shadow: none !important;
+}
 

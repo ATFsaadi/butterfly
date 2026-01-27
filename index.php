@@ -1,23 +1,24 @@
 <?php
+
 if (session_status() === PHP_SESSION_NONE) session_start();
 
 require_once "controleur/controleur.class.php";
 $unControleur = new Controleur();
 
-// --- Gestion page ---
+/* page */
 $page = $_GET['page'] ?? 'home';
 $error = '';
 $inscription_error = '';
 $inscription_success = '';
 
-// --- Déconnexion ---
+/* logout */
 if ($page === 'logout') {
     session_destroy();
     header("Location: index.php?page=home");
     exit;
 }
 
-// --- Gestion connexion ---
+/* login */
 if (isset($_POST['Connexion']) && isset($_POST['email'], $_POST['mot_de_passe'])) {
     $email = trim($_POST['email']);
     $mdp = $_POST['mot_de_passe'];
@@ -44,7 +45,7 @@ if (isset($_POST['Connexion']) && isset($_POST['email'], $_POST['mot_de_passe'])
     }
 }
 
-// --- Gestion inscription ---
+/* register */
 if (isset($_POST['inscription_submit'])) {
     $nom = trim($_POST['nom'] ?? '');
     $prenom = trim($_POST['prenom'] ?? '');
@@ -67,17 +68,28 @@ if (isset($_POST['inscription_submit'])) {
     }
 }
 
-// --- Données spécifiques au HOME ---
+/* donnees communes */
+$continents = method_exists($unControleur, 'getAllContinents')
+    ? $unControleur->getAllContinents()
+    : [];
+
+/* home */
 if ($page === 'home') {
     $slides = $unControleur->getSlidesActifs();
-    $voyages = method_exists($unControleur, 'getAllVoyages') ? $unControleur->getAllVoyages() : [];
+
+    $voyages = method_exists($unControleur, 'getAllVoyages')
+        ? $unControleur->getAllVoyages()
+        : [];
+
     $villesDepart = [];
     $destinations = $unControleur->getAllDestinations();
 
-    $offres = $unControleur->getOffresActives(); // ✅ AJOUT ICI
+    $offres = method_exists($unControleur, 'getOffresActives')
+        ? $unControleur->getOffresActives()
+        : [];
 }
 
-// --- Données spécifiques à la page DESTINATIONS (CLIENT) ---
+/* destinations */
 if ($page === 'destinations') {
     $idContinent = isset($_GET['continent']) && $_GET['continent'] !== '' ? (int)$_GET['continent'] : null;
 
@@ -86,43 +98,57 @@ if ($page === 'destinations') {
     } else {
         $destinations = $unControleur->getAllDestinations();
     }
-
-    // Optionnel : pour afficher le nom du continent sélectionné
-    // $continentActuel = $idContinent ? $unControleur->getContinentById($idContinent) : null;
 }
 
+/* voyages */
+if ($page === 'voyages') {
+    $voyages = method_exists($unControleur, 'getAllVoyages')
+        ? $unControleur->getAllVoyages()
+        : [];
+}
 
-// --- LOGIQUE ADMIN ---
+/* offres */
+if ($page === 'offres') {
+    $offres = method_exists($unControleur, 'getOffresActives')
+        ? $unControleur->getOffresActives()
+        : [];
+}
+
+/* admin */
 if (str_starts_with($page, 'admin')) {
 
-    // Sécurité globale admin
+    /* securite admin */
     if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
         header('Location: index.php?page=home');
         exit();
     }
 
+    /* admin slides */
     if ($page === 'admin_slides') {
         require_once __DIR__ . '/controleur/gestion.slides.php';
     }
 
+    /* admin destinations */
     if ($page === 'admin_destinations') {
-    require_once __DIR__ . '/controleur/gestion.destinations.php';
-}
-if ($page === 'admin_voyages') {
-    require_once __DIR__ . '/controleur/gestion.voyages.php';
-}
-if ($page === 'admin_offres') {
-    require_once __DIR__ . '/controleur/gestion.offres.php';
+        require_once __DIR__ . '/controleur/gestion.destinations.php';
+    }
+
+    /* admin voyages */
+    if ($page === 'admin_voyages') {
+        require_once __DIR__ . '/controleur/gestion.voyages.php';
+    }
+
+    /* admin offres */
+    if ($page === 'admin_offres') {
+        require_once __DIR__ . '/controleur/gestion.offres.php';
+    }
 }
 
-
-}
-
-// --- Détermination de la vue ---
+/* vue */
 $viewFile = "vue/{$page}.php";
 if (!file_exists($viewFile)) {
     $viewFile = "vue/home.php";
 }
 
-// --- Chargement du layout (HTML) ---
+/* layout */
 require_once "vue/layout.php";

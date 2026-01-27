@@ -1,9 +1,4 @@
-/* ==========================================
-   RESPONSIVE DESIGN – VERSION FINALE 2025
-   Luxe épuré • Zéro ombre • Mobile-first
-========================================== */
-
-/* =============== MOBILE FIRST =============== */
+/* mobile first */
 @media (max-width: 480px) {
     .container-fluid { padding: 0 15px !important; }
 
@@ -22,6 +17,7 @@
     .mini-map-container { max-width: 100%; }
 }
 
+/* petits ecrans */
 @media (min-width: 481px) and (max-width: 767px) {
     h1 { font-size: 42px; }
     h6 { font-size: 40px; }
@@ -29,6 +25,7 @@
     .sticky-top .nav-link { font-size: 14.5px; }
 }
 
+/* tablettes */
 @media (min-width: 768px) and (max-width: 991px) {
     .container-fluid { padding: 0 40px; }
     .logo-size { width: 170px; }
@@ -37,16 +34,19 @@
     footer .mini-map-container { max-width: 420px; }
 }
 
+/* petits desktops */
 @media (min-width: 992px) and (max-width: 1199px) {
     .container-fluid { max-width: 960px; }
     .sticky-top .nav-link { font-size: 15.8px; }
 }
 
+/* grands desktops */
 @media (min-width: 1200px) {
     .container-fluid { max-width: 1360px; }
     .custom-navbar > .container-fluid { padding: 20px 100px; }
 }
 
+/* tres grands ecrans */
 @media (min-width: 1600px) {
     .container-fluid { max-width: 1580px; }
     h1 { font-size: 62px; }
@@ -54,9 +54,7 @@
     .logo-size { width: 260px; height: auto; }
 }
 
-/* ==========================================
-   AJUSTEMENTS GLOBAUX – ZÉRO OMBRE
-========================================== */
+/* ajustements globaux */
 @media (max-width: 991.98px) {
     .sticky-top { border-bottom: 1px solid #eee; }
     .sticky-top .navbar-collapse {
@@ -72,34 +70,36 @@
         background: #fafafa;
     }
 
-    /* Titre principal */
     .voyage-menu-title h1 { font-size: 36px !important; padding: 0 20px; }
 }
 
+/* alignement navbar desktop */
 @media (min-width: 992px) {
     .navbar-nav.mx-auto { width: 100%; justify-content: center; }
 }
 
+/* modales mobile */
 @media (max-width: 576px) {
     .voyage-menu-title h1 { font-size: 32px !important; }
     .modal-dialog { margin: 15px; }
     .modal-content { border-radius: 16px !important; }
 }
 
+/* style modale */
 .modal-content { border-radius: 20px !important; overflow: hidden; }
 
-/* Footer mobile */
+/* footer mobile */
 @media (max-width: 767.98px) {
     footer .row > div { text-align: center !important; }
     .mini-map-container { order: 1; margin: 25px auto 15px; }
 }
 
-/* Espacement global */
+/* espacement global */
 main { padding-top: 20px; }
 .sticky-top + main { padding-top: 90px; }
 @media (max-width: 991px) { .sticky-top + main { padding-top: 15px; } }
 
-/* Hover desktop uniquement */
+/* hover desktop */
 @media (hover: hover) {
     .icon-circle:hover {
         transform: translateY(-4px) scale(1.18);
@@ -108,20 +108,20 @@ main { padding-top: 20px; }
     }
     .icon-circle:hover svg { fill: var(--primary-color); }
 }
+
+/* hover mobile */
 @media (hover: none) {
     .icon-circle:hover { transform: none !important; background: white !important; }
 }
+
+/* hover carte footer */
 #footerMap:hover { transform: scale(1.03); }
 
-/* ==========================================
-   MENU VOYAGE – MOBILE → BOUTON + DRAWER
-========================================== */
+/* menu voyage mobile */
 @media (max-width: 991.98px) {
 
-    /* Cache le menu horizontal complet */
-    #voyageBar .voyage-menu.d-none.d-lg-flex { display: none !important; }
+    .voyageBar .voyage-menu.d-none.d-lg-flex { display: none !important; }
 
-    /* Barre sticky simplifiée */
     #voyageBar {
         height: 90px;
         background: white;
@@ -133,7 +133,6 @@ main { padding-top: 20px; }
         z-index: 10;
     }
 
-    /* Bouton unique magnifique */
     .mobile-search-toggle {
         display: flex !important;
         align-items: center;
@@ -158,7 +157,6 @@ main { padding-top: 20px; }
         stroke-width: 2.8;
     }
 
-    /* Drawer mobile */
     .voyage-mobile-drawer {
         position: fixed;
         top: 0; left: 0;
@@ -195,7 +193,6 @@ main { padding-top: 20px; }
         cursor: pointer;
     }
 
-    /* Style drawer – dropdowns verticaux */
     .voyage-mobile-drawer .voyage-dropdown {
         width: 100% !important;
         margin-bottom: 18px;
@@ -220,7 +217,6 @@ main { padding-top: 20px; }
     }
     .voyage-mobile-drawer .voyage-dropdown-content.show { display: block; }
 
-    /* Carousel + sections */
     .carousel-image { height: 70vh !important; }
     .card-img-top { height: 300px !important; }
     .big-card .card-img-top { height: 420px !important; }
@@ -228,6 +224,7 @@ main { padding-top: 20px; }
     .section-subtitle { font-size: 1.1rem; }
 }
 
+/* bouton mobile petit */
 @media (max-width: 576px) {
     .mobile-search-toggle {
         font-size: 1rem;
@@ -238,7 +235,7 @@ main { padding-top: 20px; }
     .mobile-search-toggle svg { width: 23px; height: 23px; }
 }
 
-/* =============== DESKTOP – Tout reste normal =============== */
+/* desktop */
 @media (min-width: 992px) {
     .mobile-search-toggle,
     .voyage-mobile-drawer {

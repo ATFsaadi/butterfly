@@ -1,19 +1,21 @@
 <?php
+
 if (session_status() === PHP_SESSION_NONE) session_start();
 require_once __DIR__ . '/controleur.class.php';
 
 $unControleur = new Controleur();
 
-// Sécurité admin
+/* securite admin */
 if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
     header('Location: index.php?page=home');
     exit();
 }
 
+/* configuration upload */
 $uploadDir = __DIR__ . '/../images/slides/';
 $errors = [];
 
-/* ===== AJOUT / MODIFICATION ===== */
+/* ajout modification */
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_slide'])) {
 
     $id_slide = !empty($_POST['id_slide']) ? intval($_POST['id_slide']) : null;
@@ -29,13 +31,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_slide'])) {
         $errors[] = "Image obligatoire pour une nouvelle slide.";
     }
 
+    /* upload image */
     if (!empty($_FILES['image']['name']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+
         $allowedExt = ['jpg','jpeg','png','gif','webp'];
         $ext = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
 
         if (!in_array($ext, $allowedExt)) {
             $errors[] = "Format image invalide.";
         } else {
+
             $imageName = uniqid('slide_') . '.' . $ext;
             move_uploaded_file($_FILES['image']['tmp_name'], $uploadDir . $imageName);
 
@@ -45,7 +50,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_slide'])) {
         }
     }
 
+    /* enregistrement */
     if (empty($errors)) {
+
         $data = compact('titre','description','imageName','lien','ordre','actif');
         $data['image'] = $imageName;
 
@@ -61,8 +68,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_slide'])) {
     }
 }
 
-/* ===== SUPPRESSION ===== */
+/* suppression */
 if (isset($_GET['delete'])) {
+
     $id_slide = intval($_GET['delete']);
     $slide = $unControleur->getSlideById($id_slide);
 
@@ -75,6 +83,6 @@ if (isset($_GET['delete'])) {
     exit();
 }
 
-/* ===== RÉCUPÉRATION ===== */
+/* recuperation donnees */
 $slides = $unControleur->getAllSlides();
 $slideToEdit = isset($_GET['edit']) ? $unControleur->getSlideById((int)$_GET['edit']) : null;

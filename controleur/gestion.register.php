@@ -1,15 +1,14 @@
 <?php
-// Démarrer la session si elle n'est pas déjà démarrée
-if (session_status() === PHP_SESSION_NONE) session_start();
 
-// Inclure le contrôleur
+if (session_status() === PHP_SESSION_NONE) session_start();
 require_once __DIR__ . '/controleur.class.php';
 
 $controleur = new Controleur();
 $erreur = "";
 
-// Traitement du formulaire d'inscription
+/* traitement inscription */
 if (isset($_POST['inscription_submit'])) {
+
     $nom = trim($_POST['nom'] ?? '');
     $prenom = trim($_POST['prenom'] ?? '');
     $email = trim($_POST['email'] ?? '');
@@ -17,25 +16,28 @@ if (isset($_POST['inscription_submit'])) {
     $conf_mdp = $_POST['confirmer_mot_de_passe'] ?? '';
     $telephone = trim($_POST['telephone'] ?? '');
 
-    // Vérifications
+    /* verification champs */
     if (empty($nom) || empty($prenom) || empty($email) || empty($mdp) || empty($conf_mdp)) {
         $erreur = "Veuillez remplir tous les champs obligatoires.";
     } elseif ($mdp !== $conf_mdp) {
         $erreur = "Les mots de passe ne correspondent pas.";
     } else {
-        // Vérifier si l'email existe déjà
+
+        /* verification email */
         $existingUser = $controleur->select_user($email);
+
         if ($existingUser) {
             $erreur = "Cet email est déjà utilisé.";
         } else {
-            // Hasher le mot de passe
+
+            /* creation utilisateur */
             $hashMdp = password_hash($mdp, PASSWORD_DEFAULT);
             $controleur->addUser($nom, $prenom, $email, $hashMdp, $telephone);
 
-            // Auto-login après inscription
+            /* session utilisateur */
             $_SESSION['user'] = $controleur->select_user($email);
 
-            // Redirection vers home
+            /* redirection */
             header('Location: ../index.php?page=home');
             exit();
         }

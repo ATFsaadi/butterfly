@@ -1,11 +1,13 @@
-<?php if(!empty($offres)): ?>
-<div id="offresCarousel" class="carousel slide mt-4" data-bs-ride="carousel">
-<h3 class="section-title">Nos offres</h3>
-        <p class="section-subtitle">Meilleures offres pour vos aventures</p>
-    <!-- Indicateurs -->
+<?php if (!empty($offres)): ?>
+
+<h3 class="section-title text-center mt-5">Nos offres</h3>
+<p class="section-subtitle text-center mb-4">Meilleures offres pour vos aventures</p>
+
+<div id="offresCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="6000">
+
+    <!-- indicateurs -->
     <div class="carousel-indicators">
-        
-        <?php foreach($offres as $i => $offre): ?>
+        <?php foreach ($offres as $i => $offre): ?>
             <button type="button"
                     data-bs-target="#offresCarousel"
                     data-bs-slide-to="<?= $i ?>"
@@ -15,68 +17,96 @@
         <?php endforeach; ?>
     </div>
 
-    <!-- Slides -->
+    <!-- contenu -->
     <div class="carousel-inner">
-        <?php foreach($offres as $i => $offre): ?>
+
+        <?php foreach ($offres as $i => $offre): ?>
 
             <?php
-                $reduc = (int)($offre['reduction'] ?? 0);
-                $coef = (100 - $reduc) / 100;
+            /* calcul reduction */
+            $reduc = (int)($offre['reduction'] ?? 0);
+            $coef = (100 - $reduc) / 100;
 
-                $prixAdulte = isset($offre['prix_adulte']) ? (float)$offre['prix_adulte'] : 0;
-                $prixEnfant = isset($offre['prix_enfant']) ? (float)$offre['prix_enfant'] : 0;
-                $prixBebe   = isset($offre['prix_bebe']) ? (float)$offre['prix_bebe'] : 0;
+            /* prix de base */
+            $prixAdulte = (float)($offre['prix_adulte'] ?? 0);
+            $prixEnfant = (float)($offre['prix_enfant'] ?? 0);
+            $prixBebe   = (float)($offre['prix_bebe'] ?? 0);
 
-                $prixAdulteRemise = $prixAdulte * $coef;
-                $prixEnfantRemise = $prixEnfant * $coef;
-                $prixBebeRemise   = $prixBebe * $coef;
+            /* prix avec remise */
+            $prixAdulteRemise = $prixAdulte * $coef;
+            $prixEnfantRemise = $prixEnfant * $coef;
+            $prixBebeRemise   = $prixBebe * $coef;
             ?>
 
             <div class="carousel-item <?= $i === 0 ? 'active' : '' ?>">
 
-                <img src="/projet-ecole/agence/images/voyages/<?= htmlspecialchars((string)($offre['voyage_image'] ?? ''), ENT_QUOTES, 'UTF-8') ?>"
-                     class="d-block w-100 carousel-image"
-                     alt="<?= htmlspecialchars((string)($offre['titre'] ?? 'Offre'), ENT_QUOTES, 'UTF-8') ?>"
-                     style="max-height: 500px; object-fit: cover;">
+                <!-- ligne -->
+                <div class="row g-0" style="min-height:500px;">
 
-                <div class="carousel-caption d-flex h-100 align-items-center justify-content-center">
-                    <div class="text-center text-white">
-                        <h6>
-                            <?= htmlspecialchars((string)($offre['titre'] ?? ''), ENT_QUOTES, 'UTF-8') ?>
-                            <?php if($reduc > 0): ?> (-<?= $reduc ?>%)<?php endif; ?>
-                        </h6>
-
-                        <p class="d-none d-md-block">
-                            <?= htmlspecialchars((string)($offre['voyage_titre'] ?? ''), ENT_QUOTES, 'UTF-8') ?><br>
-                            <small>
-                                Valable du <?= htmlspecialchars((string)($offre['date_debut'] ?? ''), ENT_QUOTES, 'UTF-8') ?>
-                                au <?= htmlspecialchars((string)($offre['date_fin'] ?? ''), ENT_QUOTES, 'UTF-8') ?>
-                            </small>
-                        </p>
-
-                        <p class="d-none d-md-block">
-                            Prix adulte : <?= number_format($prixAdulteRemise, 2, ',', ' ') ?> € |
-                            Enfant : <?= number_format($prixEnfantRemise, 2, ',', ' ') ?> € |
-                            Bébé : <?= number_format($prixBebeRemise, 2, ',', ' ') ?> €
-                        </p>
-
-                        <a href="#" class="btn btn-outline-light rounded-pill px-4 mt-2">Réserver</a>
+                    <!-- image -->
+                    <div class="col-md-9">
+                        <img src="/projet-ecole/agence/images/voyages/<?= htmlspecialchars($offre['voyage_image'] ?? '') ?>"
+                             class="d-block w-100 carousel-image"
+                             alt="<?= htmlspecialchars($offre['titre'] ?? 'Offre') ?>"
+                             style="height:500px; object-fit:cover;">
                     </div>
-                </div>
 
+                    <!-- details -->
+                    <div class="col-md-3 d-flex align-items-stretch"
+                         style="background: var(--secondary-color);">
+
+                        <!-- caption -->
+                        <div class="carousel-caption d-flex h-100 w-100 align-items-center justify-content-center"
+                             style="position: static; padding: 20px;">
+
+                            <div class="text-center text-white">
+
+                                <h6>
+                                    <?= htmlspecialchars($offre['titre'] ?? '') ?>
+                                    <?php if ($reduc > 0): ?>
+                                        (-<?= $reduc ?>%)
+                                    <?php endif; ?>
+                                </h6>
+
+                                <p class="d-none d-md-block">
+                                    <?= htmlspecialchars($offre['voyage_titre'] ?? '') ?><br>
+                                    <small>
+                                        Du <?= htmlspecialchars($offre['date_debut'] ?? '') ?>
+                                        au <?= htmlspecialchars($offre['date_fin'] ?? '') ?>
+                                    </small>
+                                </p>
+
+                                <p class="d-none d-md-block">
+                                    Adulte : <?= number_format($prixAdulteRemise, 2, ',', ' ') ?> €<br>
+                                    Enfant : <?= number_format($prixEnfantRemise, 2, ',', ' ') ?> €<br>
+                                    Bébé : <?= number_format($prixBebeRemise, 2, ',', ' ') ?> €
+                                </p>
+
+                                <a href="#" class="btn btn-outline-light rounded-pill px-4 mt-2">
+                                    Réserver
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
             </div>
+
         <?php endforeach; ?>
     </div>
 
-    <!-- Contrôles -->
+    <!-- controles -->
     <button class="carousel-control-prev" type="button" data-bs-target="#offresCarousel" data-bs-slide="prev">
         <span class="carousel-control-prev-icon"></span>
         <span class="visually-hidden">Précédent</span>
     </button>
+
     <button class="carousel-control-next" type="button" data-bs-target="#offresCarousel" data-bs-slide="next">
         <span class="carousel-control-next-icon"></span>
         <span class="visually-hidden">Suivant</span>
     </button>
 
 </div>
+
 <?php endif; ?>

@@ -1,4 +1,5 @@
 <?php
+
 if (session_status() === PHP_SESSION_NONE) session_start();
 require_once __DIR__ . '/controleur.class.php';
 
@@ -7,7 +8,7 @@ $unControleur->verifAdmin();
 
 $errors = [];
 
-/* ===== AJOUT / MODIFICATION ===== */
+/* ajout modification */
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
 
     $id_offre = !empty($_POST['id_offre']) ? (int)$_POST['id_offre'] : null;
@@ -25,6 +26,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     if ($reduction < 0 || $reduction > 100) $errors[] = "Réduction doit être entre 0 et 100.";
 
     if (empty($errors)) {
+
+        /* preparation donnees */
         $data = compact('titre','reduction','date_debut','date_fin','actif','id_voyage');
 
         if ($id_offre) {
@@ -34,21 +37,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
             $unControleur->addOffre($data);
         }
 
+        /* redirection */
         header('Location: index.php?page=admin_offres');
         exit();
     }
 }
 
-/* ===== SUPPRESSION ===== */
+/* suppression */
 if (isset($_GET['delete'])) {
     $unControleur->deleteOffre((int)$_GET['delete']);
     header('Location: index.php?page=admin_offres');
     exit();
 }
 
-/* ===== RÉCUPÉRATION ===== */
+/* recuperation donnees */
 $offres = $unControleur->getAllOffres();
 $offreToEdit = isset($_GET['edit']) ? $unControleur->getOffreById((int)$_GET['edit']) : null;
 
-/* Dropdown voyages */
+/* liste voyages */
 $voyages = method_exists($unControleur, 'getAllVoyages') ? $unControleur->getAllVoyages() : [];

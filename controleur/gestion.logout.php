@@ -1,16 +1,15 @@
 <?php
-// gestion.logout.php
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Supprimer toutes les variables de session
+/* nettoyage session */
 $_SESSION = [];
 
-// Détruire la session
+/* destruction session */
 session_destroy();
 
-// Redirection vers la page d'accueil
+/* redirection */
 header('Location: ../index.php?page=home');
 exit();

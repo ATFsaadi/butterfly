@@ -1,14 +1,17 @@
 <?php
+
 require_once __DIR__ . '/../modele/modele.class.php';
 
 class Controleur {
+
+    /* constructeur */
     private $unModele;
 
     public function __construct() {
         $this->unModele = new Modele();
     }
 
-    /* ================= UTILISATEURS ================= */
+    /* utilisateurs */
 
     public function select_user($email) {
         return $this->unModele->select_user($email);
@@ -22,7 +25,7 @@ class Controleur {
         return $this->unModele->getAllUsers();
     }
 
-    /* ================= SÉCURITÉ ================= */
+    /* securite */
 
     public function verifConnexion() {
         if (session_status() === PHP_SESSION_NONE) session_start();
@@ -40,9 +43,7 @@ class Controleur {
         }
     }
 
-    /* ===================== */
-    /* ====== SLIDES ======= */
-    /* ===================== */
+    /* slides */
 
     public function addSlide($tab) {
         $this->unModele->insertSlide($tab);
@@ -68,9 +69,7 @@ class Controleur {
         return $this->unModele->selectSlidesActifs();
     }
 
-    /* ========================= */
-    /* ===== CONTINENTS ======== */
-    /* ========================= */
+    /* continents */
 
     public function getAllContinents() {
         return $this->unModele->selectAllContinents();
@@ -80,9 +79,7 @@ class Controleur {
         return $this->unModele->selectContinentById((int)$id);
     }
 
-    /* ========================= */
-    /* ===== DESTINATIONS ====== */
-    /* ========================= */
+    /* destinations */
 
     public function addDestination($tab) {
         $this->unModele->insertDestination($tab);
@@ -107,56 +104,53 @@ class Controleur {
     public function getDestinationsByContinent($id_continent) {
         return $this->unModele->selectDestinationsByContinent((int)$id_continent);
     }
-    /* ========================= */
-/* ====== VOYAGES ========== */
-/* ========================= */
 
-public function getAllVoyages() {
-    return $this->unModele->selectAllVoyages();
-}
+    /* voyages */
 
-public function getVoyageById($id) {
-    return $this->unModele->selectVoyageById((int)$id);
-}
+    public function getAllVoyages() {
+        return $this->unModele->selectAllVoyages();
+    }
 
-public function addVoyage($tab) {
-    $this->unModele->insertVoyage($tab);
-}
+    public function getVoyageById($id) {
+        return $this->unModele->selectVoyageById((int)$id);
+    }
 
-public function updateVoyage($tab) {
-    $this->unModele->updateVoyage($tab);
-}
+    public function addVoyage($tab) {
+        $this->unModele->insertVoyage($tab);
+    }
 
-public function deleteVoyage($id) {
-    $this->unModele->deleteVoyage((int)$id);
-}
-/* ========================= */
-/* ======= OFFRES ========== */
-/* ========================= */
+    public function updateVoyage($tab) {
+        $this->unModele->updateVoyage($tab);
+    }
 
-public function getAllOffres() {
-    return $this->unModele->selectAllOffres();
-}
+    public function deleteVoyage($id) {
+        $this->unModele->deleteVoyage((int)$id);
+    }
 
-public function getOffreById($id) {
-    return $this->unModele->selectOffreById((int)$id);
-}
+    /* offres */
 
-public function addOffre($tab) {
-    $this->unModele->insertOffre($tab);
-}
+    public function getAllOffres() {
+        return $this->unModele->selectAllOffres();
+    }
 
-public function updateOffre($tab) {
-    $this->unModele->updateOffre($tab);
-}
+    public function getOffreById($id) {
+        return $this->unModele->selectOffreById((int)$id);
+    }
 
-public function deleteOffre($id) {
-    $this->unModele->deleteOffre((int)$id);
-}
-public function getOffresActives() {
-    return $this->unModele->selectOffresActives();
-}
+    public function addOffre($tab) {
+        $this->unModele->insertOffre($tab);
+    }
 
+    public function updateOffre($tab) {
+        $this->unModele->updateOffre($tab);
+    }
 
+    public function deleteOffre($id) {
+        $this->unModele->deleteOffre((int)$id);
+    }
+
+    public function getOffresActives() {
+        return $this->unModele->selectOffresActives();
+    }
 
 }

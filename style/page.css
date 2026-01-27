@@ -1,4 +1,4 @@
-/* Authentification (Connexion / Inscription) */
+/* authentification */
 .auth-section {
     width: 100%;
     display: flex;
@@ -14,6 +14,7 @@
     max-width: 700px;
 }
 
+/* carte auth */
 .auth-card {
     display: flex;
     background: #fff;
@@ -23,6 +24,7 @@
     transition: transform 0.3s ease;
 }
 
+/* formulaire auth */
 .auth-form {
     flex: 1;
     padding: 40px 30px;
@@ -31,6 +33,7 @@
     justify-content: center;
 }
 
+/* titre auth */
 .auth-form h2 {
     text-align: center;
     margin-bottom: 25px;
@@ -40,12 +43,14 @@
     font-style: italic;
 }
 
+/* structure formulaire */
 .auth-form form {
     display: flex;
     flex-direction: column;
     gap: 15px;
 }
 
+/* champs auth */
 .auth-form input {
     padding: 12px 15px;
     border-radius: var(--border-radius);
@@ -56,16 +61,19 @@
     background: #fff;
 }
 
+/* placeholder */
 .auth-form input::placeholder {
     color: #aaa;
     font-style: italic;
 }
 
+/* focus champs */
 .auth-form input:focus {
     border-color: var(--primary-color);
     box-shadow: 0 0 0 1px  #f2733827;
 }
 
+/* bouton auth */
 .auth-form button {
     padding: 12px 0;
     border: none;
@@ -79,11 +87,13 @@
     margin-top: 10px;
 }
 
+/* hover bouton */
 .auth-form button:hover {
     opacity: 0.9;
     transform: translateY(-1px);
 }
 
+/* options formulaire */
 .form-options {
     display: flex;
     justify-content: space-between;
@@ -92,6 +102,7 @@
     margin-top: 10px;
 }
 
+/* lien options */
 .form-options a {
     text-decoration: none;
     color: var(--primary-color);
@@ -99,10 +110,12 @@
     transition: color 0.3s ease;
 }
 
+/* hover lien options */
 .form-options a:hover {
     color: var(--secondary-color);
 }
 
+/* separateur */
 .divider {
     text-align: center;
     margin: 20px 0;
@@ -111,6 +124,7 @@
     position: relative;
 }
 
+/* lignes separateur */
 .divider::before,
 .divider::after {
     content: "";
@@ -124,6 +138,7 @@
 .divider::before { left: 0; }
 .divider::after { right: 0; }
 
+/* boutons sociaux */
 .social-buttons {
     display: flex;
     justify-content: center;
@@ -131,6 +146,7 @@
     margin-bottom: 15px;
 }
 
+/* bouton social */
 .social-buttons button {
     width: 45px;
     height: 45px;
@@ -144,22 +160,26 @@
     transition: var(--transition);
 }
 
+/* hover bouton social */
 .social-buttons button:hover {
     transform: scale(1.1);
     border-color: var(--primary-color);
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
+/* icones sociaux */
 .social-buttons i {
     color: var(--secondary-color);
     font-size: 1.1rem;
     transition: color 0.3s ease;
 }
 
+/* hover icones sociaux */
 .social-buttons button:hover i {
     color: var(--primary-color);
 }
 
+/* lien switch */
 .switch-link {
     text-align: center;
     font-size: 0.9rem;
@@ -167,6 +187,7 @@
     margin-top: 15px;
 }
 
+/* lien switch a */
 .switch-link a {
     color: var(--primary-color);
     text-decoration: none;
@@ -174,10 +195,12 @@
     transition: color 0.3s ease;
 }
 
+/* hover lien switch */
 .switch-link a:hover {
     color: var(--secondary-color);
 }
 
+/* logo auth */
 .auth-logo {
     flex: 1;
     background-color: var(--primary-color);
@@ -188,6 +211,7 @@
     min-height: 300px;
 }
 
+/* image logo auth */
 .auth-logo img {
     width: 120px;
     object-fit: contain;
@@ -195,19 +219,19 @@
     transition: transform 0.3s ease;
 }
 
+/* hover image logo */
 .auth-logo img:hover {
     transform: scale(1.05);
 }
 
-/* SECTION RECHERCHE */
-/* TITRE */
+/* titre recherche */
 .voyage-menu-title {
     text-align: center;
     margin: 30px;
     padding-top: 20px;
 }
 
-/* DROPDOWN STANDARD */
+/* dropdown voyage */
 .voyage-dropdown {
     position: relative;
     width: 180px;
@@ -217,6 +241,7 @@
     text-align: center;
 }
 
+/* bouton dropdown */
 .voyage-dropdown button {
     background: rgb(255, 255, 255);
     border: 1px solid transparent;
@@ -232,6 +257,7 @@
     transition: var(--transition);
 }
 
+/* suggestion dropdown */
 .voyage-suggestion {
     color: var(--secondary-color);
     font-weight: bold;
@@ -239,7 +265,7 @@
     margin-top: 5px;
 }
 
-/* DROPDOWN CONTENT */
+/* contenu dropdown */
 .voyage-dropdown-content {
     display: none;
     position: absolute;
@@ -254,11 +280,13 @@
     border: 1px solid var(--border-color);
 }
 
+/* ouverture dropdown */
 .voyage-dropdown:hover .voyage-dropdown-content {
     display: block;
     animation: fadeIn 0.3s ease;
 }
 
+/* item dropdown */
 .voyage-dropdown-content li {
     padding: 10px;
     cursor: pointer;
@@ -267,11 +295,12 @@
     transition: background 0.3s ease;
 }
 
+/* hover item dropdown */
 .voyage-dropdown-content li:hover {
     background: #f0f8ff;
 }
 
-/* DROPDOWN PERSONNES (compteurs) */
+/* compteur personnes */
 .voyage-dropdown .counter {
     display: flex;
     align-items: center;
@@ -283,6 +312,7 @@
     border-radius: 14px;
 }
 
+/* bouton compteur */
 .voyage-dropdown .btn-counter {
     width: 24px;
     height: 24px;
@@ -299,11 +329,13 @@
     flex-shrink: 0;
 }
 
+/* hover bouton compteur */
 .voyage-dropdown .btn-counter:hover:not(:disabled) {
     background: #e55a2b;
     transform: scale(1.1);
 }
 
+/* bouton compteur desactive */
 .voyage-dropdown .btn-counter:disabled {
     background: #ccc;
     color: #999;
@@ -311,6 +343,7 @@
     opacity: 0.7;
 }
 
+/* valeur compteur */
 .voyage-dropdown .count {
     width: 28px;
     text-align: center;
@@ -322,7 +355,7 @@
     justify-content: center;
 }
 
-/* BOUTON RECHERCHER + RESET */
+/* groupe actions recherche */
 .voyage-search-group {
     display: flex;
     align-items: center;
@@ -330,6 +363,7 @@
     height: 100px;
 }
 
+/* bouton rechercher */
 .voyage-search-btn {
     background: linear-gradient(135deg, var(--primary-color), #F2A65B);
     color: #fff;
@@ -339,25 +373,28 @@
     height: 100px;
     display: flex;
     flex-direction: column;
-    align-items: center;   
+    align-items: center;
     justify-content: center;
-    gap: 16px;               
+    gap: 16px;
     padding: 0;
     cursor: pointer;
     transition: transform 0.2s ease;
 }
 
+/* alignement recherche */
 .search-left {
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
+/* icone recherche */
 .search-icon {
     width: 22px;
     height: 22px;
 }
 
+/* bouton reset */
 .voyage-reset-icon {
     width: 20px;
     height: 20px;
@@ -369,12 +406,15 @@
     justify-content: center;
     cursor: pointer;
     transition: 0.3s ease;
-    margin-top: 40px; /* ← pousse l’icône en bas du conteneur */
+    margin-top: 40px;
 }
 
+/* hover reset */
 .voyage-reset-icon:hover {
     transform: rotate(90deg);
 }
+
+/* menu fixe */
 .voyage-menu-section.fixed .voyage-menu {
     width: 100%;
     max-width: none;
@@ -386,29 +426,29 @@
     gap: 10px;
 }
 
-/* FIXATION DU MENU */
-
-
+/* barre sticky */
 #voyageBar {
     position: sticky;
     top: 0;
     left: 0;
     width: 100%;
     z-index: 5;
-    background-color: #ffffff; ;
+    background-color: #ffffff;
     /*box-shadow: 0 1px 1px greenyellow;*/
 }
 
+/* contenu barre sticky */
 #voyageBar .voyage-menu {
-    max-width: 1100px;  /* largeur des boutons centrés */
-    margin: 0 auto;     /* centre le menu dans la barre */
+    max-width: 1100px;
+    margin: 0 auto;
     display: flex;
     justify-content: center;
     align-items: center;
     /*gap: 10px;*/
-    padding: 0 20px;   /* espace intérieur si nécessaire */
+    padding: 0 20px;
 }
-/* Carousel */
+
+/* carousel */
 .carousel {
     width: 100%;
     margin: 0;
@@ -417,20 +457,24 @@
     border-radius: 0;
 }
 
+/* image carousel */
 .carousel-image {
     width: 100%;
     height: 900px;
     object-fit: cover;
 }
 
+/* indicateurs carousel */
 .carousel-indicators {
     bottom: 20px;
 }
 
+/* indicateur actif */
 .carousel-indicators .active {
     background-color: var(--primary-color);
 }
 
+/* boutons carousel et cards */
 .carousel-caption .btn,
 .card .btn {
     background: linear-gradient(135deg, var(--primary-color), #F2A65B);
@@ -442,6 +486,7 @@
     transition: var(--transition);
 }
 
+/* hover boutons carousel et cards */
 .carousel-caption .btn:hover,
 .card .btn:hover {
     background-color: transparent;
@@ -449,26 +494,28 @@
     border-color: var(--primary-color);
 }
 
-/* Sections sélection / offres */
+/* sections */
 .selection-section,
 .offers-section {
     padding: 40px 0;
     background-color: var(--bg-light);
 }
 
+/* titres sections */
 .section-title {
     font-size: 2.5rem;
     color: var(--secondary-color);
     margin-bottom: 10px;
 }
 
+/* sous-titres sections */
 .section-subtitle {
     font-size: 1.2rem;
     color: var(--muted-color);
     margin-bottom: 40px;
 }
 
-/* Cards */
+/* carte */
 .card {
     border: none;
     border-radius: 0;
@@ -479,17 +526,20 @@
     transition: transform 0.3s ease;
 }
 
+/* hover carte */
 .card:hover {
     transform: translateY(-5px);
     /*box-shadow: 0 15px 30px greenyellow;*/
 }
 
+/* image carte */
 .card-img-top {
     width: 100%;
     height: 650px;
     object-fit: cover;
 }
 
+/* contenu carte */
 .card-body {
     min-height: 200px;
     display: flex;
@@ -498,36 +548,44 @@
     padding: 20px;
 }
 
+/* titre carte */
 .card-title {
     font-size: 1.5rem;
     color: var(--primary-color);
 }
 
+/* texte carte */
 .card-text {
     font-size: 1rem;
     color: var(--muted-color);
 }
 
+/* grande carte */
 .big-card {
     width: 100%;
     max-width: 600px;
     margin: 0 auto;
 }
 
+/* image grande carte */
 .big-card .card-img-top {
     height: 800px;
 }
 
+/* titre grande carte */
 .big-card .card-title {
     font-size: 1.8rem;
 }
 
+/* texte grande carte */
 .big-card .card-text {
     font-size: 1.1rem;
 }
 
+/* controles carousel offres */
 #offerCarousel .carousel-control-prev,
 #offerCarousel .carousel-control-next {
     width: 60px;
     height: 60px;
 }
+

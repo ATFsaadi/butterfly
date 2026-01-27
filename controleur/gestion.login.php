@@ -1,21 +1,22 @@
 <?php
-// Démarrer la session si elle n'est pas déjà démarrée
-if (session_status() === PHP_SESSION_NONE) session_start();
 
-// Inclure le contrôleur
+if (session_status() === PHP_SESSION_NONE) session_start();
 require_once __DIR__ . '/controleur.class.php';
 
 $controleur = new Controleur();
 $errors = [];
 
-// Traitement du formulaire de connexion
+/* traitement connexion */
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['Connexion'])) {
+
     $email = trim($_POST['email'] ?? '');
     $mdp = $_POST['mot_de_passe'] ?? '';
 
     if (empty($email) || empty($mdp)) {
         $errors[] = "Veuillez remplir tous les champs.";
     } else {
+
+        /* recuperation utilisateur */
         $user = $controleur->select_user($email);
 
         if (!$user) {
@@ -23,7 +24,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['Connexion'])) {
         } elseif (!password_verify($mdp, $user['mot_de_passe'])) {
             $errors[] = "Mot de passe incorrect.";
         } else {
-            // Stockage de l'utilisateur en session
+
+            /* session utilisateur */
             $_SESSION['user'] = [
                 'idutil' => $user['idutil'],
                 'nom' => $user['nom'],
@@ -32,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['Connexion'])) {
                 'role' => $user['role']
             ];
 
-            // Redirection vers home
+            /* redirection */
             header('Location: ../index.php?page=home');
             exit();
         }

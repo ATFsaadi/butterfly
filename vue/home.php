@@ -1,12 +1,12 @@
 <?php
-// Vérification variables
+
 $villesDepart = $villesDepart ?? [];
 $destinations = $destinations ?? [];
 $voyages = $voyages ?? [];
 $slides = $slides ?? [];
 ?>
 
-<!-- SECTION RECHERCHE VOYAGE -->
+<!-- section recherche voyage -->
 <section class="voyage-menu-section">
     <div class="voyage-container">
         <div class="voyage-menu-title" id="voyageTitle">
@@ -15,15 +15,19 @@ $slides = $slides ?? [];
     </div>
 </section>
 
-<!-- MENU STICKY -->
+<!-- menu sticky -->
 <div id="voyageBar" class="position-sticky top-0 start-0 w-100 bg-white" style="z-index: 1030; border-bottom: 1px solid #eee;">
+
+    <!-- composant recherche -->
     <?php include __DIR__ . '/components/voyageSearch.php'; ?>
+
 </div>
 
-<!-- SECTION SELECTION (Slides dynamiques) -->
+<!-- slides -->
 <?php include __DIR__ . '/components/carouselSlides.php'; ?>
 
-<!-- SECTION OFFRES (Voyages dynamiques) -->
+<!-- offres -->
 <?php include __DIR__ . '/components/carouselOffres.php'; ?>
 
+<!-- script -->
 <script src="js/home.js" defer></script>

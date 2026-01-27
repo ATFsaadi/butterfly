@@ -346,3 +346,6 @@ Validation des données
 2️⃣ Destinations + affichage
 3️⃣ Voyages + filtres (prix, durée, ville)
 4️⃣ Réservations (client)
+
+
+
