@@ -368,4 +368,76 @@ class Modele {
         return $this->unPdo->query($sql)->fetchAll();
     }
 
+    /* reservations */
+
+   public function addReservation(array $tab)
+{
+    $sql = "INSERT INTO reservations
+            (id_utilisateur, id_voyage, date_depart, date_retour, nombre_adultes, nombre_enfants, nombre_bebes, prix_total)
+            VALUES (:id_utilisateur, :id_voyage, :date_depart, :date_retour, :adultes, :enfants, :bebes, :prix_total)";
+
+    $stmt = $this->unPdo->prepare($sql);
+
+    $ok = $stmt->execute([
+        ':id_utilisateur' => (int)$tab['id_utilisateur'],
+        ':id_voyage'      => (int)$tab['id_voyage'],
+        ':date_depart'    => $tab['date_depart'] ?? null,
+        ':date_retour'    => $tab['date_retour'] ?? null,
+        ':adultes'        => (int)($tab['nombre_adultes'] ?? 0),
+        ':enfants'        => (int)($tab['nombre_enfants'] ?? 0),
+        ':bebes'          => (int)($tab['nombre_bebes'] ?? 0),
+        ':prix_total'     => (float)($tab['prix_total'] ?? 0),
+    ]);
+
+    if (!$ok) return false;
+
+    return (int)$this->unPdo->lastInsertId(); 
+}
+
+
+    public function selectReservationsByUser(int $id_utilisateur): array
+    {
+        $sql = "SELECT r.*, v.titre AS voyage_titre, v.image AS voyage_image
+                FROM reservations r
+                JOIN voyages v ON v.id_voyage = r.id_voyage
+                WHERE r.id_utilisateur = :id
+                ORDER BY r.date_reservation DESC";
+
+        $stmt = $this->unPdo->prepare($sql);
+        $stmt->execute([':id' => $id_utilisateur]);
+        return $stmt->fetchAll();
+    }
+
+    public function selectReservationById(int $id_reservation): array|false
+    {
+        $sql = "SELECT r.*, v.titre AS voyage_titre, v.image AS voyage_image
+                FROM reservations r
+                JOIN voyages v ON v.id_voyage = r.id_voyage
+                WHERE r.id_reservation = :id";
+
+        $stmt = $this->unPdo->prepare($sql);
+        $stmt->execute([':id' => $id_reservation]);
+        return $stmt->fetch();
+    }
+
+   public function selectAllReservations(): array
+{
+    $sql = "SELECT r.*, u.nom, u.prenom, v.titre
+            FROM reservations r
+            JOIN utilisateurs u ON u.idutil = r.id_utilisateur
+            JOIN voyages v ON v.id_voyage = r.id_voyage
+            ORDER BY r.date_reservation DESC";
+
+    return $this->unPdo->query($sql)->fetchAll();
+}
+
+
+public function confirmReservation(int $id): bool
+{
+    $sql = "UPDATE reservations SET statut = 'confirmée' WHERE id_reservation = :id";
+    $stmt = $this->unPdo->prepare($sql);
+    return $stmt->execute([':id' => $id]);
+}
+
+
 }

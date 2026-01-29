@@ -28,13 +28,15 @@ if (isset($_POST['Connexion']) && isset($_POST['email'], $_POST['mot_de_passe'])
     if (!$unUser || !password_verify($mdp, $unUser['mot_de_passe'])) {
         $error = "Email ou mot de passe incorrect";
     } else {
-        session_regenerate_id(true);
         $_SESSION['user'] = [
             'id' => $unUser['idutil'],
+            'idutil' => $unUser['idutil'],
             'nom' => $unUser['nom'],
             'prenom' => $unUser['prenom'],
+            'email' => $unUser['email'],
             'role' => $unUser['role']
         ];
+
 
         $redirect = ($unUser['role'] === 'admin')
             ? "index.php?page=dashboard_admin"
@@ -107,12 +109,47 @@ if ($page === 'voyages') {
         : [];
 }
 
+if ($page === 'voyage_detail') {
+    $id = (int)($_GET['id'] ?? 0);
+    $voyage = $unControleur->getVoyageById($id);
+}
+
+
 /* offres */
 if ($page === 'offres') {
     $offres = method_exists($unControleur, 'getOffresActives')
         ? $unControleur->getOffresActives()
         : [];
 }
+
+/* reservation */
+if ($page === 'reservation') {
+    require_once __DIR__ . '/controleur/gestion.reservations.php';
+}
+
+if ($page === 'reservation_recap') {
+    require_once __DIR__ . '/controleur/gestion.reservation_recap.php';
+}
+
+if ($page === 'admin_reservations') {
+    require_once __DIR__ . '/controleur/gestion.reservations.php';
+}
+
+if ($page === 'dashboard_client') {
+
+    if (!isset($_SESSION['user'])) {
+        header("Location: index.php?page=home");
+        exit;
+    }
+
+    // prend idutil (et fallback id si jamais)
+    $idUser = (int)($_SESSION['user']['idutil'] ?? ($_SESSION['user']['id'] ?? 0));
+
+    $reservations = ($idUser > 0)
+        ? $unControleur->getReservationsByUser($idUser)
+        : [];
+}
+
 
 /* admin */
 if (str_starts_with($page, 'admin')) {

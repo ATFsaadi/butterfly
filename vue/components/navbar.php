@@ -1,5 +1,4 @@
 <?php
-
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -16,7 +15,7 @@ $continentActif = isset($_GET['continent']) ? (int)$_GET['continent'] : 0;
         <!-- logo et menu mobile -->
         <div class="d-flex align-items-center">
             <button class="navbar-toggler d-lg-none nav-link d-flex flex-column align-items-center"
-                    type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavTop">
                 <span class="icon-circle">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15">
                         <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
@@ -24,6 +23,7 @@ $continentActif = isset($_GET['continent']) ? (int)$_GET['continent'] : 0;
                 </span>
                 <span class="mt-1">menu</span>
             </button>
+
             <a href="index.php" class="navbar-brand logo-spacing d-none d-lg-flex">
                 <img src="icons/logo-1.png" alt="logo" class="logo-size">
             </a>
@@ -35,11 +35,12 @@ $continentActif = isset($_GET['continent']) ? (int)$_GET['continent'] : 0;
 
                 <?php if (isset($_SESSION['user'])): ?>
 
-                    <?php if ($_SESSION['user']['role'] === 'admin'): ?>
+                    <?php if (($_SESSION['user']['role'] ?? '') === 'admin'): ?>
 
                         <!-- menu admin -->
-                        <li class="nav-item d-flex flex-column align-items-center">
-                            <a class="nav-link d-flex flex-column align-items-center" href="index.php?page=admin_destinations">
+                        <li class="nav-item d-flex flex-column align-items-center nav-item-fixed">
+                            <a class="nav-link d-flex flex-column align-items-center <?= $pageActuelle === 'admin_destinations' ? 'active' : '' ?>"
+                               href="index.php?page=admin_destinations">
                                 <span class="icon-circle">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15">
                                         <path d="M12 2L15 8H9L12 2ZM12 22V12H2L12 22ZM22 12H12V2L22 12Z"/>
@@ -49,8 +50,9 @@ $continentActif = isset($_GET['continent']) ? (int)$_GET['continent'] : 0;
                             </a>
                         </li>
 
-                        <li class="nav-item d-flex flex-column align-items-center">
-                            <a class="nav-link d-flex flex-column align-items-center" href="index.php?page=admin_voyages">
+                        <li class="nav-item d-flex flex-column align-items-center nav-item-fixed">
+                            <a class="nav-link d-flex flex-column align-items-center <?= $pageActuelle === 'admin_voyages' ? 'active' : '' ?>"
+                               href="index.php?page=admin_voyages">
                                 <span class="icon-circle">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15">
                                         <path d="M20 8h-3V4H7v4H4v2h16V8zm-5-4v4H9V4h6zm-9 8h16v8H4v-8zm2 2v4h12v-4H6z"/>
@@ -60,8 +62,9 @@ $continentActif = isset($_GET['continent']) ? (int)$_GET['continent'] : 0;
                             </a>
                         </li>
 
-                        <li class="nav-item d-flex flex-column align-items-center">
-                            <a class="nav-link d-flex flex-column align-items-center" href="index.php?page=admin_slides">
+                        <li class="nav-item d-flex flex-column align-items-center nav-item-fixed">
+                            <a class="nav-link d-flex flex-column align-items-center <?= $pageActuelle === 'admin_slides' ? 'active' : '' ?>"
+                               href="index.php?page=admin_slides">
                                 <span class="icon-circle">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15">
                                         <path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 8h14v-2H7v2zm0-4h14v-2H7v2zm0-6v2h14V7H7z"/>
@@ -71,8 +74,9 @@ $continentActif = isset($_GET['continent']) ? (int)$_GET['continent'] : 0;
                             </a>
                         </li>
 
-                        <li class="nav-item d-flex flex-column align-items-center">
-                            <a class="nav-link d-flex flex-column align-items-center" href="index.php?page=admin_offres">
+                        <li class="nav-item d-flex flex-column align-items-center nav-item-fixed">
+                            <a class="nav-link d-flex flex-column align-items-center <?= $pageActuelle === 'admin_offres' ? 'active' : '' ?>"
+                               href="index.php?page=admin_offres">
                                 <span class="icon-circle">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15">
                                         <path d="M12 2l9 4v6c0 5-4 9-9 10C7 21 3 17 3 12V6l9-4zm4 7H8v2h8V9zm0 4H8v2h8v-2z"/>
@@ -82,7 +86,19 @@ $continentActif = isset($_GET['continent']) ? (int)$_GET['continent'] : 0;
                             </a>
                         </li>
 
-                        <li class="nav-item d-flex flex-column align-items-center">
+                        <li class="nav-item d-flex flex-column align-items-center nav-item-fixed">
+                            <a class="nav-link d-flex flex-column align-items-center <?= $pageActuelle === 'admin_reservations' ? 'active' : '' ?>"
+                               href="index.php?page=admin_reservations">
+                                <span class="icon-circle">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15">
+                                        <path d="M7 2v2H5a2 2 0 0 0-2 2v2h18V6a2 2 0 0 0-2-2h-2V2h-2v2H9V2H7zm14 8H3v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V10z"/>
+                                    </svg>
+                                </span>
+                                <span class="mt-1">Réservations</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item d-flex flex-column align-items-center nav-item-fixed">
                             <a class="nav-link d-flex flex-column align-items-center" href="index.php?page=logout">
                                 <span class="icon-circle">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15">
@@ -93,37 +109,26 @@ $continentActif = isset($_GET['continent']) ? (int)$_GET['continent'] : 0;
                             </a>
                         </li>
 
-                        <!-- prenom -->
-                        <li class="nav-item d-flex flex-column align-items-center">
-                            <span class="nav-link"><?= htmlspecialchars($_SESSION['user']['prenom']) ?></span>
+                        <li class="nav-item d-flex flex-column align-items-center nav-item-fixed">
+                            <span class="nav-link"><?= htmlspecialchars($_SESSION['user']['prenom'] ?? '') ?></span>
                         </li>
 
                     <?php else: ?>
 
                         <!-- menu client connecte -->
-                        <li class="nav-item d-flex flex-column align-items-center d-none d-lg-block">
-                            <a class="nav-link d-flex flex-column align-items-center" href="#" onclick="openAgenceMap(); return false;">
+                        <li class="nav-item d-flex flex-column align-items-center nav-item-fixed">
+                            <a class="nav-link d-flex flex-column align-items-center <?= $pageActuelle === 'dashboard_client' ? 'active' : '' ?>"
+                               href="index.php?page=dashboard_client">
                                 <span class="icon-circle">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15">
-                                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                                        <path d="M4 6h16v2H4V6zm0 5h16v2H4v-2zm0 5h10v2H4v-2z"/>
                                     </svg>
                                 </span>
-                                <span class="mt-1">Notre agence</span>
+                                <span class="mt-1">Mes réservations</span>
                             </a>
                         </li>
 
-                        <li class="nav-item d-flex flex-column align-items-center d-none d-lg-block">
-                            <a class="nav-link d-flex flex-column align-items-center" href="about.php">
-                                <span class="icon-circle">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15">
-                                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
-                                    </svg>
-                                </span>
-                                <span class="mt-1">À propos</span>
-                            </a>
-                        </li>
-
-                        <li class="nav-item d-flex flex-column align-items-center">
+                        <li class="nav-item d-flex flex-column align-items-center nav-item-fixed">
                             <a class="nav-link d-flex flex-column align-items-center" href="index.php?page=logout">
                                 <span class="icon-circle">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15">
@@ -134,9 +139,8 @@ $continentActif = isset($_GET['continent']) ? (int)$_GET['continent'] : 0;
                             </a>
                         </li>
 
-                        <!-- prenom -->
-                        <li class="nav-item d-flex flex-column align-items-center">
-                            <span class="nav-link"><?= htmlspecialchars($_SESSION['user']['prenom']) ?></span>
+                        <li class="nav-item d-flex flex-column align-items-center nav-item-fixed">
+                            <span class="nav-link"><?= htmlspecialchars($_SESSION['user']['prenom'] ?? '') ?></span>
                         </li>
 
                     <?php endif; ?>
@@ -144,7 +148,7 @@ $continentActif = isset($_GET['continent']) ? (int)$_GET['continent'] : 0;
                 <?php else: ?>
 
                     <!-- menu visiteur -->
-                    <li class="nav-item d-flex flex-column align-items-center d-none d-lg-block">
+                    <li class="nav-item d-flex flex-column align-items-center d-none d-lg-block nav-item-fixed">
                         <a class="nav-link d-flex flex-column align-items-center" href="#" onclick="openAgenceMap(); return false;">
                             <span class="icon-circle">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15">
@@ -155,7 +159,7 @@ $continentActif = isset($_GET['continent']) ? (int)$_GET['continent'] : 0;
                         </a>
                     </li>
 
-                    <li class="nav-item d-flex flex-column align-items-center d-none d-lg-block">
+                    <li class="nav-item d-flex flex-column align-items-center d-none d-lg-block nav-item-fixed">
                         <a class="nav-link d-flex flex-column align-items-center" href="about.php">
                             <span class="icon-circle">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15">
@@ -166,7 +170,7 @@ $continentActif = isset($_GET['continent']) ? (int)$_GET['continent'] : 0;
                         </a>
                     </li>
 
-                    <li class="nav-item d-flex flex-column align-items-center">
+                    <li class="nav-item d-flex flex-column align-items-center nav-item-fixed">
                         <button class="nav-link signin-nav-link d-flex flex-column align-items-center btn p-0"
                                 data-bs-toggle="modal" data-bs-target="#loginModal">
                             <span class="icon-circle">
@@ -178,7 +182,7 @@ $continentActif = isset($_GET['continent']) ? (int)$_GET['continent'] : 0;
                         </button>
                     </li>
 
-                    <li class="nav-item d-flex flex-column align-items-center">
+                    <li class="nav-item d-flex flex-column align-items-center nav-item-fixed">
                         <button class="nav-link d-flex flex-column align-items-center btn p-0"
                                 data-bs-toggle="modal" data-bs-target="#registerModal">
                             <span class="icon-circle">
@@ -194,6 +198,7 @@ $continentActif = isset($_GET['continent']) ? (int)$_GET['continent'] : 0;
 
             </ul>
         </div>
+
     </div>
 </nav>
 
@@ -203,23 +208,20 @@ $continentActif = isset($_GET['continent']) ? (int)$_GET['continent'] : 0;
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mx-auto">
 
-                <!-- destinations -->
                 <li class="nav-item me-4">
-                    <a class="nav-link" href="index.php?page=destinations">
+                    <a class="nav-link <?= $pageActuelle === 'destinations' ? 'active' : '' ?>" href="index.php?page=destinations">
                         <i class="fas fa-map-marked-alt nav-icon"></i> Destinations
                     </a>
                 </li>
 
-                <!-- voyages -->
                 <li class="nav-item me-4">
-                    <a class="nav-link" href="index.php?page=voyages">
+                    <a class="nav-link <?= $pageActuelle === 'voyages' ? 'active' : '' ?>" href="index.php?page=voyages">
                         <i class="fas fa-suitcase-rolling nav-icon"></i> Voyages
                     </a>
                 </li>
 
-                <!-- offres -->
                 <li class="nav-item me-4">
-                    <a class="nav-link" href="index.php?page=offres">
+                    <a class="nav-link <?= $pageActuelle === 'offres' ? 'active' : '' ?>" href="index.php?page=offres">
                         <i class="fas fa-tags nav-icon"></i> Offres
                     </a>
                 </li>

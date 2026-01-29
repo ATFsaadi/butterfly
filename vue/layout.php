@@ -1,23 +1,8 @@
-<?php
-
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-require_once __DIR__ . "/../controleur/controleur.class.php";
-
-$unControleur = new Controleur();
-$continents = $unControleur->getAllContinents();
-?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-
-    <!-- meta -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- titre -->
     <title>Butterfly Voyage</title>
 
     <!-- librairies -->
@@ -36,23 +21,23 @@ $continents = $unControleur->getAllContinents();
     <link rel="stylesheet" href="style/page.css">
     <link rel="stylesheet" href="style/responsive.css">
     <link rel="stylesheet" href="style/admin.css">
-
 </head>
+
 <body>
 
 <!-- navigation -->
 <?php
-require_once(__DIR__ . "/components/navbar.php");
-require_once(__DIR__ . "/modales/login.php");
-require_once(__DIR__ . "/modales/register.php");
-require_once(__DIR__ . "/modales/map.php");
+require_once __DIR__ . "/components/navbar.php";
+require_once __DIR__ . "/modales/login.php";
+require_once __DIR__ . "/modales/register.php";
+require_once __DIR__ . "/modales/map.php";
 ?>
 
 <!-- contenu -->
 <main>
-    <?php 
+    <?php
     if (isset($viewFile) && file_exists($viewFile)) {
-        include($viewFile);
+        include $viewFile;
     } else {
         echo "<p>La page demandée n'existe pas.</p>";
     }
@@ -60,7 +45,7 @@ require_once(__DIR__ . "/modales/map.php");
 </main>
 
 <!-- pied de page -->
-<?php require_once(__DIR__ . "/components/footer.php"); ?>
+<?php require_once __DIR__ . "/components/footer.php"; ?>
 
 <!-- scripts -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>

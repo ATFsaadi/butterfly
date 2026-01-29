@@ -1,6 +1,5 @@
 
-
-CREATE DATABASE IF NOT EXISTS bfly
+CREATE DATABASE bfly
 USE bfly;
 
 DROP TABLE IF EXISTS reservations;
@@ -29,7 +28,6 @@ CREATE TABLE destinations (
   id_continent INT
 ) ENGINE=InnoDB;
 
-
 CREATE TABLE voyages (
   id_voyage INT AUTO_INCREMENT PRIMARY KEY,
   titre VARCHAR(100) NOT NULL,
@@ -46,7 +44,6 @@ CREATE TABLE voyages (
   date_retour DATE
 ) ENGINE=InnoDB;
 
-
 CREATE TABLE offres (
   id_offre INT AUTO_INCREMENT PRIMARY KEY,
   titre VARCHAR(150) NOT NULL,
@@ -57,7 +54,6 @@ CREATE TABLE offres (
   actif TINYINT(1) DEFAULT 1,
   id_voyage INT NOT NULL
 ) ENGINE=MyISAM;
-
 
 CREATE TABLE utilisateurs (
   idutil INT AUTO_INCREMENT PRIMARY KEY,
@@ -71,8 +67,6 @@ CREATE TABLE utilisateurs (
   date_modification DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
-
-
 CREATE TABLE slides (
   id_slide INT AUTO_INCREMENT PRIMARY KEY,
   titre VARCHAR(100) NOT NULL,
@@ -81,19 +75,6 @@ CREATE TABLE slides (
   lien VARCHAR(255),
   ordre INT DEFAULT 0,
   actif TINYINT(1) DEFAULT 1
-) ENGINE=InnoDB;
-
-
-
-CREATE TABLE reservations (
-  id_reservation INT AUTO_INCREMENT PRIMARY KEY,
-  id_utilisateur INT NOT NULL,
-  id_voyage INT NOT NULL,
-  nombre_adultes INT DEFAULT 0,
-  nombre_enfants INT DEFAULT 0,
-  nombre_bebes INT DEFAULT 0,
-  date_reservation DATETIME DEFAULT CURRENT_TIMESTAMP,
-  statut ENUM('en attente','confirmée') DEFAULT 'en attente'
 ) ENGINE=InnoDB;
 
 ALTER TABLE destinations
@@ -112,3 +93,62 @@ ALTER TABLE reservations
   FOREIGN KEY (id_voyage) REFERENCES voyages(id_voyage);
 
 COMMIT;
+
+-- DESTINATIONS
+
+INSERT INTO destinations (nom, ville, description, image, id_continent) VALUES
+('Safari Kenya', 'Nairobi', 'Découverte de la faune africaine', 'kenya.jpg', 1),
+('New York City', 'New York', 'La ville qui ne dort jamais', 'ny.jpg', 2),
+('Rio de Janeiro', 'Rio', 'Plages et carnaval', 'rio.jpg', 3),
+('Tokyo Experience', 'Tokyo', 'Tradition et modernité', 'tokyo.jpg', 4),
+('Rome Antique', 'Rome', 'Histoire et gastronomie', 'rome.jpg', 5);
+
+
+-- VOYAGES
+
+INSERT INTO voyages
+(titre, prix_adulte, prix_enfant, prix_bebe, duree, description, image, id_destination, ville_depart, prix, date_depart, date_retour)
+VALUES
+('Safari Aventure', 1800, 1200, 300, 10, 'Safari au cœur du Kenya', 'safari.jpg', 1, 'Paris', 1800, '2026-03-10', '2026-03-20'),
+('City Trip NYC', 1200, 800, 200, 7, 'Voyage urbain à New York', 'ny_trip.jpg', 2, 'Paris', 1200, '2026-04-05', '2026-04-12'),
+('Brésil Festif', 1500, 1000, 250, 9, 'Rio et ses plages', 'rio_trip.jpg', 3, 'Paris', 1500, '2026-05-01', '2026-05-10'),
+('Tokyo Immersion', 2000, 1400, 400, 12, 'Culture japonaise complète', 'tokyo_trip.jpg', 4, 'Paris', 2000, '2026-06-15', '2026-06-27'),
+('Rome Culture', 900, 600, 150, 5, 'Visite historique de Rome', 'rome_trip.jpg', 5, 'Paris', 900, '2026-07-10', '2026-07-15');
+
+
+-- OFFRES
+
+INSERT INTO offres (titre, reduction, date_debut, date_fin, description, actif, id_voyage) VALUES
+('Promo Safari', 15, '2026-01-01', '2026-02-01', 'Réduction safari Kenya', 1, 1),
+('NY Deal', 10, '2026-02-01', '2026-03-01', 'Offre spéciale New York', 1, 2),
+('Carnaval Rio', 20, '2026-03-01', '2026-04-01', 'Promo carnaval', 1, 3),
+('Tokyo Spring', 12, '2026-04-01', '2026-05-01', 'Promo printemps Japon', 1, 4),
+('Rome Express', 8, '2026-05-01', '2026-06-01', 'Week-end romain', 1, 5);
+
+
+-- SLIDES
+
+INSERT INTO slides (titre, description, image, lien, ordre, actif) VALUES
+('Safari Kenya', 'Explorez l’Afrique sauvage', 'slide1.jpg', '#safari', 1, 1),
+('New York', 'La ville mythique', 'slide2.jpg', '#ny', 2, 1),
+('Rio', 'Soleil et fête', 'slide3.jpg', '#rio', 3, 1),
+('Tokyo', 'Tradition et futur', 'slide4.jpg', '#tokyo', 4, 1),
+('Rome', 'Voyage dans le temps', 'slide5.jpg', '#rome', 5, 1);
+
+
+CREATE TABLE reservations (
+  id_reservation INT AUTO_INCREMENT PRIMARY KEY,
+  id_utilisateur INT NOT NULL,
+  id_voyage INT NOT NULL,
+  date_depart DATE NULL,
+  date_retour DATE NULL,
+  nombre_adultes INT DEFAULT 0,
+  nombre_enfants INT DEFAULT 0,
+  nombre_bebes INT DEFAULT 0,
+  prix_total DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+  date_reservation DATETIME DEFAULT CURRENT_TIMESTAMP,
+  statut ENUM('en attente','confirmée','annulée') DEFAULT 'en attente'
+) ENGINE=InnoDB;
+
+ALTER TABLE reservations
+ADD paiement_statut VARCHAR(20) NOT NULL DEFAULT 'non payé';

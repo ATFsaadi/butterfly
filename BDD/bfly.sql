@@ -111,3 +111,19 @@ CREATE TABLE offres (
         ON DELETE CASCADE
         ON UPDATE CASCADE
 );
+ALTER TABLE reservations
+  ADD COLUMN date_depart DATE NULL AFTER id_voyage,
+  ADD COLUMN date_retour DATE NULL AFTER date_depart,
+  ADD COLUMN prix_total DECIMAL(10,2) NOT NULL DEFAULT 0.00 AFTER nombre_bebes,
+  MODIFY COLUMN statut ENUM('en attente','confirmée','annulée') DEFAULT 'en attente';
+ALTER TABLE reservations
+  CHANGE id_utilisateur idutil INT NOT NULL;
+
+ALTER TABLE reservations DROP FOREIGN KEY reservations_ibfk_1;
+
+ALTER TABLE reservations
+  ADD CONSTRAINT reservations_ibfk_1
+  FOREIGN KEY (idutil) REFERENCES utilisateurs(idutil)
+  ON DELETE CASCADE;
+ALTER TABLE reservations
+ADD paiement_statut VARCHAR(20) NOT NULL DEFAULT 'non payé';

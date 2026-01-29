@@ -153,4 +153,25 @@ class Controleur {
         return $this->unModele->selectOffresActives();
     }
 
+    public function addReservation($tab) {
+    return $this->unModele->addReservation($tab);
+    }
+
+    public function getReservationsByUser(int $id_utilisateur): array {
+        return $this->unModele->selectReservationsByUser($id_utilisateur);
+    }
+
+    public function getReservationById(int $id_reservation) {
+        return $this->unModele->selectReservationById($id_reservation);
+    }
+
+    public function getAllReservations() {
+    return $this->unModele->selectAllReservations();
+}
+
+public function confirmReservation(int $id) {
+    return $this->unModele->confirmReservation($id);
+}
+
+
 }

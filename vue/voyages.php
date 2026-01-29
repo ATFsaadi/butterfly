@@ -53,7 +53,11 @@ if (!isset($voyages)) $voyages = [];
 
                         <!-- action -->
                         <div class="card-footer bg-white border-0">
-                            <a href="#" class="btn btn-outline-primary w-100 disabled">Voir plus</a>
+                            <a href="index.php?page=voyage_detail&id=<?= (int)$v['id_voyage'] ?>"
+   class="btn btn-outline-primary w-100">
+   Voir plus
+</a>
+
                         </div>
 
                     </div>
