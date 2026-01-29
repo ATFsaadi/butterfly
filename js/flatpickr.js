@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
 
+  /* sécurité : flatpickr chargé ? */
   if (typeof flatpickr === "undefined") {
     console.error("flatpickr non chargé");
     return;
@@ -7,63 +8,74 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const today = new Date();
 
-  /* helpers */
-  const setupFlatpickrPair = (startInput, endInput) => {
+  /* =========================
+     helper : lie 2 champs date
+  ========================= */
+  function setupFlatpickrPair(startInput, endInput) {
     if (!startInput || !endInput) return;
 
+    /* date de fin */
     const endPicker = flatpickr(endInput, {
       dateFormat: "Y-m-d",
       minDate: today,
       allowInput: false,
       disableMobile: true,
-      locale: (flatpickr.l10ns && flatpickr.l10ns.fr) ? "fr" : undefined
+      locale: (flatpickr.l10ns?.fr) ? "fr" : undefined
     });
 
+    /* date de début */
     flatpickr(startInput, {
       dateFormat: "Y-m-d",
       minDate: today,
       defaultDate: startInput.value || today,
       allowInput: false,
       disableMobile: true,
-      locale: (flatpickr.l10ns && flatpickr.l10ns.fr) ? "fr" : undefined,
-      onChange: function (selectedDates, dateStr) {
+      locale: (flatpickr.l10ns?.fr) ? "fr" : undefined,
+
+      onChange(selectedDates, dateStr) {
         endPicker.set("minDate", dateStr);
+
+        /* force date fin >= date début */
         if (!endInput.value || endInput.value < dateStr) {
           endPicker.setDate(dateStr, true);
         }
       }
     });
 
-    if (!endInput.value || (startInput.value && endInput.value < startInput.value)) {
-      endPicker.set("minDate", startInput.value || today);
-      endPicker.setDate(startInput.value || today, true);
+    /* initialisation cohérente */
+    const startVal = startInput.value || today;
+    if (!endInput.value || endInput.value < startVal) {
+      endPicker.set("minDate", startVal);
+      endPicker.setDate(startVal, true);
     } else {
-      endPicker.set("minDate", startInput.value || today);
+      endPicker.set("minDate", startVal);
     }
-  };
+  }
 
-  /* 1) ADMIN (par name) */
-  const adminPairs = [
-    { start: 'date_depart', end: 'date_retour' },
-    { start: 'date_debut', end: 'date_fin' }
-  ];
-
-  adminPairs.forEach(pair => {
-    const startInput = document.querySelector(`input[name="${pair.start}"]`);
-    const endInput   = document.querySelector(`input[name="${pair.end}"]`);
-    setupFlatpickrPair(startInput, endInput);
+  /* =========================
+     1) admin (par name)
+  ========================= */
+  [
+    { start: "date_depart", end: "date_retour" },
+    { start: "date_debut", end: "date_fin" }
+  ].forEach(({ start, end }) => {
+    setupFlatpickrPair(
+      document.querySelector(`input[name="${start}"]`),
+      document.querySelector(`input[name="${end}"]`)
+    );
   });
 
-  /* 2) MENU VOYAGE (par id) */
-  const menuPairs = [
-    { startId: 'dateDepart', endId: 'dateArrivee' },
-    { startId: 'dateDepartMobile', endId: 'dateArriveeMobile' }
-  ];
-
-  menuPairs.forEach(pair => {
-    const startInput = document.getElementById(pair.startId);
-    const endInput   = document.getElementById(pair.endId);
-    setupFlatpickrPair(startInput, endInput);
+  /* =========================
+     2) menu voyage (par id)
+  ========================= */
+  [
+    { start: "dateDepart", end: "dateArrivee" },
+    { start: "dateDepartMobile", end: "dateArriveeMobile" }
+  ].forEach(({ start, end }) => {
+    setupFlatpickrPair(
+      document.getElementById(start),
+      document.getElementById(end)
+    );
   });
 
 });

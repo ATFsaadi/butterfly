@@ -1,19 +1,30 @@
 <?php
+
+/* session */
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
 /* variables */
-$pageActuelle = $_GET['page'] ?? '';
-$continentActif = isset($_GET['continent']) ? (int)$_GET['continent'] : 0;
+$pageActuelle    = $_GET['page'] ?? '';
+$continentActif  = isset($_GET['continent']) ? (int) $_GET['continent'] : 0;
+$notifReservations = 0;
+
+/* notification admin */
+if (isset($_SESSION['user']) && ($_SESSION['user']['role'] ?? '') === 'admin') {
+    $notifReservations = $unControleur->countReservationsEnAttente();
+}
+
 ?>
 
 <!-- navbar superieure -->
 <nav class="custom-navbar navbar-expand-lg">
     <div class="container-fluid d-flex justify-content-between" style="padding: 20px 100px;">
 
-        <!-- logo et menu mobile -->
+        <!-- logo + bouton menu mobile -->
         <div class="d-flex align-items-center">
+
+            <!-- bouton menu mobile -->
             <button class="navbar-toggler d-lg-none nav-link d-flex flex-column align-items-center"
                     type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavTop">
                 <span class="icon-circle">
@@ -24,9 +35,11 @@ $continentActif = isset($_GET['continent']) ? (int)$_GET['continent'] : 0;
                 <span class="mt-1">menu</span>
             </button>
 
+            <!-- logo desktop -->
             <a href="index.php" class="navbar-brand logo-spacing d-none d-lg-flex">
                 <img src="icons/logo-1.png" alt="logo" class="logo-size">
             </a>
+
         </div>
 
         <!-- actions utilisateur -->
@@ -38,6 +51,8 @@ $continentActif = isset($_GET['continent']) ? (int)$_GET['continent'] : 0;
                     <?php if (($_SESSION['user']['role'] ?? '') === 'admin'): ?>
 
                         <!-- menu admin -->
+
+                        <!-- destinations -->
                         <li class="nav-item d-flex flex-column align-items-center nav-item-fixed">
                             <a class="nav-link d-flex flex-column align-items-center <?= $pageActuelle === 'admin_destinations' ? 'active' : '' ?>"
                                href="index.php?page=admin_destinations">
@@ -50,6 +65,7 @@ $continentActif = isset($_GET['continent']) ? (int)$_GET['continent'] : 0;
                             </a>
                         </li>
 
+                        <!-- voyages -->
                         <li class="nav-item d-flex flex-column align-items-center nav-item-fixed">
                             <a class="nav-link d-flex flex-column align-items-center <?= $pageActuelle === 'admin_voyages' ? 'active' : '' ?>"
                                href="index.php?page=admin_voyages">
@@ -62,6 +78,7 @@ $continentActif = isset($_GET['continent']) ? (int)$_GET['continent'] : 0;
                             </a>
                         </li>
 
+                        <!-- slides -->
                         <li class="nav-item d-flex flex-column align-items-center nav-item-fixed">
                             <a class="nav-link d-flex flex-column align-items-center <?= $pageActuelle === 'admin_slides' ? 'active' : '' ?>"
                                href="index.php?page=admin_slides">
@@ -74,6 +91,7 @@ $continentActif = isset($_GET['continent']) ? (int)$_GET['continent'] : 0;
                             </a>
                         </li>
 
+                        <!-- offres -->
                         <li class="nav-item d-flex flex-column align-items-center nav-item-fixed">
                             <a class="nav-link d-flex flex-column align-items-center <?= $pageActuelle === 'admin_offres' ? 'active' : '' ?>"
                                href="index.php?page=admin_offres">
@@ -86,18 +104,30 @@ $continentActif = isset($_GET['continent']) ? (int)$_GET['continent'] : 0;
                             </a>
                         </li>
 
-                        <li class="nav-item d-flex flex-column align-items-center nav-item-fixed">
-                            <a class="nav-link d-flex flex-column align-items-center <?= $pageActuelle === 'admin_reservations' ? 'active' : '' ?>"
+                        <!-- reservations + badge -->
+                        <li class="nav-item d-flex flex-column align-items-center position-relative">
+                            <a class="nav-link d-flex flex-column align-items-center"
                                href="index.php?page=admin_reservations">
-                                <span class="icon-circle">
+
+                                <span class="icon-circle position-relative">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15">
                                         <path d="M7 2v2H5a2 2 0 0 0-2 2v2h18V6a2 2 0 0 0-2-2h-2V2h-2v2H9V2H7zm14 8H3v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V10z"/>
                                     </svg>
+
+                                    <?php if ($notifReservations > 0): ?>
+                                        <!-- badge notifications -->
+                                        <span class="badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle"
+                                              style="font-size:10px;">
+                                            <?= $notifReservations ?>
+                                        </span>
+                                    <?php endif; ?>
                                 </span>
+
                                 <span class="mt-1">Réservations</span>
                             </a>
                         </li>
 
+                        <!-- deconnexion -->
                         <li class="nav-item d-flex flex-column align-items-center nav-item-fixed">
                             <a class="nav-link d-flex flex-column align-items-center" href="index.php?page=logout">
                                 <span class="icon-circle">
@@ -109,6 +139,7 @@ $continentActif = isset($_GET['continent']) ? (int)$_GET['continent'] : 0;
                             </a>
                         </li>
 
+                        <!-- prenom -->
                         <li class="nav-item d-flex flex-column align-items-center nav-item-fixed">
                             <span class="nav-link"><?= htmlspecialchars($_SESSION['user']['prenom'] ?? '') ?></span>
                         </li>
@@ -116,6 +147,8 @@ $continentActif = isset($_GET['continent']) ? (int)$_GET['continent'] : 0;
                     <?php else: ?>
 
                         <!-- menu client connecte -->
+
+                        <!-- mes reservations -->
                         <li class="nav-item d-flex flex-column align-items-center nav-item-fixed">
                             <a class="nav-link d-flex flex-column align-items-center <?= $pageActuelle === 'dashboard_client' ? 'active' : '' ?>"
                                href="index.php?page=dashboard_client">
@@ -128,6 +161,7 @@ $continentActif = isset($_GET['continent']) ? (int)$_GET['continent'] : 0;
                             </a>
                         </li>
 
+                        <!-- deconnexion -->
                         <li class="nav-item d-flex flex-column align-items-center nav-item-fixed">
                             <a class="nav-link d-flex flex-column align-items-center" href="index.php?page=logout">
                                 <span class="icon-circle">
@@ -139,6 +173,7 @@ $continentActif = isset($_GET['continent']) ? (int)$_GET['continent'] : 0;
                             </a>
                         </li>
 
+                        <!-- prenom -->
                         <li class="nav-item d-flex flex-column align-items-center nav-item-fixed">
                             <span class="nav-link"><?= htmlspecialchars($_SESSION['user']['prenom'] ?? '') ?></span>
                         </li>
@@ -148,8 +183,11 @@ $continentActif = isset($_GET['continent']) ? (int)$_GET['continent'] : 0;
                 <?php else: ?>
 
                     <!-- menu visiteur -->
+
+                    <!-- notre agence -->
                     <li class="nav-item d-flex flex-column align-items-center d-none d-lg-block nav-item-fixed">
-                        <a class="nav-link d-flex flex-column align-items-center" href="#" onclick="openAgenceMap(); return false;">
+                        <a class="nav-link d-flex flex-column align-items-center" href="#"
+                           onclick="openAgenceMap(); return false;">
                             <span class="icon-circle">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15">
                                     <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
@@ -159,6 +197,7 @@ $continentActif = isset($_GET['continent']) ? (int)$_GET['continent'] : 0;
                         </a>
                     </li>
 
+                    <!-- a propos -->
                     <li class="nav-item d-flex flex-column align-items-center d-none d-lg-block nav-item-fixed">
                         <a class="nav-link d-flex flex-column align-items-center" href="about.php">
                             <span class="icon-circle">
@@ -170,6 +209,7 @@ $continentActif = isset($_GET['continent']) ? (int)$_GET['continent'] : 0;
                         </a>
                     </li>
 
+                    <!-- bouton connexion -->
                     <li class="nav-item d-flex flex-column align-items-center nav-item-fixed">
                         <button class="nav-link signin-nav-link d-flex flex-column align-items-center btn p-0"
                                 data-bs-toggle="modal" data-bs-target="#loginModal">
@@ -182,6 +222,7 @@ $continentActif = isset($_GET['continent']) ? (int)$_GET['continent'] : 0;
                         </button>
                     </li>
 
+                    <!-- bouton inscription -->
                     <li class="nav-item d-flex flex-column align-items-center nav-item-fixed">
                         <button class="nav-link d-flex flex-column align-items-center btn p-0"
                                 data-bs-toggle="modal" data-bs-target="#registerModal">
@@ -205,28 +246,37 @@ $continentActif = isset($_GET['continent']) ? (int)$_GET['continent'] : 0;
 <!-- menu principal sticky -->
 <div class="custom-navbar navbar-expand-lg navbar-light bg-white sticky-top">
     <div class="container-fluid">
+
+        <!-- menu desktop -->
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mx-auto">
 
+                <!-- lien destinations -->
                 <li class="nav-item me-4">
-                    <a class="nav-link <?= $pageActuelle === 'destinations' ? 'active' : '' ?>" href="index.php?page=destinations">
+                    <a class="nav-link <?= $pageActuelle === 'destinations' ? 'active' : '' ?>"
+                       href="index.php?page=destinations">
                         <i class="fas fa-map-marked-alt nav-icon"></i> Destinations
                     </a>
                 </li>
 
+                <!-- lien voyages -->
                 <li class="nav-item me-4">
-                    <a class="nav-link <?= $pageActuelle === 'voyages' ? 'active' : '' ?>" href="index.php?page=voyages">
+                    <a class="nav-link <?= $pageActuelle === 'voyages' ? 'active' : '' ?>"
+                       href="index.php?page=voyages">
                         <i class="fas fa-suitcase-rolling nav-icon"></i> Voyages
                     </a>
                 </li>
 
+                <!-- lien offres -->
                 <li class="nav-item me-4">
-                    <a class="nav-link <?= $pageActuelle === 'offres' ? 'active' : '' ?>" href="index.php?page=offres">
+                    <a class="nav-link <?= $pageActuelle === 'offres' ? 'active' : '' ?>"
+                       href="index.php?page=offres">
                         <i class="fas fa-tags nav-icon"></i> Offres
                     </a>
                 </li>
 
             </ul>
         </div>
+
     </div>
 </div>

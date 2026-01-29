@@ -1,42 +1,54 @@
 <?php
-
 require_once __DIR__ . '/../modele/modele.class.php';
 
-class Controleur {
-
-    /* constructeur */
+class Controleur
+{
     private $unModele;
-
-    public function __construct() {
+    public function __construct()
+    {
         $this->unModele = new Modele();
     }
 
     /* utilisateurs */
-
-    public function select_user($email) {
+    /* recuperer un utilisateur par email */
+    public function select_user($email)
+    {
         return $this->unModele->select_user($email);
     }
 
-    public function addUser($nom, $prenom, $email, $mdp, $telephone = null, $role = 'client') {
+    /* ajouter un utilisateur */
+    public function addUser($nom, $prenom, $email, $mdp, $telephone = null, $role = 'client')
+    {
         return $this->unModele->addUser($nom, $prenom, $email, $mdp, $telephone, $role);
     }
 
-    public function getAllUsers() {
+    /* recuperer tous les utilisateurs */
+    public function getAllUsers()
+    {
         return $this->unModele->getAllUsers();
     }
 
     /* securite */
+    /* verifier si un utilisateur est connecte */
+    public function verifConnexion()
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
 
-    public function verifConnexion() {
-        if (session_status() === PHP_SESSION_NONE) session_start();
         if (!isset($_SESSION['user'])) {
             header('Location: index.php?page=home');
             exit();
         }
     }
 
-    public function verifAdmin() {
-        if (session_status() === PHP_SESSION_NONE) session_start();
+    /* verifier si l'utilisateur est admin */
+    public function verifAdmin()
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
         if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
             header('Location: index.php?page=home');
             exit();
@@ -44,134 +56,200 @@ class Controleur {
     }
 
     /* slides */
-
-    public function addSlide($tab) {
+    /* ajouter un slide */
+    public function addSlide($tab)
+    {
         $this->unModele->insertSlide($tab);
     }
 
-    public function getAllSlides() {
+    /* recuperer tous les slides */
+    public function getAllSlides()
+    {
         return $this->unModele->selectAllSlides();
     }
 
-    public function getSlideById($id_slide) {
+    /* recuperer un slide par id */
+    public function getSlideById($id_slide)
+    {
         return $this->unModele->selectSlideById($id_slide);
     }
 
-    public function updateSlide($tab) {
+    /* modifier un slide */
+    public function updateSlide($tab)
+    {
         $this->unModele->updateSlide($tab);
     }
 
-    public function deleteSlide($id_slide) {
+    /* supprimer un slide */
+    public function deleteSlide($id_slide)
+    {
         $this->unModele->deleteSlide($id_slide);
     }
 
-    public function getSlidesActifs() {
+    /* recuperer les slides actifs */
+    public function getSlidesActifs()
+    {
         return $this->unModele->selectSlidesActifs();
     }
 
     /* continents */
-
-    public function getAllContinents() {
+    /* recuperer tous les continents */
+    public function getAllContinents()
+    {
         return $this->unModele->selectAllContinents();
     }
 
-    public function getContinentById($id) {
-        return $this->unModele->selectContinentById((int)$id);
+    /* recuperer un continent par id */
+    public function getContinentById($id)
+    {
+        return $this->unModele->selectContinentById((int) $id);
     }
 
     /* destinations */
-
-    public function addDestination($tab) {
+    /* ajouter une destination */
+    public function addDestination($tab)
+    {
         $this->unModele->insertDestination($tab);
     }
 
-    public function getAllDestinations() {
+    /* recuperer toutes les destinations */
+    public function getAllDestinations()
+    {
         return $this->unModele->selectAllDestinations();
     }
 
-    public function getDestinationById($id) {
-        return $this->unModele->selectDestinationById((int)$id);
+    /* recuperer une destination par id */
+    public function getDestinationById($id)
+    {
+        return $this->unModele->selectDestinationById((int) $id);
     }
 
-    public function updateDestination($tab) {
+    /* modifier une destination */
+    public function updateDestination($tab)
+    {
         $this->unModele->updateDestination($tab);
     }
 
-    public function deleteDestination($id) {
-        $this->unModele->deleteDestination((int)$id);
+    /* supprimer une destination */
+    public function deleteDestination($id)
+    {
+        $this->unModele->deleteDestination((int) $id);
     }
 
-    public function getDestinationsByContinent($id_continent) {
-        return $this->unModele->selectDestinationsByContinent((int)$id_continent);
+    /* recuperer les destinations par continent */
+    public function getDestinationsByContinent($id_continent)
+    {
+        return $this->unModele->selectDestinationsByContinent((int) $id_continent);
     }
 
     /* voyages */
-
-    public function getAllVoyages() {
+    /* recuperer tous les voyages */
+    public function getAllVoyages()
+    {
         return $this->unModele->selectAllVoyages();
     }
 
-    public function getVoyageById($id) {
-        return $this->unModele->selectVoyageById((int)$id);
+    /* recuperer un voyage par id */
+    public function getVoyageById($id)
+    {
+        return $this->unModele->selectVoyageById((int) $id);
     }
 
-    public function addVoyage($tab) {
+    /* ajouter un voyage */
+    public function addVoyage($tab)
+    {
         $this->unModele->insertVoyage($tab);
     }
 
-    public function updateVoyage($tab) {
+    /* modifier un voyage */
+    public function updateVoyage($tab)
+    {
         $this->unModele->updateVoyage($tab);
     }
 
-    public function deleteVoyage($id) {
-        $this->unModele->deleteVoyage((int)$id);
+    /* supprimer un voyage */
+    public function deleteVoyage($id)
+    {
+        $this->unModele->deleteVoyage((int) $id);
     }
 
     /* offres */
-
-    public function getAllOffres() {
+    /* recuperer toutes les offres */
+    public function getAllOffres()
+    {
         return $this->unModele->selectAllOffres();
     }
 
-    public function getOffreById($id) {
-        return $this->unModele->selectOffreById((int)$id);
+    /* recuperer une offre par id */
+    public function getOffreById($id)
+    {
+        return $this->unModele->selectOffreById((int) $id);
     }
 
-    public function addOffre($tab) {
+    /* ajouter une offre */
+    public function addOffre($tab)
+    {
         $this->unModele->insertOffre($tab);
     }
 
-    public function updateOffre($tab) {
+    /* modifier une offre */
+    public function updateOffre($tab)
+    {
         $this->unModele->updateOffre($tab);
     }
 
-    public function deleteOffre($id) {
-        $this->unModele->deleteOffre((int)$id);
+    /* supprimer une offre */
+    public function deleteOffre($id)
+    {
+        $this->unModele->deleteOffre((int) $id);
     }
 
-    public function getOffresActives() {
+    /* recuperer les offres actives */
+    public function getOffresActives()
+    {
         return $this->unModele->selectOffresActives();
     }
 
-    public function addReservation($tab) {
-    return $this->unModele->addReservation($tab);
+    /* reservations */
+    /* ajouter une reservation */
+    public function addReservation($tab)
+    {
+        return $this->unModele->addReservation($tab);
     }
 
-    public function getReservationsByUser(int $id_utilisateur): array {
+    /* recuperer les reservations d'un utilisateur */
+    public function getReservationsByUser(int $id_utilisateur): array
+    {
         return $this->unModele->selectReservationsByUser($id_utilisateur);
     }
 
-    public function getReservationById(int $id_reservation) {
+    /* recuperer une reservation par id */
+    public function getReservationById(int $id_reservation)
+    {
         return $this->unModele->selectReservationById($id_reservation);
     }
 
-    public function getAllReservations() {
-    return $this->unModele->selectAllReservations();
-}
+    /* recuperer toutes les reservations */
+    public function getAllReservations(): array
+    {
+        return $this->unModele->selectAllReservations();
+    }
 
-public function confirmReservation(int $id) {
-    return $this->unModele->confirmReservation($id);
-}
+    /* confirmer une reservation */
+    public function confirmReservation(int $id): bool
+    {
+        return $this->unModele->confirmReservation($id);
+    }
 
+    /* marquer une reservation comme payee */
+    public function markReservationPaid(int $id): bool
+    {
+        return $this->unModele->markReservationPaid($id);
+    }
 
+    /* compter les reservations en attente */
+    public function countReservationsEnAttente(): int
+    {
+        return $this->unModele->countReservationsEnAttente();
+    }
 }

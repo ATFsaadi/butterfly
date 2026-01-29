@@ -1,3 +1,4 @@
+<!-- modal connexion -->
 <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
 
     <!-- boite modale -->
@@ -13,25 +14,32 @@
             <!-- carte authentification -->
             <div class="auth-card">
 
-                <!-- formulaire -->
+                <!-- bloc formulaire -->
                 <div class="auth-form">
+
+                    <!-- titre -->
                     <h2>Connexion</h2>
 
                     <!-- messages erreur -->
-                    <?php if (!empty($errors)) : ?>
-                        <?php foreach ($errors as $err) : ?>
-                            <div class="alert alert-danger"><?= htmlspecialchars($err) ?></div>
+                    <?php if (!empty($errors)): ?>
+                        <?php foreach ($errors as $err): ?>
+                            <div class="alert alert-danger">
+                                <?= htmlspecialchars((string) $err) ?>
+                            </div>
                         <?php endforeach; ?>
                     <?php endif; ?>
 
                     <!-- formulaire connexion -->
                     <form method="POST" action="controleur/gestion.login.php">
+
+                        <!-- champ email -->
                         <input type="email"
                                name="email"
                                placeholder="Adresse email"
-                               value="<?= htmlspecialchars($_POST['email'] ?? '') ?>"
+                               value="<?= htmlspecialchars((string) ($_POST['email'] ?? '')) ?>"
                                required>
 
+                        <!-- champ mot de passe -->
                         <input type="password"
                                name="mot_de_passe"
                                placeholder="Mot de passe"
@@ -39,28 +47,38 @@
 
                         <!-- options -->
                         <div class="form-options d-flex justify-content-between align-items-center mb-2">
+
+                            <!-- remember me -->
                             <label>
                                 <input type="checkbox" name="remember_me">
                                 Se souvenir de moi
                             </label>
+
+                            <!-- mdp oublie -->
                             <a href="#" class="auth-link">Mot de passe oublié ?</a>
                         </div>
 
-                        <button type="submit"
-                                name="Connexion"
-                                class="btn btn-primary w-100">
+                        <!-- bouton submit -->
+                        <button type="submit" name="Connexion" class="btn btn-primary w-100">
                             Se connecter
                         </button>
+
                     </form>
 
                     <!-- separation -->
                     <div class="divider my-3 text-center">OU</div>
 
-                    <!-- reseaux sociaux -->
+                    <!-- boutons reseaux -->
                     <div class="social-buttons d-flex justify-content-center gap-2 mb-3">
-                        <button class="btn btn-outline-secondary"><i class="fab fa-google"></i></button>
-                        <button class="btn btn-outline-secondary"><i class="fab fa-facebook-f"></i></button>
-                        <button class="btn btn-outline-secondary"><i class="fab fa-apple"></i></button>
+                        <button class="btn btn-outline-secondary" type="button">
+                            <i class="fab fa-google"></i>
+                        </button>
+                        <button class="btn btn-outline-secondary" type="button">
+                            <i class="fab fa-facebook-f"></i>
+                        </button>
+                        <button class="btn btn-outline-secondary" type="button">
+                            <i class="fab fa-apple"></i>
+                        </button>
                     </div>
 
                     <!-- lien inscription -->
@@ -73,9 +91,10 @@
                             Inscrivez-vous
                         </a>
                     </p>
+
                 </div>
 
-                <!-- logo -->
+                <!-- bloc logo -->
                 <div class="auth-logo text-center p-3">
                     <img src="icons/logo-acc.png"
                          alt="Logo de l'agence"
@@ -83,6 +102,7 @@
                 </div>
 
             </div>
+
         </div>
     </div>
 </div>
