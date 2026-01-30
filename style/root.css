@@ -1,0 +1,65 @@
+/* theme soleil */
+:root {
+    --primary-color: #FFB347;
+    --secondary-color: #007F8C;
+    --text-color: #2C3E50;
+    --muted-color: #7FA7A9;
+    --bg-light: #F4F9F9;
+    --border-color: #DCE6E6;
+    --border-radius: 14px;
+    --btn-radius: 50rem;
+    --shadow: 0 8px 20px rgba(0, 127, 140, 0.15);
+}
+
+/* theme corail */
+:root {
+    --primary-color: #FF7E5F;
+    --secondary-color: #2A9D8F;
+    --text-color: #1D3557;
+    --muted-color: #A8DADC;
+    --bg-light: #FFF8F3;
+    --border-color: #E8E4D8;
+    --border-radius: 12px;
+    --btn-radius: 50rem;
+    --shadow: 0 10px 25px rgba(255, 126, 95, 0.15);
+}
+
+/* theme ocean */
+:root {
+    --primary-color: #00A8E8;
+    --secondary-color: #184E77;
+    --text-color: #2E2E2E;
+    --muted-color: #9BBEC8;
+    --bg-light: #FAFAFA;
+    --border-color: #E0E0E0;
+    --border-radius: 10px;
+    --btn-radius: 50rem;
+    --shadow: 0 8px 22px rgba(0, 168, 232, 0.15);
+}
+
+/* theme urbain */
+:root {
+    --primary-color: #FF6B6B;
+    --secondary-color: #1E1E2F;
+    --text-color: #2E2E2E;
+    --muted-color: #9A9EA4;
+    --bg-light: #F7F7F7;
+    --border-color: #DADADA;
+    --border-radius: 10px;
+    --btn-radius: 50rem;
+    --shadow: 0 8px 18px rgba(30, 30, 47, 0.1);
+}
+
+/* theme principal */
+:root {
+    --primary-color: #F27438;
+    --secondary-color: #26474E;
+    --text-color: #00353F;
+    --muted-color: #6c757d;
+    --bg-light: #f9f9f9;
+    --border-color: #ccc;
+    --border-radius: 12px;
+    --btn-radius: 50rem;
+    --shadow: 0 10px 25px rgba(0,0,0,0.08);
+    --transition: all 0.3s ease;
+}
