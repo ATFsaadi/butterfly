@@ -1,28 +1,18 @@
 <?php
 
-/* session */
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-/* dependances */
 require_once __DIR__ . '/controleur.class.php';
 
-/* initialisation controleur */
 $unControleur = new Controleur();
 
-/* ============================= */
-/* securite admin */
-/* ============================= */
 
 if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
     header('Location: index.php?page=home');
     exit();
 }
-
-/* ============================= */
-/* configuration upload */
-/* ============================= */
 
 $uploadDir = __DIR__ . '/../images/destinations/';
 $errors = [];
@@ -31,9 +21,7 @@ $allowedExt  = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
 $allowedMime = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
 $maxSize     = 5 * 1024 * 1024;
 
-/* ============================= */
 /* ajout / modification */
-/* ============================= */
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
 
@@ -132,9 +120,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     }
 }
 
-/* ============================= */
 /* suppression */
-/* ============================= */
 
 if (isset($_GET['delete'])) {
 
@@ -160,10 +146,7 @@ if (isset($_GET['delete'])) {
     exit();
 }
 
-/* ============================= */
 /* recuperation donnees */
-/* ============================= */
-
 /* liste destinations */
 $destinations = $unControleur->getAllDestinations();
 

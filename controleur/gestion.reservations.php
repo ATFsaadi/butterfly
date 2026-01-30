@@ -1,19 +1,14 @@
 <?php
 
-/* session */
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-/* dependances */
 require_once __DIR__ . '/controleur.class.php';
 
-/* initialisation controleur */
 $unControleur = new Controleur();
 
-/* ============================= */
 /* partie admin */
-/* ============================= */
 
 if (($_GET['page'] ?? '') === 'admin_reservations') {
 
@@ -28,7 +23,6 @@ if (($_GET['page'] ?? '') === 'admin_reservations') {
             $unControleur->confirmReservation($id);
         }
 
-        /* redirection */
         header('Location: index.php?page=admin_reservations');
         exit();
     }
@@ -50,26 +44,18 @@ if (($_GET['page'] ?? '') === 'admin_reservations') {
     $reservations = $unControleur->getAllReservations();
     return;
 }
-
-/* ============================= */
-/* partie client */
-/* ============================= */
-
-/* securite client */
+/* partie client *
+/* securite client*/
 if (!isset($_SESSION['user']['idutil'])) {
     header('Location: index.php?page=home');
     exit();
 }
 
-/* variables */
 $errors  = [];
 $success = "";
 
-/* ============================= */
 /* recuperation voyage */
-/* ============================= */
 
-/* url : index.php?page=reservation&id=id_voyage */
 $id_voyage = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 $voyage = ($id_voyage > 0) ? $unControleur->getVoyageById($id_voyage) : null;
 
@@ -77,9 +63,7 @@ if (!$voyage) {
     $errors[] = "Voyage introuvable.";
 }
 
-/* ============================= */
 /* recuperation offre */
-/* ============================= */
 
 $id_offre = 0;
 
@@ -91,9 +75,7 @@ if (isset($_POST['offre'])) {
 
 $offre = ($id_offre > 0) ? $unControleur->getOffreById($id_offre) : null;
 
-/* ============================= */
 /* traitement reservation */
-/* ============================= */
 
 if (
     $_SERVER['REQUEST_METHOD'] === 'POST'
@@ -131,12 +113,11 @@ if (
         'statut'          => 'en attente'
     ]);
 
-    /* redirection recap */
     if ($id_reservation) {
         header('Location: index.php?page=reservation_recap&id=' . $id_reservation);
         exit();
     }
-
+    
     /* erreur reservation */
     $errors[] = "Erreur lors de la réservation.";
 }

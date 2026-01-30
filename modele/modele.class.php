@@ -2,10 +2,7 @@
 
 class Modele
 {
-    /* connexion */
     private PDO $unPdo;
-
-    /* constructeur */
     public function __construct()
     {
         /* configuration base */
@@ -25,19 +22,12 @@ class Modele
         }
     }
 
-    /* ============================= */
     /* acces pdo */
-    /* ============================= */
 
-    /* retourner l'objet pdo */
     public function getPdo(): PDO
     {
         return $this->unPdo;
     }
-
-    /* ============================= */
-    /* utilisateurs */
-    /* ============================= */
 
     /* recuperer un utilisateur par email */
     public function select_user(string $email): array|false
@@ -79,10 +69,8 @@ class Modele
         return $this->unPdo->query($sql)->fetchAll();
     }
 
-    /* ============================= */
-    /* slides */
-    /* ============================= */
 
+    /* slides */
     /* ajouter un slide */
     public function insertSlide(array $tab): void
     {
@@ -157,10 +145,8 @@ class Modele
         return $this->unPdo->query($sql)->fetchAll();
     }
 
-    /* ============================= */
-    /* continents */
-    /* ============================= */
 
+    /* continents */
     /* recuperer tous les continents */
     public function selectAllContinents(): array
     {
@@ -177,10 +163,7 @@ class Modele
         return $stmt->fetch();
     }
 
-    /* ============================= */
     /* destinations */
-    /* ============================= */
-
     /* ajouter une destination */
     public function insertDestination(array $tab): void
     {
@@ -269,10 +252,7 @@ class Modele
         return $stmt->fetchAll();
     }
 
-    /* ============================= */
     /* voyages */
-    /* ============================= */
-
     /* recuperer tous les voyages */
     public function selectAllVoyages(): array
     {
@@ -360,10 +340,7 @@ class Modele
         $stmt->execute([':id' => $id]);
     }
 
-    /* ============================= */
     /* offres */
-    /* ============================= */
-
     /* recuperer toutes les offres */
     public function selectAllOffres(): array
     {
@@ -453,10 +430,7 @@ class Modele
         return $this->unPdo->query($sql)->fetchAll();
     }
 
-    /* ============================= */
     /* reservations */
-    /* ============================= */
-
     /* ajouter une reservation */
     public function addReservation(array $tab): int|false
     {

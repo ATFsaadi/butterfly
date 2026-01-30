@@ -1,9 +1,7 @@
 // js/script.js → commun à toutes les pages
 document.addEventListener("DOMContentLoaded", function () {
 
-  /* =========================
-     modale carte agence
-  ========================= */
+  /* modale carte agence */
   const modal = document.getElementById('mapModal');
   const closeBtn = document.querySelector('#mapModal .close');
 
@@ -58,9 +56,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  /* =========================
-     carte leaflet dans modale
-  ========================= */
+  /* carte leaflet dans modale */
   function initMap() {
     if (typeof L === 'undefined') return;
     if (!document.getElementById('map')) return;
@@ -122,9 +118,7 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 
-  /* =========================
-     mini-carte footer
-  ========================= */
+  /* mini-carte footer */
   function initFooterMap() {
     if (typeof L === 'undefined') return;
 
@@ -177,9 +171,7 @@ document.addEventListener("DOMContentLoaded", function () {
   /* lancement mini map */
   initFooterMap();
 
-  /* =========================
-     dropdown hover (desktop)
-  ========================= */
+  /* dropdown hover */
   if (window.innerWidth >= 992 && typeof bootstrap !== 'undefined') {
     document.querySelectorAll('.nav-item.dropdown').forEach(item => {
       const toggle = item.querySelector('.dropdown-toggle');

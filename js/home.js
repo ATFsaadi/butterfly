@@ -1,10 +1,6 @@
-// js/home.js
-
 document.addEventListener("DOMContentLoaded", () => {
 
-  /* =========================
-     dropdowns desktop
-  ========================= */
+  /* dropdowns desktop */
   document.querySelectorAll('.voyage-btn').forEach(btn => {
     btn.addEventListener('click', function (e) {
       e.stopPropagation();
@@ -33,9 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  /* =========================
-     selection options
-  ========================= */
+  /* selection options */
   window.selectOption = function (type, element) {
     const suggestion = document.getElementById(type + 'Suggestion');
     if (suggestion) suggestion.textContent = element.textContent;
@@ -45,9 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (dropdown) dropdown.style.display = 'none';
   };
 
-  /* =========================
-     dates (desktop)
-  ========================= */
+  /* dates */
   const dateDepart = document.getElementById('dateDepart');
   const dateArrivee = document.getElementById('dateArrivee');
   const dateSuggestion = document.getElementById('dateSuggestion');
@@ -96,9 +88,7 @@ document.addEventListener("DOMContentLoaded", () => {
     window.updateDateSuggestion();
   }
 
-  /* =========================
-     personnes
-  ========================= */
+  /* personnes */
   function updatePersonnesSuggestion() {
     const a = parseInt(document.getElementById('adultesCount')?.textContent || '1', 10);
     const e = parseInt(document.getElementById('enfantsCount')?.textContent || '0', 10);
@@ -126,9 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   updatePersonnesSuggestion();
 
-  /* =========================
-     reset filtres
-  ========================= */
+  /* reset filtres */
   window.resetFilters = function () {
     const today = new Date().toISOString().split('T')[0];
 
@@ -161,9 +149,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.querySelector('.voyage-reset-icon')?.addEventListener('click', window.resetFilters);
 
-  /* =========================
-     drawer mobile
-  ========================= */
+  /* drawer mobile */
   const drawer = document.getElementById('voyageDrawer');
 
   window.openDrawer = function () {

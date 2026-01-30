@@ -48,16 +48,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register_form'])) {
     }
 
     $hashMdp = password_hash($mdp, PASSWORD_DEFAULT);
-    // après addUser(...)
     $controleur->addUser($nom, $prenom, $email, $hashMdp, $telephone);
-
-    // ✅ message succès
     $_SESSION['flash_success'] = "Inscription réussie. Vous pouvez vous connecter.";
-
-    // Optionnel : pré-remplir email dans login
     $_SESSION['old_email'] = $email;
 
-    // (si tu ne veux pas connecter automatiquement)
+    // si tu ne veux pas connecter automatiquement
     unset($_SESSION['register_errors'], $_SESSION['old_register']);
 
     header('Location: ../index.php?page=login');

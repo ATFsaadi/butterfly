@@ -1,28 +1,18 @@
 <?php
 
-/* session */
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-/* dependances */
 require_once __DIR__ . '/controleur.class.php';
 
-/* initialisation controleur */
 $unControleur = new Controleur();
 
-/* ============================= */
 /* securite admin */
-/* ============================= */
-
 if (!isset($_SESSION['user']) || ($_SESSION['user']['role'] ?? '') !== 'admin') {
     header('Location: index.php?page=home');
     exit();
 }
-
-/* ============================= */
-/* configuration upload */
-/* ============================= */
 
 $uploadDir = __DIR__ . '/../images/slides/';
 $errors = [];
@@ -30,9 +20,7 @@ $errors = [];
 /* extensions autorisees */
 $allowedExt = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
 
-/* ============================= */
 /* ajout / modification */
-/* ============================= */
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_slide'])) {
 
@@ -111,9 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_slide'])) {
     }
 }
 
-/* ============================= */
 /* suppression */
-/* ============================= */
 
 if (isset($_GET['delete'])) {
 
@@ -141,10 +127,6 @@ if (isset($_GET['delete'])) {
     header('Location: index.php?page=admin_slides&deleted=1');
     exit();
 }
-
-/* ============================= */
-/* recuperation donnees */
-/* ============================= */
 
 /* liste slides */
 $slides = $unControleur->getAllSlides();

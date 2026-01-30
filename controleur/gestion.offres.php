@@ -1,25 +1,16 @@
 <?php
 
-/* session */
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-/* dependances */
 require_once __DIR__ . '/controleur.class.php';
 
-/* initialisation controleur */
 $unControleur = new Controleur();
-
-/* securite admin */
 $unControleur->verifAdmin();
-
-/* erreurs */
 $errors = [];
 
-/* ============================= */
 /* ajout / modification */
-/* ============================= */
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
 
@@ -77,23 +68,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     }
 }
 
-/* ============================= */
 /* suppression */
-/* ============================= */
 
 if (isset($_GET['delete'])) {
 
     $unControleur->deleteOffre((int) $_GET['delete']);
 
-    /* redirection */
     header('Location: index.php?page=admin_offres');
     exit();
 }
 
-/* ============================= */
 /* recuperation donnees */
-/* ============================= */
-
 /* liste offres */
 $offres = $unControleur->getAllOffres();
 

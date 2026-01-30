@@ -8,9 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const today = new Date();
 
-  /* =========================
-     helper : lie 2 champs date
-  ========================= */
+  /* helper : lie 2 champs date */
   function setupFlatpickrPair(startInput, endInput) {
     if (!startInput || !endInput) return;
 
@@ -52,9 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  /* =========================
-     1) admin (par name)
-  ========================= */
+  /* admin (par name) */
   [
     { start: "date_depart", end: "date_retour" },
     { start: "date_debut", end: "date_fin" }
@@ -65,9 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   });
 
-  /* =========================
-     2) menu voyage (par id)
-  ========================= */
+  /* menu voyage (par id) */
   [
     { start: "dateDepart", end: "dateArrivee" },
     { start: "dateDepartMobile", end: "dateArriveeMobile" }

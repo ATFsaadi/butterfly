@@ -1,7 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  /* =========================
-     modals login / inscription (Bootstrap)
-  ========================= */
+  /*  modals login / inscription (Bootstrap) */
   const loginEl = document.getElementById("loginModal");
   const registerEl = document.getElementById("registerModal");
 
@@ -41,9 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (registerShouldOpen && registerModal) registerModal.show();
 
 
-  /* =========================
-     modal carte (custom + Leaflet)
-  ========================= */
+  /* modal carte (custom + Leaflet) */
   const mapModal = document.getElementById("mapModal");
   const openMapBtn = document.getElementById("openMapModal");
   const closeMapBtn = mapModal ? mapModal.querySelector(".close") : null;
@@ -96,18 +92,12 @@ document.addEventListener("DOMContentLoaded", () => {
     closeMapBtn.addEventListener("click", () => hideModal(mapModal));
   }
 
-  /* =========================
-     clic dehors (fermeture)
-     - Bootstrap gère déjà backdrop click pour login/register
-     - On gère seulement la carte custom
-  ========================= */
+  /* clic dehors (fermeture) */
   window.addEventListener("click", (e) => {
     if (mapModal && e.target === mapModal) hideModal(mapModal);
   });
 
-  /* =========================
-     adresse cliquable (ouvre carte)
-  ========================= */
+  /* adresse cliquable (ouvre carte) */
   const clickableAddress = document.querySelector(".clickable-address");
 
   if (clickableAddress && openMapBtn) {
@@ -116,9 +106,7 @@ document.addEventListener("DOMContentLoaded", () => {
     clickableAddress.addEventListener("mouseleave", () => (clickableAddress.style.opacity = "1"));
   }
 
-  /* =========================
-     Escape (optionnel)
-  ========================= */
+  /* Escape (optionnel) */
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && mapModal && mapModal.style.display === "block") {
       hideModal(mapModal);
