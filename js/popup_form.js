@@ -1,82 +1,48 @@
-document.addEventListener("DOMContentLoaded", function () {
-
+document.addEventListener("DOMContentLoaded", () => {
   /* =========================
-     modals login / inscription
+     modals login / inscription (Bootstrap)
   ========================= */
-  const loginModal = document.getElementById("loginModal");
-  const registerModal = document.getElementById("registerModal");
+  const loginEl = document.getElementById("loginModal");
+  const registerEl = document.getElementById("registerModal");
+
+  const loginModal = loginEl ? new bootstrap.Modal(loginEl) : null;
+  const registerModal = registerEl ? new bootstrap.Modal(registerEl) : null;
+
+  // Boutons d’ouverture (si présents)
   const openLoginBtn = document.getElementById("openLoginModal");
   const openRegisterBtn = document.getElementById("openRegisterModal");
 
-  /* helpers modals */
-  function showModal(el) {
-    if (!el) return;
-    el.style.display = "block";
-  }
-
-  function hideModal(el) {
-    if (!el) return;
-    el.style.display = "none";
-  }
-
-  function hideAuthModals() {
-    hideModal(loginModal);
-    hideModal(registerModal);
-  }
-
-  /* ouvrir login */
-  if (openLoginBtn) {
-    openLoginBtn.addEventListener("click", () => {
-      showModal(loginModal);
-      hideModal(registerModal);
-    });
-  }
-
-  /* ouvrir inscription */
-  if (openRegisterBtn) {
-    openRegisterBtn.addEventListener("click", () => {
-      showModal(registerModal);
-      hideModal(loginModal);
-    });
-  }
-
-  /* fermer auth via croix (classe .close) */
-  document.querySelectorAll(".close").forEach(btn => {
-    btn.addEventListener("click", () => {
-      hideAuthModals();
-    });
-  });
-
-  /* switch login/register */
-  document.querySelectorAll("#switchToLogin").forEach(link => {
-    link.addEventListener("click", (e) => {
+  if (openLoginBtn && loginModal) {
+    openLoginBtn.addEventListener("click", (e) => {
       e.preventDefault();
-      hideModal(registerModal);
-      showModal(loginModal);
+      loginModal.show();
     });
-  });
+  }
 
-  document.querySelectorAll("#switchToRegister").forEach(link => {
-    link.addEventListener("click", (e) => {
+  if (openRegisterBtn && registerModal) {
+    openRegisterBtn.addEventListener("click", (e) => {
       e.preventDefault();
-      hideModal(loginModal);
-      showModal(registerModal);
+      registerModal.show();
     });
-  });
+  }
 
-  /* ouverture automatique (url ou erreur) */
+// Ouverture auto (URL OU data-open=1)
   const urlParams = new URLSearchParams(window.location.search);
 
-  if (urlParams.get("page") === "login" || (loginModal && loginModal.dataset.error === "1")) {
-    showModal(loginModal);
-  }
+  const loginShouldOpen =
+    (urlParams.get("page") === "login") ||
+    (loginEl && loginEl.dataset.open === "1");
 
-  if (urlParams.get("page") === "inscription") {
-    showModal(registerModal);
-  }
+  const registerShouldOpen =
+    (urlParams.get("page") === "inscription") ||
+    (registerEl && registerEl.dataset.open === "1");
+
+  if (loginShouldOpen && loginModal) loginModal.show();
+  if (registerShouldOpen && registerModal) registerModal.show();
+
 
   /* =========================
-     modal carte (leaflet)
+     modal carte (custom + Leaflet)
   ========================= */
   const mapModal = document.getElementById("mapModal");
   const openMapBtn = document.getElementById("openMapModal");
@@ -84,19 +50,36 @@ document.addEventListener("DOMContentLoaded", function () {
 
   let mapInstance = null;
 
-  /* ouvrir carte */
+  function showModal(el) {
+    el.style.display = "block";
+    document.body.style.overflow = "hidden";
+  }
+
+  function hideModal(el) {
+    el.style.display = "none";
+    document.body.style.overflow = "auto";
+
+    // Optionnel : détruire la map à la fermeture si tu veux reset à chaque fois
+    // si tu veux la garder, retire ce bloc
+    if (el === mapModal && mapInstance) {
+      mapInstance.remove();
+      mapInstance = null;
+    }
+  }
+
+  // Ouvrir carte
   if (openMapBtn && mapModal) {
     openMapBtn.addEventListener("click", (e) => {
       e.preventDefault();
       showModal(mapModal);
 
-      /* init map 1 seule fois */
+      // init map 1 seule fois
       if (!mapInstance && typeof L !== "undefined") {
         setTimeout(() => {
           mapInstance = L.map("map").setView([48.8566, 2.3522], 16);
 
           L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-            attribution: "&copy; OpenStreetMap contributors"
+            attribution: "&copy; OpenStreetMap contributors",
           }).addTo(mapInstance);
 
           L.marker([48.8566, 2.3522])
@@ -108,23 +91,17 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  /* fermer carte via croix */
-  if (closeMapBtn) {
-    closeMapBtn.addEventListener("click", () => {
-      hideModal(mapModal);
-    });
+  // Fermer carte via croix
+  if (closeMapBtn && mapModal) {
+    closeMapBtn.addEventListener("click", () => hideModal(mapModal));
   }
 
   /* =========================
      clic dehors (fermeture)
+     - Bootstrap gère déjà backdrop click pour login/register
+     - On gère seulement la carte custom
   ========================= */
   window.addEventListener("click", (e) => {
-
-    /* fermer auth modals si clic sur fond */
-    if (loginModal && e.target === loginModal) hideModal(loginModal);
-    if (registerModal && e.target === registerModal) hideModal(registerModal);
-
-    /* fermer map modal si clic sur fond */
     if (mapModal && e.target === mapModal) hideModal(mapModal);
   });
 
@@ -139,4 +116,12 @@ document.addEventListener("DOMContentLoaded", function () {
     clickableAddress.addEventListener("mouseleave", () => (clickableAddress.style.opacity = "1"));
   }
 
+  /* =========================
+     Escape (optionnel)
+  ========================= */
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && mapModal && mapModal.style.display === "block") {
+      hideModal(mapModal);
+    }
+  });
 });
