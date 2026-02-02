@@ -1,108 +1,83 @@
-<?php
-$slides      = $slides ?? [];
-$slideToEdit = $slideToEdit ?? null;
-$errors      = $errors ?? [];
-?>
+<?php if (!empty($slides)): ?>
 
-<h3 class="section-title text-center mt-5">Gestion des Slides</h3>
+<h3 class="section-title text-center mt-5">Coup de Cœur</h3>
 
-<?php if (!empty($errors)): ?>
-    <div class="alert alert-danger">
-        <?php foreach ($errors as $err): ?>
-            <p><?= htmlspecialchars((string) $err) ?></p>
+<div id="mainCarousel" class="carousel slide mt-4" data-bs-ride="carousel" data-bs-interval="6000">
+
+    <!-- indicateurs -->
+    <div class="carousel-indicators">
+        <?php foreach ($slides as $i => $slide): ?>
+            <button type="button"
+                    data-bs-target="#mainCarousel"
+                    data-bs-slide-to="<?= $i ?>"
+                    class="<?= $i === 0 ? 'active' : '' ?>"
+                    aria-current="<?= $i === 0 ? 'true' : 'false' ?>">
+            </button>
         <?php endforeach; ?>
     </div>
-<?php endif; ?>
 
-<form action="" method="POST" enctype="multipart/form-data" class="mb-4">
+    <!-- contenu -->
+    <div class="carousel-inner">
 
-    <input type="hidden" name="id_slide"
-           value="<?= htmlspecialchars((string) ($slideToEdit['id_slide'] ?? '')) ?>">
+        <?php foreach ($slides as $i => $slide): ?>
 
-    <input type="hidden" name="existing_image_url"
-           value="<?= htmlspecialchars((string) ($slideToEdit['image_url'] ?? '')) ?>">
+            <?php
+            $titre = $slide['titre'] ?? '';
+            $sousTitre = $slide['sous_titre'] ?? '';
+            $img = $slide['image_url'] ?? '';
+            ?>
 
-    <input type="text" name="titre" placeholder="Titre" required class="form-control mb-2"
-           value="<?= htmlspecialchars((string) ($slideToEdit['titre'] ?? '')) ?>">
+            <div class="carousel-item <?= $i === 0 ? 'active' : '' ?>">
 
-    <textarea name="sous_titre" placeholder="Sous-titre" class="form-control mb-2"><?= htmlspecialchars((string) ($slideToEdit['sous_titre'] ?? '')) ?></textarea>
+                <!-- image -->
+                <?php if (!empty($img)): ?>
+                    <img src="<?= htmlspecialchars($img, ENT_QUOTES, 'UTF-8') ?>"
+                         class="d-block w-100 carousel-image"
+                         alt="<?= htmlspecialchars($titre, ENT_QUOTES, 'UTF-8') ?>"
+                         style="max-height: 500px; object-fit: cover;">
+                <?php else: ?>
+                    <div class="d-flex align-items-center justify-content-center bg-light"
+                         style="height:500px;">
+                        <span class="text-muted">Image non disponible</span>
+                    </div>
+                <?php endif; ?>
 
-    <input type="number" name="ordre" placeholder="Ordre" class="form-control mb-2"
-           value="<?= htmlspecialchars((string) ($slideToEdit['ordre'] ?? 1)) ?>">
+                <!-- caption -->
+                <div class="carousel-caption d-flex h-100 align-items-center justify-content-center">
+                    <div class="text-center text-white">
 
-    <label class="mb-2">
-        <input type="checkbox" name="actif"
-            <?= (empty($slideToEdit) || (int) ($slideToEdit['actif'] ?? 0) === 1) ? 'checked' : '' ?>>
-        Actif
-    </label>
+                        <?php if (!empty($titre)): ?>
+                            <h6><?= htmlspecialchars($titre, ENT_QUOTES, 'UTF-8') ?></h6>
+                        <?php endif; ?>
 
-    <input type="file" name="image" class="form-control mb-2">
+                        <?php if (!empty($sousTitre)): ?>
+                            <p class="d-none d-md-block"><?= htmlspecialchars($sousTitre, ENT_QUOTES, 'UTF-8') ?></p>
+                        <?php endif; ?>
 
-    <?php if (!empty($slideToEdit['image_url'])): ?>
-        <p>
-            Image actuelle :
-            <img src="images/slides/<?= htmlspecialchars((string) $slideToEdit['image_url']) ?>" width="100">
-        </p>
-    <?php endif; ?>
+                        <!-- bouton (comme tu n'as pas de champ lien dans ta table) -->
+                        <a href="index.php?page=destinations"
+                           class="btn btn-outline-light rounded-pill px-4 mt-2">
+                            Découvrir
+                        </a>
 
-    <div class="d-flex justify-content-center">
-        <button type="submit" name="submit_slide" class="btn btn-primary">
-            <?= $slideToEdit ? 'Modifier le slide' : 'Ajouter le slide' ?>
-        </button>
+                    </div>
+                </div>
+
+            </div>
+        <?php endforeach; ?>
     </div>
 
-</form>
+    <!-- contrôles -->
+    <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+        <span class="visually-hidden">Précédent</span>
+    </button>
 
-<hr>
+    <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+        <span class="visually-hidden">Suivant</span>
+    </button>
 
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>Image</th>
-            <th>Titre</th>
-            <th>Sous-titre</th>
-            <th>Ordre</th>
-            <th>Actif</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
+</div>
 
-    <tbody>
-        <?php if (!empty($slides)): ?>
-
-            <?php foreach ($slides as $slide): ?>
-                <tr>
-                    <td>
-                        <?php if (!empty($slide['image_url'])): ?>
-                            <img src="images/slides/<?= htmlspecialchars((string) $slide['image_url']) ?>" width="100">
-                        <?php endif; ?>
-                    </td>
-
-                    <td><?= htmlspecialchars((string) ($slide['titre'] ?? '')) ?></td>
-                    <td><?= htmlspecialchars((string) ($slide['sous_titre'] ?? '')) ?></td>
-                    <td><?= htmlspecialchars((string) ($slide['ordre'] ?? '')) ?></td>
-                    <td><?= ((int) ($slide['actif'] ?? 0) === 1) ? 'Oui' : 'Non' ?></td>
-
-                    <td>
-                        <a href="index.php?page=admin_slides&edit=<?= (int) ($slide['id_slide'] ?? 0) ?>"
-                           class="btn btn-warning btn-sm">
-                            Modifier
-                        </a>
-
-                        <a href="index.php?page=admin_slides&delete=<?= (int) ($slide['id_slide'] ?? 0) ?>"
-                           onclick="return confirm('Supprimer ce slide ?');"
-                           class="btn btn-danger btn-sm">
-                            Supprimer
-                        </a>
-                    </td>
-
-                </tr>
-            <?php endforeach; ?>
-
-        <?php else: ?>
-            <tr>
-                <td colspan="6">Aucun slide</td>
-            </tr>
-        <?php endif; ?>
-    </tbody>
-</table>
+<?php endif; ?>

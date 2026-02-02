@@ -1,72 +1,184 @@
 <?php
-if (!isset($destinations)) $destinations = [];
+// vue/admin_destinations.php
+
+$errors = $errors ?? [];
+$success = $success ?? "";
+
+$destinations = $destinations ?? [];
+$destinationToEdit = $destinationToEdit ?? null;
+
+// Valeurs par défaut (edit ou vide)
+$id_destination = $destinationToEdit["id_destination"] ?? "";
+$pays = $destinationToEdit["pays"] ?? "";
+$ville = $destinationToEdit["ville"] ?? "";
+$continent = $destinationToEdit["continent"] ?? "";
+$description = $destinationToEdit["description"] ?? "";
+$prix_base = $destinationToEdit["prix_base"] ?? "";
+$image_url = $destinationToEdit["image_url"] ?? "";
+$actif = isset($destinationToEdit["actif"]) ? (int)$destinationToEdit["actif"] : 1;
 ?>
 
-<div class="container py-4">
-    <h3 class="section-title text-center mt-5">Nos Destinations</h3>
+<div class="container py-5">
 
-    <?php if (empty($destinations)): ?>
-        <div class="alert alert-info">Aucune destination disponible.</div>
-    <?php else: ?>
+  <h2 class="section-title text-center mb-4">Admin - Destinations</h2>
 
-        <div class="row g-4">
-            <?php foreach ($destinations as $d): ?>
-                <div class="col-12 col-md-6 col-lg-4">
+  <?php if (!empty($success)): ?>
+    <div class="alert alert-success"><?= htmlspecialchars($success) ?></div>
+  <?php endif; ?>
 
-                    <div class="card h-100 shadow-sm">
+  <?php if (!empty($errors)): ?>
+    <div class="alert alert-danger">
+      <ul class="mb-0">
+        <?php foreach ($errors as $e): ?>
+          <li><?= htmlspecialchars($e) ?></li>
+        <?php endforeach; ?>
+      </ul>
+    </div>
+  <?php endif; ?>
 
-                        <?php if (!empty($d['image_url'])): ?>
-                            <img
-                                src="images/destinations/<?= htmlspecialchars((string) $d['image_url']) ?>"
-                                class="card-img-top"
-                                alt="<?= htmlspecialchars((string) ($d['ville'] ?? 'Destination')) ?>"
-                                style="height:220px; object-fit:cover;"
-                            >
-                        <?php endif; ?>
+  <div class="row g-4">
 
-                        <div class="card-body">
+    <!-- FORM -->
+    <div class="col-lg-5">
+      <div class="card shadow-sm">
+        <div class="card-body">
 
-                            <h5 class="card-title mb-1">
-                                <?= htmlspecialchars((string) ($d['ville'] ?? '')) ?>
-                                <?php if (!empty($d['pays'])): ?>
-                                    — <?= htmlspecialchars((string) $d['pays']) ?>
-                                <?php endif; ?>
-                            </h5>
+          <h5 class="mb-3"><?= $id_destination ? "Modifier" : "Ajouter" ?> une destination</h5>
 
-                            <div class="text-muted mb-2" style="font-size:0.95rem;">
-                                <?php if (!empty($d['continent'])): ?>
-                                    <?= htmlspecialchars((string) $d['continent']) ?>
-                                <?php endif; ?>
-                            </div>
+        <form method="POST"
+                action="index.php?page=admin_destinations"
+                enctype="multipart/form-data">
 
-                            <p class="card-text">
-                                <?= nl2br(htmlspecialchars((string) ($d['description'] ?? ''))) ?>
-                            </p>
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION["csrf_token"]) ?>">
 
-                            <div class="fw-semibold">
-                                À partir de : <?= htmlspecialchars((string) ($d['prix_base'] ?? '0')) ?> €
-                            </div>
+            <?php if ($id_destination): ?>
+              <input type="hidden" name="id_destination" value="<?= (int)$id_destination ?>">
+              <input type="hidden" name="existing_image" value="<?= htmlspecialchars($image_url) ?>">
+            <?php endif; ?>
 
-                        </div>
 
-                        <div class="card-footer bg-white border-0 d-flex gap-2">
-                            <a href="index.php?page=admin_destinations&edit=<?= (int)$d['id_destination'] ?>"
-                               class="btn btn-outline-secondary w-50">
-                                Modifier
-                            </a>
+            <div class="mb-3">
+              <label class="form-label">Pays</label>
+              <input class="form-control" type="text" name="pays" value="<?= htmlspecialchars($pays) ?>" required>
+            </div>
 
-                            <a href="index.php?page=admin_destinations&delete=<?= (int)$d['id_destination'] ?>"
-                               class="btn btn-outline-danger w-50"
-                               onclick="return confirm('Supprimer cette destination ?');">
-                                Supprimer
-                            </a>
-                        </div>
+            <div class="mb-3">
+              <label class="form-label">Ville</label>
+              <input class="form-control" type="text" name="ville" value="<?= htmlspecialchars($ville) ?>" required>
+            </div>
 
-                    </div>
+            <div class="mb-3">
+              <label class="form-label">Continent</label>
+              <input class="form-control" type="text" name="continent" value="<?= htmlspecialchars($continent) ?>">
+            </div>
 
+            <div class="mb-3">
+              <label class="form-label">Description</label>
+              <textarea class="form-control" name="description" rows="4"><?= htmlspecialchars($description) ?></textarea>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Prix de base (€)</label>
+              <input class="form-control" type="number" step="0.01" name="prix_base"
+                     value="<?= htmlspecialchars((string)$prix_base) ?>" required>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Image</label>
+              <input class="form-control" type="file" name="image" accept="image/*">
+              <?php if (!empty($image_url)): ?>
+                <div class="small text-muted mt-1">
+                  Image actuelle : <?= htmlspecialchars($image_url) ?>
                 </div>
-            <?php endforeach; ?>
-        </div>
+              <?php endif; ?>
+            </div>
 
-    <?php endif; ?>
+            <div class="form-check mb-3">
+              <input class="form-check-input" type="checkbox" name="actif" id="actifDest"
+                     <?= ($actif === 1) ? "checked" : "" ?>>
+              <label class="form-check-label" for="actifDest">Active</label>
+            </div>
+
+            <button class="btn btn-primary w-100"
+                    type="submit"
+                    name="submit_destination">
+              Enregistrer
+            </button>
+
+            <?php if ($id_destination): ?>
+              <a class="btn btn-outline-secondary w-100 mt-2" href="index.php?page=admin_destinations">
+                Annuler édition
+              </a>
+            <?php endif; ?>
+
+          </form>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- LISTE -->
+    <div class="col-lg-7">
+      <div class="card shadow-sm">
+        <div class="card-body">
+
+          <h5 class="mb-3">Liste des destinations</h5>
+
+          <?php if (empty($destinations)): ?>
+            <div class="alert alert-secondary">Aucune destination.</div>
+          <?php else: ?>
+            <div class="table-responsive">
+              <table class="table table-sm align-middle">
+                <thead>
+                  <tr>
+                    <th>Destination</th>
+                    <th>Prix</th>
+                    <th>Active</th>
+                    <th style="width:140px;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <?php foreach ($destinations as $d): ?>
+                    <tr>
+                      <td>
+                        <strong><?= htmlspecialchars($d["ville"]) ?></strong>
+                        — <?= htmlspecialchars($d["pays"]) ?>
+                        <?php if (!empty($d["continent"])): ?>
+                          <div class="small text-muted"><?= htmlspecialchars($d["continent"]) ?></div>
+                        <?php endif; ?>
+                      </td>
+                      <td><?= number_format((float)$d["prix_base"], 2, ",", " ") ?> €</td>
+                      <td><?= ((int)$d["actif"] === 1) ? "Oui" : "Non" ?></td>
+                      <td>
+                        <a class="btn btn-sm btn-outline-primary"
+                           href="index.php?page=admin_destinations&edit=<?= (int)$d["id_destination"] ?>">
+                          Modifier
+                        </a>
+                       <form method="POST"
+      action="index.php?page=admin_destinations"
+      style="display:inline;">
+  <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION["csrf_token"]) ?>">
+  <input type="hidden" name="id_destination" value="<?= (int)$d["id_destination"] ?>">
+
+  <button class="btn btn-sm btn-outline-danger"
+          type="submit"
+          name="delete_destination"
+          onclick="return confirm('Supprimer cette destination ?');">
+    Supprimer
+  </button>
+</form>
+
+                      </td>
+                    </tr>
+                  <?php endforeach; ?>
+                </tbody>
+              </table>
+            </div>
+          <?php endif; ?>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
 </div>

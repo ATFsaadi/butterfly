@@ -26,47 +26,37 @@
     <link rel="stylesheet" href="style/admin.css">
 </head>
 
-<body>
 
-<!-- navbar + modales -->
-<?php
-    /* composants */
-    require_once __DIR__ . "/components/navbar.php";
+<body class="bg-light">
 
-    /* modales */
-    require_once __DIR__ . "/modales/login.php";
-    require_once __DIR__ . "/modales/register.php";
-    require_once __DIR__ . "/modales/map.php";
-?>
+  <!-- NAVBAR -->
+  <?php require_once("vue/components/navbar.php"); ?>
 
-<!-- contenu page -->
-<main>
+  <!-- CONTENU -->
+  <main class="container my-4">
     <?php
-        /* include vue */
-        if (isset($viewFile) && file_exists($viewFile)) {
-            include $viewFile;
-        } else {
-            echo "<p>La page demandée n'existe pas.</p>";
-        }
+      $pathVue = "vue/" . $vue;
+      if (file_exists($pathVue)) {
+          require_once($pathVue);
+      } else {
+          echo "<div class='alert alert-danger'>Vue introuvable : ".htmlspecialchars($vue)."</div>";
+      }
     ?>
-</main>
+  </main>
 
-<!-- footer -->
-<?php require_once __DIR__ . "/components/footer.php"; ?>
+  <!-- FOOTER -->
+  <?php require_once("vue/components/footer.php"); ?>
 
-<!-- scripts js -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- MODALES AUTH (si tu les gardes séparées) -->
+  <?php
+    // Tu peux laisser toujours présent, même si l’utilisateur est connecté.
+    // Sinon, tu peux conditionner sur !isset($_SESSION['user'])
+    require_once("vue/modales/login.php");
+    require_once("vue/modales/register.php");
+  ?>
 
-<!-- leaflet -->
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-<!-- flatpickr -->
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/fr.js"></script>
-<script src="js/flatpickr.js"></script>
-
-<!-- scripts projet -->
-<script src="js/script.js"></script>
-
+  <!-- JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/auth-modals.js"></script>
 </body>
 </html>

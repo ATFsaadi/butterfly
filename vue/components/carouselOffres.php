@@ -23,13 +23,25 @@
         <?php foreach ($offres as $i => $offre): ?>
 
             <?php
+            // Réduction
             $reduc = (int)($offre['pourcentage_reduction'] ?? 0);
-            $coef  = (100 - $reduc) / 100;
+            $coef = (100 - $reduc) / 100;
 
-            $prixBase  = (float)($offre['prix_base'] ?? 0);
-            $prixPromo = round($prixBase * $coef, 2);
+            // Prix base (destination)
+            $prixBase = (float)($offre['prix_base'] ?? 0);
 
-            $destLabel = trim(($offre['ville'] ?? '') . ' — ' . ($offre['pays'] ?? ''));
+            // Prix avec remise
+            $prixRemise = $prixBase;
+            if ($prixBase > 0 && $reduc > 0) {
+                $prixRemise = $prixBase * $coef;
+            }
+
+            // Image (destination)
+            $img = $offre['image_url'] ?? '';
+
+            // Texte destination
+            $pays = $offre['pays'] ?? '';
+            $ville = $offre['ville'] ?? '';
             ?>
 
             <div class="carousel-item <?= $i === 0 ? 'active' : '' ?>">
@@ -38,13 +50,20 @@
 
                     <!-- image -->
                     <div class="col-md-9">
-                        <img src="/projet-ecole/agence/images/destinations/<?= htmlspecialchars($offre['image_url'] ?? '') ?>"
-                             class="d-block w-100 carousel-image"
-                             alt="<?= htmlspecialchars($offre['titre'] ?? 'Offre') ?>"
-                             style="height:500px; object-fit:cover;">
+                        <?php if (!empty($img)): ?>
+                            <img src="<?= htmlspecialchars($img) ?>"
+                                 class="d-block w-100 carousel-image"
+                                 alt="<?= htmlspecialchars($offre['titre'] ?? 'Offre') ?>"
+                                 style="height:500px; object-fit:cover;">
+                        <?php else: ?>
+                            <div class="d-flex align-items-center justify-content-center bg-light"
+                                 style="height:500px;">
+                                <span class="text-muted">Image non disponible</span>
+                            </div>
+                        <?php endif; ?>
                     </div>
 
-                    <!-- details -->
+                    <!-- détails -->
                     <div class="col-md-3 d-flex align-items-stretch"
                          style="background: var(--secondary-color);">
 
@@ -61,22 +80,37 @@
                                 </h6>
 
                                 <p class="d-none d-md-block">
-                                    <?= htmlspecialchars($destLabel) ?><br>
+                                    <?= htmlspecialchars(trim($pays . " - " . $ville)) ?><br>
                                     <small>
                                         Du <?= htmlspecialchars($offre['date_debut'] ?? '') ?>
                                         au <?= htmlspecialchars($offre['date_fin'] ?? '') ?>
                                     </small>
                                 </p>
 
-                                <p class="d-none d-md-block">
-                                    Prix de base : <s><?= number_format($prixBase, 2, ',', ' ') ?> €</s><br>
-                                    Prix promo : <strong><?= number_format($prixPromo, 2, ',', ' ') ?> €</strong>
-                                </p>
+                                <?php if ($prixBase > 0): ?>
+                                    <p class="d-none d-md-block">
+                                        <?php if ($reduc > 0): ?>
+                                            <del><?= number_format($prixBase, 2, ',', ' ') ?> €</del><br>
+                                            <strong><?= number_format($prixRemise, 2, ',', ' ') ?> €</strong>
+                                        <?php else: ?>
+                                            <strong><?= number_format($prixBase, 2, ',', ' ') ?> €</strong>
+                                        <?php endif; ?>
+                                        <br><small>Prix par personne (base)</small>
+                                    </p>
+                                <?php endif; ?>
 
-                                <a href="index.php?page=reservation&id=<?= (int)($offre['id_destination'] ?? 0) ?>"
-                                   class="btn btn-outline-light rounded-pill px-4 mt-2">
-                                    Réserver
-                                </a>
+                                <!-- lien vers la destination -->
+                                <?php if (!empty($offre['id_destination'])): ?>
+                                    <a href="index.php?page=destination_detail&id_destination=<?= (int)$offre['id_destination'] ?>"
+                                       class="btn btn-outline-light rounded-pill px-4 mt-2">
+                                        Voir / Réserver
+                                    </a>
+                                <?php else: ?>
+                                    <a href="index.php?page=offres"
+                                       class="btn btn-outline-light rounded-pill px-4 mt-2">
+                                        Voir les offres
+                                    </a>
+                                <?php endif; ?>
 
                             </div>
                         </div>
@@ -88,7 +122,7 @@
         <?php endforeach; ?>
     </div>
 
-    <!-- controles -->
+    <!-- contrôles -->
     <button class="carousel-control-prev" type="button" data-bs-target="#offresCarousel" data-bs-slide="prev">
         <span class="carousel-control-prev-icon"></span>
         <span class="visually-hidden">Précédent</span>

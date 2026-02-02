@@ -1,86 +1,83 @@
-<?php
-$reservations = $reservations ?? [];
-?>
-
 <h3 class="section-title text-center mt-5">Gestion des Réservations</h3>
 
-<?php if (empty($reservations)): ?>
-    <div class="alert alert-info text-center mt-4">
-        Aucune réservation pour le moment.
-    </div>
-<?php else: ?>
+<!-- si aucune réservation -->
+<div class="alert alert-info text-center mt-4 d-none">
+  Aucune réservation pour le moment.
+</div>
 
-    <table class="table table-bordered mt-4 align-middle">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Client</th>
-                <th>Destination</th>
-                <th>Dates</th>
-                <th>Voyageurs</th>
-                <th>Total</th>
-                <th>Statut</th>
-                <th>Action</th>
-            </tr>
-        </thead>
+<!-- tableau des réservations -->
+<table class="table table-bordered mt-4 align-middle">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Client</th>
+      <th>Destination</th>
+      <th>Dates</th>
+      <th>Voyageurs</th>
+      <th>Total</th>
+      <th>Statut</th>
+      <th>Action</th>
+    </tr>
+  </thead>
 
-        <tbody>
-            <?php foreach ($reservations as $r): ?>
-                <?php
-                    $idRes = (int) ($r['id_reservation'] ?? 0);
-                    $statut = $r['statut'] ?? 'en_attente';
+  <tbody>
 
-                    $clientNom = trim(($r['nom'] ?? '') . ' ' . ($r['prenom'] ?? ''));
-                    $destLabel = trim(($r['ville'] ?? '') . ' — ' . ($r['pays'] ?? ''));
-                ?>
-                <tr>
-                    <td><?= $idRes ?></td>
+    <!-- réservation confirmée -->
+    <tr>
+      <td>1</td>
+      <td>Dupont Jean</td>
+      <td>Paris — France</td>
+      <td>2026-02-10 → 2026-02-15</td>
+      <td>2</td>
+      <td><strong>800,00 €</strong></td>
+      <td>
+        <span class="badge bg-success">✅ Confirmée</span>
+      </td>
+      <td>
+        <a href="#" class="btn btn-sm btn-outline-danger">
+          Annuler
+        </a>
+      </td>
+    </tr>
 
-                    <td><?= htmlspecialchars($clientNom) ?></td>
+    <!-- réservation en attente -->
+    <tr>
+      <td>2</td>
+      <td>Martin Sarah</td>
+      <td>Barcelone — Espagne</td>
+      <td>2026-03-01 → 2026-03-06</td>
+      <td>1</td>
+      <td><strong>297,50 €</strong></td>
+      <td>
+        <span class="badge bg-warning text-dark">⏳ En attente</span>
+      </td>
+      <td>
+        <a href="#" class="btn btn-sm btn-success">
+          Confirmer
+        </a>
+        <a href="#" class="btn btn-sm btn-outline-danger">
+          Annuler
+        </a>
+      </td>
+    </tr>
 
-                    <td><?= htmlspecialchars($destLabel) ?></td>
+    <!-- réservation annulée -->
+    <tr>
+      <td>3</td>
+      <td>Benali Youssef</td>
+      <td>Marrakech — Maroc</td>
+      <td>2026-01-20 → 2026-01-25</td>
+      <td>3</td>
+      <td><strong>1 260,00 €</strong></td>
+      <td>
+        <span class="badge bg-danger">⛔ Annulée</span>
+      </td>
+      <td>
+        <a href="#" class="btn btn-sm btn-success">
+          Confirmer
+        </a>
+      </td>
+    </tr>
 
-                    <td>
-                        <?= htmlspecialchars((string) ($r['date_depart'] ?? '')) ?>
-                        →
-                        <?= htmlspecialchars((string) ($r['date_retour'] ?? '')) ?>
-                    </td>
-
-                    <td><?= (int) ($r['nb_personnes'] ?? 1) ?></td>
-
-                    <td>
-                        <strong><?= number_format((float) ($r['prix_total'] ?? 0), 2, ',', ' ') ?> €</strong>
-                    </td>
-
-                    <td>
-                        <?php if ($statut === 'confirmee'): ?>
-                            <span class="badge bg-success">✅ Confirmée</span>
-                        <?php elseif ($statut === 'annulee'): ?>
-                            <span class="badge bg-danger">⛔ Annulée</span>
-                        <?php else: ?>
-                            <span class="badge bg-warning text-dark">⏳ En attente</span>
-                        <?php endif; ?>
-                    </td>
-
-                    <td>
-                        <?php if ($statut !== 'confirmee'): ?>
-                            <a href="index.php?page=admin_reservations&confirm=<?= $idRes ?>"
-                               class="btn btn-sm btn-success">
-                                Confirmer
-                            </a>
-                        <?php endif; ?>
-
-                        <?php if ($statut !== 'annulee'): ?>
-                            <a href="index.php?page=admin_reservations&cancel=<?= $idRes ?>"
-                               class="btn btn-sm btn-outline-danger"
-                               onclick="return confirm('Annuler cette réservation ?');">
-                                Annuler
-                            </a>
-                        <?php endif; ?>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
-
-<?php endif; ?>
+  </tbody>
+</table>

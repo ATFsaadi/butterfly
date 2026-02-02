@@ -1,18 +1,12 @@
 <?php
-$hasRegisterErrors = !empty($_SESSION['register_errors']);
-$firstRegisterError = $hasRegisterErrors ? ($_SESSION['register_errors'][0] ?? "Erreur d'inscription.") : '';
-
-$old = $_SESSION['old_register'] ?? [];
-$oldNom = $old['nom'] ?? '';
-$oldPrenom = $old['prenom'] ?? '';
-$oldEmail = $old['email'] ?? '';
+// vue/modales/register.php
+// session déjà démarrée dans index.php
 ?>
 
 <div class="modal fade"
      id="registerModal"
      tabindex="-1"
-     aria-hidden="true"
-     data-open="<?= $hasRegisterErrors ? '1' : '0' ?>">
+     aria-hidden="true">
 
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content p-0" style="border-radius:20px; overflow:hidden;">
@@ -26,33 +20,42 @@ $oldEmail = $old['email'] ?? '';
         <div class="auth-form">
           <h2>Inscription</h2>
 
-          <?php if ($hasRegisterErrors): ?>
-            <div class="alert alert-danger">
-              <?= htmlspecialchars((string)$firstRegisterError) ?>
+          <!-- succès -->
+          <?php if (!empty($successRegister)): ?>
+            <div class="alert alert-success">
+              <?= htmlspecialchars($successRegister) ?>
             </div>
           <?php endif; ?>
 
-          <form method="POST" action="controleur/gestion.register.php">
-            <input type="hidden" name="register_form" value="1">
+          <!-- erreur -->
+          <?php if (!empty($erreurRegister)): ?>
+            <div class="alert alert-danger">
+              <?= htmlspecialchars($erreurRegister) ?>
+            </div>
+          <?php endif; ?>
+
+          <form method="POST" action="index.php?page=register">
+            <input type="hidden"
+                   name="csrf_token"
+                   value="<?= htmlspecialchars($_SESSION["csrf_token"] ?? "") ?>">
 
             <input type="text" name="nom" placeholder="Nom"
-                    value="<?= htmlspecialchars((string)$oldNom) ?>" required>
+                   value="<?= htmlspecialchars($_POST['nom'] ?? '') ?>" required>
 
             <input type="text" name="prenom" placeholder="Prénom"
-                    value="<?= htmlspecialchars((string)$oldPrenom) ?>" required>
+                   value="<?= htmlspecialchars($_POST['prenom'] ?? '') ?>" required>
 
             <input type="email" name="email" placeholder="Adresse email"
-                    value="<?= htmlspecialchars((string)$oldEmail) ?>" required>
+                   value="<?= htmlspecialchars($_POST['email'] ?? '') ?>" required>
 
-            <input type="password" name="mot_de_passe" placeholder="Mot de passe" required>
+            <input type="password" name="mdp" placeholder="Mot de passe" required>
 
-            <input type="password" name="confirmer_mot_de_passe" placeholder="Confirmer le mot de passe" required>
+            <input type="password" name="mdp2" placeholder="Confirmer le mot de passe" required>
 
-            <button type="submit" class="btn btn-primary w-100">
-                S’inscrire
+            <button type="submit" name="inscrire" value="1" class="btn btn-primary w-100">
+              S’inscrire
             </button>
-            </form>
-
+          </form>
 
           <p class="switch-link text-center mt-3">
             Déjà un compte ?
@@ -74,23 +77,28 @@ $oldEmail = $old['email'] ?? '';
     </div>
   </div>
 </div>
-<?php if ($hasRegisterErrors): ?>
+
+<!-- Flags JS (si ton layout les utilise) -->
+<?php if (!empty($erreurRegister)): ?>
+<script>window.__OPEN_REGISTER_MODAL__ = true;</script>
+<?php endif; ?>
+
+<?php if (!empty($openLoginAfterRegister)): ?>
+<script>window.__OPEN_LOGIN_MODAL__ = true;</script>
+<?php endif; ?>
+
+<!-- Fallback (si ton layout n'ouvre pas les modals via flags) -->
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-  const el = document.getElementById("registerModal");
-  if (!el) return;
-  if (typeof bootstrap !== "undefined") {
-    new bootstrap.Modal(el).show();
+document.addEventListener("DOMContentLoaded", function () {
+  try {
+    if (window.__OPEN_REGISTER_MODAL__) {
+      new bootstrap.Modal(document.getElementById("registerModal")).show();
+    }
+    if (window.__OPEN_LOGIN_MODAL__) {
+      new bootstrap.Modal(document.getElementById("loginModal")).show();
+    }
+  } catch (e) {
+    // bootstrap pas chargé, on ignore
   }
 });
 </script>
-<?php endif; ?>
-
-<?php
-unset($_SESSION['register_errors'], $_SESSION['old_register']);
-?>
-
-<?php
-// Nettoyage APRES génération HTML
-unset($_SESSION['register_errors'], $_SESSION['old_register']);
-?>

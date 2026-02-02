@@ -1,149 +1,414 @@
 <?php
-
 class Modele
 {
-    private PDO $unPdo;
+    private $unPdo;
 
+    // Constructeur : connexion à la base
     public function __construct()
     {
-        $url  = "mysql:host=localhost;dbname=agence_voyage;charset=utf8mb4";
+        $url = "mysql:host=localhost;dbname=agence_voyage;charset=utf8mb4";
         $user = "root";
-        $mdp  = "";
+        $mdp = "";
 
         try {
             $this->unPdo = new PDO($url, $user, $mdp);
             $this->unPdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $this->unPdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
         } catch (PDOException $exp) {
-            echo "Erreur de connexion à " . $url . "<br>";
+            echo "Erreur de Connexion à " . $url . "<br>";
             echo $exp->getMessage();
             exit();
         }
     }
 
     /* =========================
-       DESTINATIONS (CRUD)
-       ========================= */
+       UTILISATEURS / AUTH
+    ========================== */
 
-    public function insertDestination(array $tab): bool
+    // Sélection user pour login (tu vérifies le hash côté PHP)
+    public function select_user_login($email)
     {
-        $sql = "INSERT INTO destinations (pays, ville, continent, description, prix_base, image_url, actif)
-                VALUES (:pays, :ville, :continent, :description, :prix_base, :image_url, :actif)";
-        $stmt = $this->unPdo->prepare($sql);
-
-        return $stmt->execute([
-            ':pays'        => $tab['pays'],
-            ':ville'       => $tab['ville'],
-            ':continent'   => $tab['continent'] ?? null,
-            ':description' => $tab['description'] ?? null,
-            ':prix_base'   => (float) $tab['prix_base'],
-            ':image_url'   => $tab['image_url'] ?? null,
-            ':actif'       => (int) ($tab['actif'] ?? 1),
-        ]);
-    }
-
-    public function selectAllDestinations(): array
-    {
-        $sql = "SELECT * FROM destinations ORDER BY pays ASC, ville ASC";
-        return $this->unPdo->query($sql)->fetchAll();
-    }
-
-    public function selectDestinationById(int $id_destination): array|false
-    {
-        $sql = "SELECT * FROM destinations WHERE id_destination = :id";
-        $stmt = $this->unPdo->prepare($sql);
-        $stmt->execute([':id' => $id_destination]);
+        $requete = "SELECT * FROM utilisateurs WHERE email = :email AND actif = 1";
+        $stmt = $this->unPdo->prepare($requete);
+        $stmt->execute([":email" => $email]);
         return $stmt->fetch();
     }
 
-    public function updateDestination(array $tab): bool
+    public function selectWhere_utilisateur_by_email($email)
     {
-        $sql = "UPDATE destinations
-                SET pays = :pays,
-                    ville = :ville,
-                    continent = :continent,
-                    description = :description,
-                    prix_base = :prix_base,
-                    image_url = :image_url,
-                    actif = :actif
-                WHERE id_destination = :id";
-        $stmt = $this->unPdo->prepare($sql);
+        $requete = "SELECT * FROM utilisateurs WHERE email = :email";
+        $stmt = $this->unPdo->prepare($requete);
+        $stmt->execute([":email" => $email]);
+        return $stmt->fetch();
+    }
 
-        return $stmt->execute([
-            ':pays'        => $tab['pays'],
-            ':ville'       => $tab['ville'],
-            ':continent'   => $tab['continent'] ?? null,
-            ':description' => $tab['description'] ?? null,
-            ':prix_base'   => (float) $tab['prix_base'],
-            ':image_url'   => $tab['image_url'] ?? null,
-            ':actif'       => (int) ($tab['actif'] ?? 1),
-            ':id'          => (int) $tab['id_destination'],
+    public function insert_utilisateur($tab)
+    {
+        $requete = "INSERT INTO utilisateurs (email, mot_de_passe_hash, role, actif)
+                    VALUES (:email, :hash, :role, 1)";
+        $stmt = $this->unPdo->prepare($requete);
+        $stmt->execute([
+            ":email" => $tab["email"],
+            ":hash"  => $tab["mot_de_passe_hash"],
+            ":role"  => $tab["role"] ?? "client"
         ]);
     }
 
-    public function deleteDestination(int $id_destination): bool
+    /* =========================
+       CLIENT
+    ========================== */
+
+    public function insert_client($tab)
     {
-        $sql = "DELETE FROM destinations WHERE id_destination = :id";
-        $stmt = $this->unPdo->prepare($sql);
-        return $stmt->execute([':id' => $id_destination]);
+        $requete = "INSERT INTO client (id_utilisateur, nom, prenom, telephone, adresse, ville, pays)
+                    VALUES (:id_utilisateur, :nom, :prenom, :telephone, :adresse, :ville, :pays)";
+        $stmt = $this->unPdo->prepare($requete);
+        $stmt->execute([
+            ":id_utilisateur" => $tab["id_utilisateur"],
+            ":nom" => $tab["nom"],
+            ":prenom" => $tab["prenom"],
+            ":telephone" => $tab["telephone"] ?? null,
+            ":adresse" => $tab["adresse"] ?? null,
+            ":ville" => $tab["ville"] ?? null,
+            ":pays" => $tab["pays"] ?? null
+        ]);
+    }
+
+    public function selectWhere_client_by_user($id_utilisateur)
+    {
+        $requete = "SELECT * FROM client WHERE id_utilisateur = :id_utilisateur";
+        $stmt = $this->unPdo->prepare($requete);
+        $stmt->execute([":id_utilisateur" => $id_utilisateur]);
+        return $stmt->fetch();
     }
 
     /* =========================
-       RECHERCHE DESTINATIONS (pour la barre)
-       ========================= */
+       INSCRIPTION COMPLETE (transaction)
+    ========================== */
 
-    public function searchDestinations(string $q = '', string $continent = '', ?float $prix_max = null): array
+    public function inscription_complete($userTab, $clientTab)
     {
-        $sql = "SELECT *
-                FROM destinations
-                WHERE actif = 1";
-        $params = [];
+        try {
+            $this->unPdo->beginTransaction();
 
-        if ($q !== '') {
-            $sql .= " AND (pays LIKE :q OR ville LIKE :q OR continent LIKE :q)";
-            $params[':q'] = '%' . $q . '%';
+            // insert user
+            $this->insert_utilisateur($userTab);
+            $idUser = $this->unPdo->lastInsertId();
+
+            // insert client lié
+            $clientTab["id_utilisateur"] = $idUser;
+            $this->insert_client($clientTab);
+            $idClient = $this->unPdo->lastInsertId();
+
+            $this->unPdo->commit();
+
+            // (facultatif) on renvoie les ids (utile au contrôleur)
+            return ["id_utilisateur" => $idUser, "id_client" => $idClient];
+
+        } catch (Exception $e) {
+            $this->unPdo->rollBack();
+            echo "Erreur inscription : " . $e->getMessage();
+            return false;
         }
+    }
 
-        if ($continent !== '') {
-            $sql .= " AND continent = :continent";
-            $params[':continent'] = $continent;
-        }
+    /* =========================
+       DESTINATIONS (CRUD + Like)
+    ========================== */
 
-        if ($prix_max !== null) {
-            $sql .= " AND prix_base <= :prix_max";
-            $params[':prix_max'] = $prix_max;
-        }
+    public function insert_destination($tab)
+    {
+        $requete = "INSERT INTO destinations (pays, ville, continent, description, prix_base, image_url, actif)
+                    VALUES (:pays, :ville, :continent, :description, :prix_base, :image_url, 1)";
+        $stmt = $this->unPdo->prepare($requete);
+        $stmt->execute([
+            ":pays" => $tab["pays"],
+            ":ville" => $tab["ville"],
+            ":continent" => $tab["continent"] ?? null,
+            ":description" => $tab["description"] ?? null,
+            ":prix_base" => $tab["prix_base"],
+            ":image_url" => $tab["image_url"] ?? null
+        ]);
+    }
 
-        $sql .= " ORDER BY pays ASC, ville ASC";
-
-        $stmt = $this->unPdo->prepare($sql);
-        $stmt->execute($params);
+    public function selectAll_destinations()
+    {
+        $requete = "SELECT * FROM destinations WHERE actif = 1 ORDER BY pays, ville";
+        $stmt = $this->unPdo->prepare($requete);
+        $stmt->execute();
         return $stmt->fetchAll();
     }
 
-    public function selectDistinctContinents(): array
+    public function selectLike_destination($filtre)
     {
-        $sql = "SELECT DISTINCT continent
-                FROM destinations
-                WHERE actif = 1 AND continent IS NOT NULL AND continent <> ''
-                ORDER BY continent ASC";
-        $rows = $this->unPdo->query($sql)->fetchAll();
-
-        return array_map(fn($r) => $r['continent'], $rows);
+        $requete = "SELECT * FROM destinations
+                    WHERE actif = 1
+                      AND (pays LIKE :filtre OR ville LIKE :filtre OR continent LIKE :filtre)
+                    ORDER BY pays, ville";
+        $stmt = $this->unPdo->prepare($requete);
+        $stmt->execute([":filtre" => "%" . $filtre . "%"]);
+        return $stmt->fetchAll();
     }
 
-    /*
-      OPTIONNEL : si tu as une table voyages avec une colonne ville_depart
-      Sinon, supprime cette méthode et dans ta vue tu mets $villesDepart = []
-    */
-    public function selectDistinctVillesDepart(): array
+    public function delete_destination($id_destination)
     {
-        $sql = "SELECT DISTINCT ville_depart
-                FROM voyages
-                WHERE ville_depart IS NOT NULL AND ville_depart <> ''
-                ORDER BY ville_depart ASC";
-        $rows = $this->unPdo->query($sql)->fetchAll();
+        // soft delete (actif=0)
+        $requete = "UPDATE destinations SET actif = 0 WHERE id_destination = :id_destination";
+        $stmt = $this->unPdo->prepare($requete);
+        $stmt->execute([":id_destination" => $id_destination]);
+    }
 
-        return array_map(fn($r) => $r['ville_depart'], $rows);
+    public function update_destination($tab)
+    {
+        $requete = "UPDATE destinations
+                    SET pays = :pays, ville = :ville, continent = :continent,
+                        description = :description, prix_base = :prix_base,
+                        image_url = :image_url, actif = :actif
+                    WHERE id_destination = :id_destination";
+        $stmt = $this->unPdo->prepare($requete);
+        $stmt->execute([
+            ":id_destination" => $tab["id_destination"],
+            ":pays" => $tab["pays"],
+            ":ville" => $tab["ville"],
+            ":continent" => $tab["continent"] ?? null,
+            ":description" => $tab["description"] ?? null,
+            ":prix_base" => $tab["prix_base"],
+            ":image_url" => $tab["image_url"] ?? null,
+            ":actif" => $tab["actif"] ?? 1
+        ]);
+    }
+
+    public function selectWhere_destination($id_destination)
+    {
+        $requete = "SELECT * FROM destinations WHERE id_destination = :id_destination";
+        $stmt = $this->unPdo->prepare($requete);
+        $stmt->execute([":id_destination" => $id_destination]);
+        return $stmt->fetch();
+    }
+
+    /* =========================
+       OFFRES (CRUD + actives)
+    ========================== */
+
+    public function insert_offre($tab)
+    {
+        $requete = "INSERT INTO offres (id_destination, titre, pourcentage_reduction, date_debut, date_fin, actif)
+                    VALUES (:id_destination, :titre, :pourcentage, :date_debut, :date_fin, 1)";
+        $stmt = $this->unPdo->prepare($requete);
+        $stmt->execute([
+            ":id_destination" => $tab["id_destination"],
+            ":titre" => $tab["titre"],
+            ":pourcentage" => $tab["pourcentage_reduction"],
+            ":date_debut" => $tab["date_debut"],
+            ":date_fin" => $tab["date_fin"]
+        ]);
+    }
+
+    public function selectAll_offres()
+    {
+        $requete = "SELECT o.*, d.pays, d.ville
+                    FROM offres o
+                    JOIN destinations d ON d.id_destination = o.id_destination
+                    ORDER BY o.date_debut DESC";
+        $stmt = $this->unPdo->prepare($requete);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    // (optionnel) recherche offre
+    public function selectLike_offre($filtre)
+    {
+        $requete = "SELECT o.*, d.pays, d.ville
+                    FROM offres o
+                    JOIN destinations d ON d.id_destination = o.id_destination
+                    WHERE o.titre LIKE :filtre OR d.pays LIKE :filtre OR d.ville LIKE :filtre
+                    ORDER BY o.date_debut DESC";
+        $stmt = $this->unPdo->prepare($requete);
+        $stmt->execute([":filtre" => "%" . $filtre . "%"]);
+        return $stmt->fetchAll();
+    }
+
+    public function delete_offre($id_offre)
+    {
+        $requete = "UPDATE offres SET actif = 0 WHERE id_offre = :id_offre";
+        $stmt = $this->unPdo->prepare($requete);
+        $stmt->execute([":id_offre" => $id_offre]);
+    }
+
+    public function update_offre($tab)
+    {
+        $requete = "UPDATE offres
+                    SET id_destination = :id_destination, titre = :titre,
+                        pourcentage_reduction = :pourcentage, date_debut = :date_debut,
+                        date_fin = :date_fin, actif = :actif
+                    WHERE id_offre = :id_offre";
+        $stmt = $this->unPdo->prepare($requete);
+        $stmt->execute([
+            ":id_offre" => $tab["id_offre"],
+            ":id_destination" => $tab["id_destination"],
+            ":titre" => $tab["titre"],
+            ":pourcentage" => $tab["pourcentage_reduction"],
+            ":date_debut" => $tab["date_debut"],
+            ":date_fin" => $tab["date_fin"],
+            ":actif" => $tab["actif"] ?? 1
+        ]);
+    }
+
+    public function selectWhere_offre($id_offre)
+    {
+        $requete = "SELECT * FROM offres WHERE id_offre = :id_offre";
+        $stmt = $this->unPdo->prepare($requete);
+        $stmt->execute([":id_offre" => $id_offre]);
+        return $stmt->fetch();
+    }
+
+    // Offres actives
+    public function selectAll_offres_actives()
+    {
+        $requete = "SELECT o.*, d.pays, d.ville, d.image_url, d.prix_base
+                    FROM offres o
+                    JOIN destinations d ON d.id_destination = o.id_destination
+                    WHERE o.actif = 1
+                      AND d.actif = 1
+                      AND CURDATE() BETWEEN o.date_debut AND o.date_fin
+                    ORDER BY o.date_debut DESC";
+        $stmt = $this->unPdo->prepare($requete);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    public function selectWhere_offre_active_by_destination($id_destination)
+    {
+        $requete = "SELECT *
+                    FROM offres
+                    WHERE actif = 1
+                      AND id_destination = :id_destination
+                      AND CURDATE() BETWEEN date_debut AND date_fin
+                    LIMIT 1";
+        $stmt = $this->unPdo->prepare($requete);
+        $stmt->execute([":id_destination" => $id_destination]);
+        return $stmt->fetch();
+    }
+
+    /* =========================
+       RESERVATIONS
+    ========================== */
+
+    public function insert_reservation($tab)
+    {
+        $requete = "INSERT INTO reservations
+                    (id_client, id_destination, date_depart, date_retour, nb_personnes, prix_total, statut)
+                    VALUES
+                    (:id_client, :id_destination, :date_depart, :date_retour, :nb_personnes, :prix_total, 'en_attente')";
+        $stmt = $this->unPdo->prepare($requete);
+        $stmt->execute([
+            ":id_client" => $tab["id_client"],
+            ":id_destination" => $tab["id_destination"],
+            ":date_depart" => $tab["date_depart"],
+            ":date_retour" => $tab["date_retour"],
+            ":nb_personnes" => $tab["nb_personnes"],
+            ":prix_total" => $tab["prix_total"]
+        ]);
+    }
+
+    public function selectAll_reservations()
+    {
+        $requete = "SELECT r.*, c.nom, c.prenom, d.pays, d.ville
+                    FROM reservations r
+                    JOIN client c ON c.id_client = r.id_client
+                    JOIN destinations d ON d.id_destination = r.id_destination
+                    ORDER BY r.date_reservation DESC";
+        $stmt = $this->unPdo->prepare($requete);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    public function selectWhere_reservations_by_client($id_client)
+    {
+        $requete = "SELECT r.*, d.pays, d.ville, d.image_url
+                    FROM reservations r
+                    JOIN destinations d ON d.id_destination = r.id_destination
+                    WHERE r.id_client = :id_client
+                    ORDER BY r.date_reservation DESC";
+        $stmt = $this->unPdo->prepare($requete);
+        $stmt->execute([":id_client" => $id_client]);
+        return $stmt->fetchAll();
+    }
+
+    public function update_reservation_statut($tab)
+    {
+        $requete = "UPDATE reservations
+                    SET statut = :statut
+                    WHERE id_reservation = :id_reservation";
+        $stmt = $this->unPdo->prepare($requete);
+        $stmt->execute([
+            ":id_reservation" => $tab["id_reservation"],
+            ":statut" => $tab["statut"]
+        ]);
+    }
+
+    /* =========================
+       SLIDES
+    ========================== */
+
+    public function insert_slide($tab)
+    {
+        $requete = "INSERT INTO slides (titre, sous_titre, image_url, ordre, actif)
+                    VALUES (:titre, :sous_titre, :image_url, :ordre, 1)";
+        $stmt = $this->unPdo->prepare($requete);
+        $stmt->execute([
+            ":titre" => $tab["titre"],
+            ":sous_titre" => $tab["sous_titre"] ?? null,
+            ":image_url" => $tab["image_url"],
+            ":ordre" => $tab["ordre"] ?? 1
+        ]);
+    }
+
+    public function selectAll_slides()
+    {
+        $requete = "SELECT * FROM slides ORDER BY ordre ASC";
+        $stmt = $this->unPdo->prepare($requete);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    public function selectAll_slides_actifs()
+    {
+        $requete = "SELECT * FROM slides WHERE actif = 1 ORDER BY ordre ASC";
+        $stmt = $this->unPdo->prepare($requete);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    public function selectWhere_slide($id_slide)
+    {
+        $requete = "SELECT * FROM slides WHERE id_slide = :id_slide";
+        $stmt = $this->unPdo->prepare($requete);
+        $stmt->execute([":id_slide" => $id_slide]);
+        return $stmt->fetch();
+    }
+
+    public function update_slide($tab)
+    {
+        $requete = "UPDATE slides
+                    SET titre = :titre, sous_titre = :sous_titre, image_url = :image_url,
+                        ordre = :ordre, actif = :actif
+                    WHERE id_slide = :id_slide";
+        $stmt = $this->unPdo->prepare($requete);
+        $stmt->execute([
+            ":id_slide" => $tab["id_slide"],
+            ":titre" => $tab["titre"],
+            ":sous_titre" => $tab["sous_titre"] ?? null,
+            ":image_url" => $tab["image_url"],
+            ":ordre" => $tab["ordre"],
+            ":actif" => $tab["actif"] ?? 1
+        ]);
+    }
+
+    public function delete_slide($id_slide)
+    {
+        $requete = "UPDATE slides SET actif = 0 WHERE id_slide = :id_slide";
+        $stmt = $this->unPdo->prepare($requete);
+        $stmt->execute([":id_slide" => $id_slide]);
     }
 }
+?>

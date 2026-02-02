@@ -1,99 +1,61 @@
 <?php
-/* valeurs par defaut */
-if (!isset($destinations)) {
-    $destinations = [];
-}
+$destinations = $destinations ?? [];
+$q = htmlspecialchars($_GET['q'] ?? '');
 ?>
 
-<!-- page destinations (client) -->
-<div class="container py-4">
+<div class="container mt-4">
 
-    <!-- titre page -->
-    <h3 class="section-title text-center mt-5">Nos Destinations</h3>
+    <h2 class="mb-3">Nos destinations</h2>
 
-    <!-- aucune destination -->
+    <!-- Filtre (comme à l'école : simple) -->
+    <form method="get" action="index.php" class="mb-4">
+        <input type="hidden" name="page" value="destinations">
+        <div class="input-group">
+            <input type="text" name="q" class="form-control" placeholder="Rechercher (pays, ville, continent)" value="<?= $q ?>">
+            <button class="btn btn-primary" type="submit">Filtrer</button>
+            <a class="btn btn-secondary" href="index.php?page=destinations">Reset</a>
+        </div>
+    </form>
+
     <?php if (empty($destinations)): ?>
-        <div class="alert alert-info">Aucune destination disponible.</div>
+        <div class="alert alert-info">Aucune destination trouvée.</div>
     <?php else: ?>
 
-        <!-- grille destinations -->
-        <div class="row g-4">
-
+        <div class="row g-3">
             <?php foreach ($destinations as $d): ?>
-                <?php if ((int)($d['actif'] ?? 0) !== 1) continue; ?>
-
                 <div class="col-12 col-md-6 col-lg-4">
+                    <div class="card h-100">
 
-                    <!-- carte destination -->
-                    <div class="card h-100 shadow-sm">
-
-                        <!-- image destination -->
                         <?php if (!empty($d['image_url'])): ?>
-                            <img
-                                src="images/destinations/<?= htmlspecialchars((string) $d['image_url']) ?>"
-                                class="card-img-top"
-                                alt="<?= htmlspecialchars((string) ($d['ville'] ?? 'Destination')) ?>"
-                                style="height:220px; object-fit:cover;"
-                            >
+                            <img src="<?= htmlspecialchars($d['image_url']) ?>"
+                                 class="card-img-top"
+                                 alt="<?= htmlspecialchars(($d['pays'] ?? '').' '.($d['ville'] ?? '')) ?>"
+                                 style="height:180px; object-fit:cover;">
                         <?php endif; ?>
 
-                        <!-- contenu carte -->
                         <div class="card-body">
-
-                            <!-- titre : ville — pays -->
-                            <h5 class="card-title mb-1">
-                                <?= htmlspecialchars((string) ($d['ville'] ?? '')) ?>
-                                <?php if (!empty($d['pays'])): ?>
-                                    — <?= htmlspecialchars((string) $d['pays']) ?>
-                                <?php endif; ?>
+                            <h5 class="card-title">
+                                <?= htmlspecialchars(($d['pays'] ?? '').' - '.($d['ville'] ?? '')) ?>
                             </h5>
 
-                            <!-- continent -->
                             <?php if (!empty($d['continent'])): ?>
-                                <div class="text-muted mb-2" style="font-size:0.95rem;">
-                                    <?= htmlspecialchars((string) $d['continent']) ?>
-                                </div>
-                            <?php else: ?>
-                                <div class="text-muted mb-2" style="font-size:0.95rem;">
-                                    &nbsp;
-                                </div>
+                                <div class="text-muted small mb-2"><?= htmlspecialchars($d['continent']) ?></div>
                             <?php endif; ?>
 
-                            <!-- description -->
-                            <?php if (!empty($d['description'])): ?>
-                                <p class="card-text">
-                                    <?= nl2br(htmlspecialchars((string) $d['description'])) ?>
-                                </p>
-                            <?php else: ?>
-                                <p class="card-text text-muted">
-                                    Description non disponible.
-                                </p>
+                            <?php if (!empty($d['prix_base'])): ?>
+                                <div class="mb-2"><strong><?= number_format((float)$d['prix_base'], 2, ',', ' ') ?> €</strong> (prix base)</div>
                             <?php endif; ?>
 
-                            <!-- prix -->
-                            <div class="fw-semibold mt-2">
-                                À partir de : <?= htmlspecialchars((string) ($d['prix_base'] ?? '0')) ?> €
-                            </div>
-
-                        </div>
-
-                        <!-- actions carte -->
-                        <div class="card-footer bg-white border-0">
-                            <a
-                                href="index.php?page=destination_detail&id=<?= (int)$d['id_destination'] ?>"
-                                class="btn btn-outline-primary w-100"
-                            >
-                                Voir plus
+                            <a class="btn btn-outline-primary"
+                               href="index.php?page=destination_detail&id_destination=<?= (int)$d['id_destination'] ?>">
+                                Voir détail
                             </a>
                         </div>
 
                     </div>
-
                 </div>
             <?php endforeach; ?>
-
         </div>
 
     <?php endif; ?>
-
 </div>

@@ -1,80 +1,86 @@
 <?php
-if (!isset($offres)) $offres = [];
+$offres = $offres ?? [];
 ?>
 
-<div class="container py-4">
+<div class="container mt-4">
 
-    <h3 class="section-title text-center mt-5">Nos Offres</h3>
+    <h2 class="mb-3">Offres en cours</h2>
 
     <?php if (empty($offres)): ?>
         <div class="alert alert-info">Aucune offre active pour le moment.</div>
     <?php else: ?>
 
-        <div class="row g-4">
-
+        <div class="row g-3">
             <?php foreach ($offres as $o): ?>
+
                 <?php
-                    $reduc = (int) ($o['pourcentage_reduction'] ?? 0);
-                    $coef  = (100 - $reduc) / 100;
+                $reduc = (int)($o['pourcentage_reduction'] ?? 0);
+                $prixBase = (float)($o['prix_base'] ?? 0);
+                $prixRemise = $prixBase;
 
-                    $prixBase = (float) ($o['prix_base'] ?? 0);
-                    $prixFinal = round($prixBase * $coef, 2);
-
-                    $destLabel = trim(($o['ville'] ?? '') . ' — ' . ($o['pays'] ?? ''));
+                if ($prixBase > 0 && $reduc > 0) {
+                    $prixRemise = $prixBase * (1 - ($reduc / 100));
+                }
                 ?>
 
                 <div class="col-12 col-md-6 col-lg-4">
-
-                    <div class="card h-100 shadow-sm">
+                    <div class="card h-100">
 
                         <?php if (!empty($o['image_url'])): ?>
-                            <img
-                                src="images/destinations/<?= htmlspecialchars((string) $o['image_url']) ?>"
-                                class="card-img-top"
-                                alt="<?= htmlspecialchars($destLabel ?: 'Destination') ?>"
-                                style="height:220px; object-fit:cover;"
-                            >
+                            <img src="<?= htmlspecialchars($o['image_url']) ?>"
+                                 class="card-img-top"
+                                 alt="<?= htmlspecialchars(($o['pays'] ?? '').' '.($o['ville'] ?? '')) ?>"
+                                 style="height:180px; object-fit:cover;">
                         <?php endif; ?>
 
                         <div class="card-body">
+                            <div class="text-muted small">
+                                <?= htmlspecialchars(($o['pays'] ?? '').' - '.($o['ville'] ?? '')) ?>
+                            </div>
 
-                            <h5 class="card-title mb-1">
-                                <?= htmlspecialchars((string) ($o['titre'] ?? '')) ?>
+                            <h5 class="card-title"><?= htmlspecialchars($o['titre'] ?? '') ?></h5>
+
+                            <div class="mb-2">
                                 <?php if ($reduc > 0): ?>
-                                    (-<?= (int) $reduc ?>%)
+                                    <span class="badge bg-success">-<?= $reduc ?>%</span>
                                 <?php endif; ?>
-                            </h5>
-
-                            <div class="text-muted mb-2" style="font-size:0.95rem;">
-                                <?= htmlspecialchars($destLabel) ?>
+                                <small class="text-muted">
+                                    Du <?= htmlspecialchars($o['date_debut'] ?? '') ?>
+                                    au <?= htmlspecialchars($o['date_fin'] ?? '') ?>
+                                </small>
                             </div>
 
-                            <div class="small">
-                                <div>Prix de base : <s><?= number_format($prixBase, 2, ',', ' ') ?> €</s></div>
-                                <div>Prix promo : <strong><?= number_format($prixFinal, 2, ',', ' ') ?> €</strong></div>
+                            <?php if ($prixBase > 0): ?>
+                                <?php if ($reduc > 0): ?>
+                                    <div>
+                                        <del class="text-muted"><?= number_format($prixBase, 2, ',', ' ') ?> €</del>
+                                        <strong><?= number_format($prixRemise, 2, ',', ' ') ?> €</strong>
+                                    </div>
+                                <?php else: ?>
+                                    <div><strong><?= number_format($prixBase, 2, ',', ' ') ?> €</strong></div>
+                                <?php endif; ?>
+                            <?php endif; ?>
 
-                                <div class="text-muted mt-2">
-                                    Valable du <?= htmlspecialchars((string) ($o['date_debut'] ?? '')) ?>
-                                    au <?= htmlspecialchars((string) ($o['date_fin'] ?? '')) ?>
-                                </div>
+                            <div class="mt-3 d-flex gap-2">
+                                <!-- ✅ paramètre "id" pour être compatible avec ton routing -->
+                                <a class="btn btn-outline-primary"
+                                   href="index.php?page=destination_detail&id=<?= (int)$o['id_destination'] ?>">
+                                    Voir destination
+                                </a>
+
+                                <!-- ✅ paramètre "id" (gestion_reservations.php lit $_GET["id"]) -->
+                                <a class="btn btn-primary"
+                                   href="index.php?page=reservation&id=<?= (int)$o['id_destination'] ?>">
+                                    Réserver
+                                </a>
                             </div>
-
-                        </div>
-
-                        <div class="card-footer bg-white border-0">
-                            <a href="index.php?page=destination_detail&id=<?= (int)($o['id_destination'] ?? 0) ?>"
-                               class="btn btn-outline-dark w-100">
-                                Voir l'offre
-                            </a>
                         </div>
 
                     </div>
-
                 </div>
-            <?php endforeach; ?>
 
+            <?php endforeach; ?>
         </div>
 
     <?php endif; ?>
-
 </div>
