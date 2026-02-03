@@ -1,3 +1,5 @@
 <?php
-// controleur/gestion_offres.php
+
+// donnees des offres actives
+
 $offres = $unControleur->selectAll_offres_actives();

@@ -1,210 +1,211 @@
 <?php
+
 class Modele
 {
-    private $unPdo;
+    private PDO $pdo;
 
     public function __construct()
     {
-        $url = "mysql:host=localhost;dbname=agence_voyage;charset=utf8mb4";
+        $dsn = "mysql:host=localhost;dbname=agence_bfly;charset=utf8mb4";
         $user = "root";
-        $mdp = "";
+        $password = "";
 
         try {
-            $this->unPdo = new PDO($url, $user, $mdp);
-            $this->unPdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        } catch (PDOException $exp) {
-            echo "Erreur de Connexion à " . $url . "<br>";
-            echo $exp->getMessage();
+            $this->pdo = new PDO($dsn, $user, $password, [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            ]);
+        } catch (PDOException $e) {
+            echo "erreur de connexion à " . $dsn . "<br>";
+            echo $e->getMessage();
             exit();
         }
     }
 
-    /* =========================
-       UTILISATEURS / AUTH
-    ========================== */
+    // pdo
 
-    public function select_user_login($email)
+    private function fetchOne(string $sql, array $params = []): array|false
     {
-        $requete = "SELECT * FROM utilisateurs WHERE email = :email AND actif = 1";
-        $stmt = $this->unPdo->prepare($requete);
-        $stmt->execute([":email" => $email]);
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function selectWhere_utilisateur_by_email($email)
+    private function fetchAll(string $sql, array $params = []): array
     {
-        $requete = "SELECT * FROM utilisateurs WHERE email = :email";
-        $stmt = $this->unPdo->prepare($requete);
-        $stmt->execute([":email" => $email]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function insert_utilisateur($tab)
+    private function execute(string $sql, array $params = []): void
     {
-        $requete = "INSERT INTO utilisateurs (email, mot_de_passe_hash, role, actif)
-                    VALUES (:email, :hash, :role, 1)";
-        $stmt = $this->unPdo->prepare($requete);
-        $stmt->execute([
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
+    }
+
+    // utilisateurs et authentification
+
+    public function select_user_login(string $email): array|false
+    {
+        $sql = "select *
+                from utilisateurs
+                where email = :email
+                  and actif = 1";
+        return $this->fetchOne($sql, [":email" => $email]);
+    }
+
+    public function selectWhere_utilisateur_by_email(string $email): array|false
+    {
+        $sql = "select *
+                from utilisateurs
+                where email = :email";
+        return $this->fetchOne($sql, [":email" => $email]);
+    }
+
+    public function insert_utilisateur(array $tab): void
+    {
+        $sql = "insert into utilisateurs (email, mot_de_passe_hash, role, actif)
+                values (:email, :hash, :role, 1)";
+        $this->execute($sql, [
             ":email" => $tab["email"],
-            ":hash"  => $tab["mot_de_passe_hash"],
-            ":role"  => $tab["role"] ?? "client"
+            ":hash" => $tab["mot_de_passe_hash"],
+            ":role" => $tab["role"] ?? "client",
         ]);
     }
 
-    /* =========================
-       CLIENT
-    ========================== */
+    // clients
 
-    public function insert_client($tab)
+    public function insert_client(array $tab): void
     {
-        $requete = "INSERT INTO client (id_utilisateur, nom, prenom, telephone, adresse, ville, pays)
-                    VALUES (:id_utilisateur, :nom, :prenom, :telephone, :adresse, :ville, :pays)";
-        $stmt = $this->unPdo->prepare($requete);
-        $stmt->execute([
+        $sql = "insert into client (id_utilisateur, nom, prenom, telephone, adresse, ville, pays)
+                values (:id_utilisateur, :nom, :prenom, :telephone, :adresse, :ville, :pays)";
+        $this->execute($sql, [
             ":id_utilisateur" => $tab["id_utilisateur"],
             ":nom" => $tab["nom"],
             ":prenom" => $tab["prenom"],
             ":telephone" => $tab["telephone"] ?? null,
             ":adresse" => $tab["adresse"] ?? null,
             ":ville" => $tab["ville"] ?? null,
-            ":pays" => $tab["pays"] ?? null
+            ":pays" => $tab["pays"] ?? null,
         ]);
     }
 
-    public function selectWhere_client_by_user($id_utilisateur)
+    public function selectWhere_client_by_user(int $id_utilisateur): array|false
     {
-        $requete = "SELECT * FROM client WHERE id_utilisateur = :id_utilisateur";
-        $stmt = $this->unPdo->prepare($requete);
-        $stmt->execute([":id_utilisateur" => $id_utilisateur]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        $sql = "select *
+                from client
+                where id_utilisateur = :id_utilisateur";
+        return $this->fetchOne($sql, [":id_utilisateur" => $id_utilisateur]);
     }
 
-    /* =========================
-       INSCRIPTION COMPLETE
-    ========================== */
+    // inscription complete
 
-    public function inscription_complete($userTab, $clientTab)
+    public function inscription_complete(array $userTab, array $clientTab): array|false
     {
         try {
-            $this->unPdo->beginTransaction();
+            $this->pdo->beginTransaction();
 
             $this->insert_utilisateur($userTab);
-            $idUser = $this->unPdo->lastInsertId();
+            $idUser = (int) $this->pdo->lastInsertId();
 
             $clientTab["id_utilisateur"] = $idUser;
             $this->insert_client($clientTab);
-            $idClient = $this->unPdo->lastInsertId();
+            $idClient = (int) $this->pdo->lastInsertId();
 
-            $this->unPdo->commit();
+            $this->pdo->commit();
             return ["id_utilisateur" => $idUser, "id_client" => $idClient];
         } catch (Exception $e) {
-            $this->unPdo->rollBack();
-            echo "Erreur inscription : " . $e->getMessage();
+            $this->pdo->rollBack();
+            echo "erreur inscription : " . $e->getMessage();
             return false;
         }
     }
 
-    /* =========================
-       CONTINENTS
-    ========================== */
+    // continents
 
-    public function selectAll_continents()
+    public function selectAll_continents(): array
     {
-        $requete = "SELECT * FROM continents ORDER BY nom ASC";
-        $stmt = $this->unPdo->prepare($requete);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $sql = "select *
+                from continents
+                order by nom asc";
+        return $this->fetchAll($sql);
     }
 
-    public function selectWhere_continent($id_continent)
+    public function selectWhere_continent(int $id_continent): array|false
     {
-        $requete = "SELECT * FROM continents WHERE id_continent = :id_continent";
-        $stmt = $this->unPdo->prepare($requete);
-        $stmt->execute([":id_continent" => $id_continent]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        $sql = "select *
+                from continents
+                where id_continent = :id_continent";
+        return $this->fetchOne($sql, [":id_continent" => $id_continent]);
     }
 
-    /* =========================
-       DESTINATIONS
-    ========================== */
+    // destinations
 
-    public function insert_destination($tab)
+    public function insert_destination(array $tab): void
     {
-        $requete = "INSERT INTO destinations (pays, ville, id_continent, description, prix_base, image_url, actif)
-                    VALUES (:pays, :ville, :id_continent, :description, :prix_base, :image_url, 1)";
-        $stmt = $this->unPdo->prepare($requete);
-        $stmt->execute([
+        $sql = "insert into destinations (pays, ville, id_continent, description, prix_base, image_url, actif)
+                values (:pays, :ville, :id_continent, :description, :prix_base, :image_url, 1)";
+        $this->execute($sql, [
             ":pays" => $tab["pays"],
             ":ville" => $tab["ville"],
             ":id_continent" => $tab["id_continent"] ?? null,
             ":description" => $tab["description"] ?? null,
             ":prix_base" => $tab["prix_base"],
-            ":image_url" => $tab["image_url"] ?? null
+            ":image_url" => $tab["image_url"] ?? null,
         ]);
     }
 
-    // client: seulement actif=1
-    public function selectAll_destinations()
+    public function selectAll_destinations(): array
     {
-        $requete = "SELECT d.*, c.nom AS continent
-                    FROM destinations d
-                    LEFT JOIN continents c ON c.id_continent = d.id_continent
-                    WHERE d.actif = 1
-                    ORDER BY d.pays, d.ville";
-        $stmt = $this->unPdo->prepare($requete);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $sql = "select d.*, c.nom as continent
+                from destinations d
+                left join continents c on c.id_continent = d.id_continent
+                where d.actif = 1
+                order by d.pays, d.ville";
+        return $this->fetchAll($sql);
     }
 
-    // admin: affiche tout (actif et inactif)
-    public function selectAll_destinations_admin()
+    public function selectAll_destinations_admin(): array
     {
-        $requete = "SELECT d.*, c.nom AS continent
-                    FROM destinations d
-                    LEFT JOIN continents c ON c.id_continent = d.id_continent
-                    ORDER BY d.actif DESC, d.pays, d.ville";
-        $stmt = $this->unPdo->prepare($requete);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $sql = "select d.*, c.nom as continent
+                from destinations d
+                left join continents c on c.id_continent = d.id_continent
+                order by d.actif desc, d.pays, d.ville";
+        return $this->fetchAll($sql);
     }
 
-    public function selectLike_destination($filtre)
+    public function selectLike_destination(string $filtre): array
     {
-        $requete = "SELECT d.*, c.nom AS continent
-                    FROM destinations d
-                    LEFT JOIN continents c ON c.id_continent = d.id_continent
-                    WHERE d.actif = 1
-                      AND (d.pays LIKE :filtre OR d.ville LIKE :filtre OR c.nom LIKE :filtre)
-                    ORDER BY d.pays, d.ville";
-        $stmt = $this->unPdo->prepare($requete);
-        $stmt->execute([":filtre" => "%" . $filtre . "%"]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $sql = "select d.*, c.nom as continent
+                from destinations d
+                left join continents c on c.id_continent = d.id_continent
+                where d.actif = 1
+                  and (d.pays like :filtre or d.ville like :filtre or c.nom like :filtre)
+                order by d.pays, d.ville";
+        return $this->fetchAll($sql, [":filtre" => "%" . $filtre . "%"]);
     }
 
-    public function selectWhere_destination($id_destination)
+    public function selectWhere_destination(int $id_destination): array|false
     {
-        $requete = "SELECT d.*, c.nom AS continent
-                    FROM destinations d
-                    LEFT JOIN continents c ON c.id_continent = d.id_continent
-                    WHERE d.id_destination = :id_destination";
-        $stmt = $this->unPdo->prepare($requete);
-        $stmt->execute([":id_destination" => $id_destination]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        $sql = "select d.*, c.nom as continent
+                from destinations d
+                left join continents c on c.id_continent = d.id_continent
+                where d.id_destination = :id_destination";
+        return $this->fetchOne($sql, [":id_destination" => $id_destination]);
     }
 
-    public function update_destination($tab)
+    public function update_destination(array $tab): void
     {
-        $requete = "UPDATE destinations
-                    SET pays = :pays,
-                        ville = :ville,
-                        id_continent = :id_continent,
-                        description = :description,
-                        prix_base = :prix_base,
-                        image_url = :image_url,
-                        actif = :actif
-                    WHERE id_destination = :id_destination";
-        $stmt = $this->unPdo->prepare($requete);
-        $stmt->execute([
+        $sql = "update destinations
+                set pays = :pays,
+                    ville = :ville,
+                    id_continent = :id_continent,
+                    description = :description,
+                    prix_base = :prix_base,
+                    image_url = :image_url,
+                    actif = :actif
+                where id_destination = :id_destination";
+        $this->execute($sql, [
             ":id_destination" => $tab["id_destination"],
             ":pays" => $tab["pays"],
             ":ville" => $tab["ville"],
@@ -212,244 +213,232 @@ class Modele
             ":description" => $tab["description"] ?? null,
             ":prix_base" => $tab["prix_base"],
             ":image_url" => $tab["image_url"] ?? null,
-            ":actif" => $tab["actif"] ?? 1
+            ":actif" => $tab["actif"] ?? 1,
         ]);
     }
 
-    public function delete_destination($id_destination)
+    public function delete_destination(int $id_destination): void
     {
-        $requete = "UPDATE destinations SET actif = 0 WHERE id_destination = :id_destination";
-        $stmt = $this->unPdo->prepare($requete);
-        $stmt->execute([":id_destination" => $id_destination]);
+        $sql = "update destinations
+                set actif = 0
+                where id_destination = :id_destination";
+        $this->execute($sql, [":id_destination" => $id_destination]);
     }
 
-    /* =========================
-       OFFRES
-    ========================== */
+    // offres
 
-    public function insert_offre($tab)
+    public function insert_offre(array $tab): void
     {
-        $requete = "INSERT INTO offres (id_destination, titre, pourcentage_reduction, date_debut, date_fin, actif)
-                    VALUES (:id_destination, :titre, :pourcentage, :date_debut, :date_fin, 1)";
-        $stmt = $this->unPdo->prepare($requete);
-        $stmt->execute([
+        $sql = "insert into offres (id_destination, titre, pourcentage_reduction, date_debut, date_fin, actif)
+                values (:id_destination, :titre, :pourcentage, :date_debut, :date_fin, 1)";
+        $this->execute($sql, [
             ":id_destination" => $tab["id_destination"],
             ":titre" => $tab["titre"],
             ":pourcentage" => $tab["pourcentage_reduction"],
             ":date_debut" => $tab["date_debut"],
-            ":date_fin" => $tab["date_fin"]
+            ":date_fin" => $tab["date_fin"],
         ]);
     }
 
-    public function selectAll_offres()
+    public function selectAll_offres(): array
     {
-        $requete = "SELECT o.*, d.pays, d.ville, cont.nom AS continent
-                    FROM offres o
-                    JOIN destinations d ON d.id_destination = o.id_destination
-                    LEFT JOIN continents cont ON cont.id_continent = d.id_continent
-                    ORDER BY o.date_debut DESC";
-        $stmt = $this->unPdo->prepare($requete);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $sql = "select o.*, d.pays, d.ville, cont.nom as continent
+                from offres o
+                join destinations d on d.id_destination = o.id_destination
+                left join continents cont on cont.id_continent = d.id_continent
+                order by o.date_debut desc";
+        return $this->fetchAll($sql);
     }
 
-    public function selectLike_offre($filtre)
+    public function selectLike_offre(string $filtre): array
     {
-        $requete = "SELECT o.*, d.pays, d.ville, cont.nom AS continent
-                    FROM offres o
-                    JOIN destinations d ON d.id_destination = o.id_destination
-                    LEFT JOIN continents cont ON cont.id_continent = d.id_continent
-                    WHERE o.titre LIKE :filtre OR d.pays LIKE :filtre OR d.ville LIKE :filtre OR cont.nom LIKE :filtre
-                    ORDER BY o.date_debut DESC";
-        $stmt = $this->unPdo->prepare($requete);
-        $stmt->execute([":filtre" => "%" . $filtre . "%"]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $sql = "select o.*, d.pays, d.ville, cont.nom as continent
+                from offres o
+                join destinations d on d.id_destination = o.id_destination
+                left join continents cont on cont.id_continent = d.id_continent
+                where o.titre like :filtre
+                   or d.pays like :filtre
+                   or d.ville like :filtre
+                   or cont.nom like :filtre
+                order by o.date_debut desc";
+        return $this->fetchAll($sql, [":filtre" => "%" . $filtre . "%"]);
     }
 
-    public function selectWhere_offre($id_offre)
+    public function selectWhere_offre(int $id_offre): array|false
     {
-        $requete = "SELECT * FROM offres WHERE id_offre = :id_offre";
-        $stmt = $this->unPdo->prepare($requete);
-        $stmt->execute([":id_offre" => $id_offre]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        $sql = "select *
+                from offres
+                where id_offre = :id_offre";
+        return $this->fetchOne($sql, [":id_offre" => $id_offre]);
     }
 
-    public function update_offre($tab)
+    public function update_offre(array $tab): void
     {
-        $requete = "UPDATE offres
-                    SET id_destination = :id_destination, titre = :titre,
-                        pourcentage_reduction = :pourcentage, date_debut = :date_debut,
-                        date_fin = :date_fin, actif = :actif
-                    WHERE id_offre = :id_offre";
-        $stmt = $this->unPdo->prepare($requete);
-        $stmt->execute([
+        $sql = "update offres
+                set id_destination = :id_destination,
+                    titre = :titre,
+                    pourcentage_reduction = :pourcentage,
+                    date_debut = :date_debut,
+                    date_fin = :date_fin,
+                    actif = :actif
+                where id_offre = :id_offre";
+        $this->execute($sql, [
             ":id_offre" => $tab["id_offre"],
             ":id_destination" => $tab["id_destination"],
             ":titre" => $tab["titre"],
             ":pourcentage" => $tab["pourcentage_reduction"],
             ":date_debut" => $tab["date_debut"],
             ":date_fin" => $tab["date_fin"],
-            ":actif" => $tab["actif"] ?? 1
+            ":actif" => $tab["actif"] ?? 1,
         ]);
     }
 
-    public function delete_offre($id_offre)
+    public function delete_offre(int $id_offre): void
     {
-        $requete = "UPDATE offres SET actif = 0 WHERE id_offre = :id_offre";
-        $stmt = $this->unPdo->prepare($requete);
-        $stmt->execute([":id_offre" => $id_offre]);
+        $sql = "update offres
+                set actif = 0
+                where id_offre = :id_offre";
+        $this->execute($sql, [":id_offre" => $id_offre]);
     }
 
-    public function selectAll_offres_actives()
+    public function selectAll_offres_actives(): array
     {
-        $requete = "SELECT o.*, d.pays, d.ville, d.image_url, d.prix_base, cont.nom AS continent
-                    FROM offres o
-                    JOIN destinations d ON d.id_destination = o.id_destination
-                    LEFT JOIN continents cont ON cont.id_continent = d.id_continent
-                    WHERE o.actif = 1
-                      AND d.actif = 1
-                      AND CURDATE() BETWEEN o.date_debut AND o.date_fin
-                    ORDER BY o.date_debut DESC";
-        $stmt = $this->unPdo->prepare($requete);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $sql = "select o.*, d.pays, d.ville, d.image_url, d.prix_base, cont.nom as continent
+                from offres o
+                join destinations d on d.id_destination = o.id_destination
+                left join continents cont on cont.id_continent = d.id_continent
+                where o.actif = 1
+                  and d.actif = 1
+                  and curdate() between o.date_debut and o.date_fin
+                order by o.date_debut desc";
+        return $this->fetchAll($sql);
     }
 
-    public function selectWhere_offre_active_by_destination($id_destination)
+    public function selectWhere_offre_active_by_destination(int $id_destination): array|false
     {
-        $requete = "SELECT *
-                    FROM offres
-                    WHERE actif = 1
-                      AND id_destination = :id_destination
-                      AND CURDATE() BETWEEN date_debut AND date_fin
-                    LIMIT 1";
-        $stmt = $this->unPdo->prepare($requete);
-        $stmt->execute([":id_destination" => $id_destination]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        $sql = "select *
+                from offres
+                where actif = 1
+                  and id_destination = :id_destination
+                  and curdate() between date_debut and date_fin
+                limit 1";
+        return $this->fetchOne($sql, [":id_destination" => $id_destination]);
     }
 
-    /* =========================
-       RESERVATIONS
-    ========================== */
+    // reservations
 
-    public function insert_reservation($tab)
+    public function insert_reservation(array $tab): void
     {
-        $requete = "INSERT INTO reservations
-                    (id_client, id_destination, date_depart, date_retour, nb_personnes, prix_total, statut)
-                    VALUES
-                    (:id_client, :id_destination, :date_depart, :date_retour, :nb_personnes, :prix_total, 'en_attente')";
-        $stmt = $this->unPdo->prepare($requete);
-        $stmt->execute([
+        $sql = "insert into reservations
+                (id_client, id_destination, date_depart, date_retour, nb_personnes, prix_total, statut)
+                values
+                (:id_client, :id_destination, :date_depart, :date_retour, :nb_personnes, :prix_total, 'en_attente')";
+        $this->execute($sql, [
             ":id_client" => $tab["id_client"],
             ":id_destination" => $tab["id_destination"],
             ":date_depart" => $tab["date_depart"],
             ":date_retour" => $tab["date_retour"],
             ":nb_personnes" => $tab["nb_personnes"],
-            ":prix_total" => $tab["prix_total"]
+            ":prix_total" => $tab["prix_total"],
         ]);
     }
 
-    public function selectAll_reservations()
+    public function selectAll_reservations(): array
     {
-        $requete = "SELECT r.*, c.nom, c.prenom, d.pays, d.ville, cont.nom AS continent
-                    FROM reservations r
-                    JOIN client c ON c.id_client = r.id_client
-                    JOIN destinations d ON d.id_destination = r.id_destination
-                    LEFT JOIN continents cont ON cont.id_continent = d.id_continent
-                    ORDER BY r.date_reservation DESC";
-        $stmt = $this->unPdo->prepare($requete);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $sql = "select r.*, c.nom, c.prenom, d.pays, d.ville, cont.nom as continent
+                from reservations r
+                join client c on c.id_client = r.id_client
+                join destinations d on d.id_destination = r.id_destination
+                left join continents cont on cont.id_continent = d.id_continent
+                order by r.date_reservation desc";
+        return $this->fetchAll($sql);
     }
 
-    public function selectWhere_reservations_by_client($id_client)
+    public function selectWhere_reservations_by_client(int $id_client): array
     {
-        $requete = "SELECT r.*, d.pays, d.ville, d.image_url, cont.nom AS continent
-                    FROM reservations r
-                    JOIN destinations d ON d.id_destination = r.id_destination
-                    LEFT JOIN continents cont ON cont.id_continent = d.id_continent
-                    WHERE r.id_client = :id_client
-                    ORDER BY r.date_reservation DESC";
-        $stmt = $this->unPdo->prepare($requete);
-        $stmt->execute([":id_client" => $id_client]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $sql = "select r.*, d.pays, d.ville, d.image_url, cont.nom as continent
+                from reservations r
+                join destinations d on d.id_destination = r.id_destination
+                left join continents cont on cont.id_continent = d.id_continent
+                where r.id_client = :id_client
+                order by r.date_reservation desc";
+        return $this->fetchAll($sql, [":id_client" => $id_client]);
     }
 
-    public function update_reservation_statut($tab)
+    public function update_reservation_statut(array $tab): void
     {
-        $requete = "UPDATE reservations
-                    SET statut = :statut
-                    WHERE id_reservation = :id_reservation";
-        $stmt = $this->unPdo->prepare($requete);
-        $stmt->execute([
+        $sql = "update reservations
+                set statut = :statut
+                where id_reservation = :id_reservation";
+        $this->execute($sql, [
             ":id_reservation" => $tab["id_reservation"],
-            ":statut" => $tab["statut"]
+            ":statut" => $tab["statut"],
         ]);
     }
 
-    /* =========================
-       SLIDES
-    ========================== */
+    // slides
 
-    public function insert_slide($tab)
+    public function insert_slide(array $tab): void
     {
-        $requete = "INSERT INTO slides (titre, sous_titre, image_url, ordre, actif)
-                    VALUES (:titre, :sous_titre, :image_url, :ordre, 1)";
-        $stmt = $this->unPdo->prepare($requete);
-        $stmt->execute([
+        $sql = "insert into slides (titre, sous_titre, image_url, ordre, actif)
+                values (:titre, :sous_titre, :image_url, :ordre, 1)";
+        $this->execute($sql, [
             ":titre" => $tab["titre"],
             ":sous_titre" => $tab["sous_titre"] ?? null,
             ":image_url" => $tab["image_url"],
-            ":ordre" => $tab["ordre"] ?? 1
+            ":ordre" => $tab["ordre"] ?? 1,
         ]);
     }
 
-    public function selectAll_slides()
+    public function selectAll_slides(): array
     {
-        $requete = "SELECT * FROM slides ORDER BY ordre ASC";
-        $stmt = $this->unPdo->prepare($requete);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $sql = "select *
+                from slides
+                order by ordre asc";
+        return $this->fetchAll($sql);
     }
 
-    public function selectAll_slides_actifs()
+    public function selectAll_slides_actifs(): array
     {
-        $requete = "SELECT * FROM slides WHERE actif = 1 ORDER BY ordre ASC";
-        $stmt = $this->unPdo->prepare($requete);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $sql = "select *
+                from slides
+                where actif = 1
+                order by ordre asc";
+        return $this->fetchAll($sql);
     }
 
-    public function selectWhere_slide($id_slide)
+    public function selectWhere_slide(int $id_slide): array|false
     {
-        $requete = "SELECT * FROM slides WHERE id_slide = :id_slide";
-        $stmt = $this->unPdo->prepare($requete);
-        $stmt->execute([":id_slide" => $id_slide]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        $sql = "select *
+                from slides
+                where id_slide = :id_slide";
+        return $this->fetchOne($sql, [":id_slide" => $id_slide]);
     }
 
-    public function update_slide($tab)
+    public function update_slide(array $tab): void
     {
-        $requete = "UPDATE slides
-                    SET titre = :titre, sous_titre = :sous_titre, image_url = :image_url,
-                        ordre = :ordre, actif = :actif
-                    WHERE id_slide = :id_slide";
-        $stmt = $this->unPdo->prepare($requete);
-        $stmt->execute([
+        $sql = "update slides
+                set titre = :titre,
+                    sous_titre = :sous_titre,
+                    image_url = :image_url,
+                    ordre = :ordre,
+                    actif = :actif
+                where id_slide = :id_slide";
+        $this->execute($sql, [
             ":id_slide" => $tab["id_slide"],
             ":titre" => $tab["titre"],
             ":sous_titre" => $tab["sous_titre"] ?? null,
             ":image_url" => $tab["image_url"],
             ":ordre" => $tab["ordre"],
-            ":actif" => $tab["actif"] ?? 1
+            ":actif" => $tab["actif"] ?? 1,
         ]);
     }
 
-    public function delete_slide($id_slide)
+    public function delete_slide(int $id_slide): void
     {
-        $requete = "UPDATE slides SET actif = 0 WHERE id_slide = :id_slide";
-        $stmt = $this->unPdo->prepare($requete);
-        $stmt->execute([":id_slide" => $id_slide]);
+        $sql = "update slides
+                set actif = 0
+                where id_slide = :id_slide";
+        $this->execute($sql, [":id_slide" => $id_slide]);
     }
 }
-?>

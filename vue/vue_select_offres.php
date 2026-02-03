@@ -1,9 +1,15 @@
 <h3 class="text-center mt-5 mb-4">Liste des offres</h3>
 
-<form method="post" class="container mt-3 p-3 border rounded shadow" style="max-width: 600px;">
+<form method="post" class="container mt-3 p-3 border rounded shadow" style="max-width:600px;">
     <div class="input-group">
-        <input type="text" name="filtre" class="form-control" placeholder="Filtrer (titre / pays / ville)">
-        <button type="submit" name="Filtrer" class="btn btn-primary">Filtrer</button>
+        <input
+            type="text"
+            name="filtre"
+            class="form-control"
+            placeholder="filtrer (titre / pays / ville)"
+            value="<?= htmlspecialchars($_POST["filtre"] ?? "") ?>"
+        >
+        <button type="submit" name="Filtrer" class="btn btn-primary">filtrer</button>
     </div>
 </form>
 
@@ -11,42 +17,70 @@
     <table class="table table-striped table-bordered">
         <thead class="table-dark">
             <tr>
-                <th>ID</th>
-                <th>Titre</th>
-                <th>Destination</th>
-                <th>Réduction</th>
-                <th>Début</th>
-                <th>Fin</th>
-                <th>Actif</th>
-                <th>Actions</th>
+                <th>id</th>
+                <th>titre</th>
+                <th>destination</th>
+                <th>réduction</th>
+                <th>début</th>
+                <th>fin</th>
+                <th>actif</th>
+                <th>actions</th>
             </tr>
         </thead>
-        <tbody>
-        <?php if (!empty($lesOffres)): ?>
-            <?php foreach ($lesOffres as $o): ?>
-                <tr>
-                    <td><?= (int)$o['id_offre'] ?></td>
-                    <td><?= htmlspecialchars($o['titre'] ?? '') ?></td>
-                    <td><?= htmlspecialchars(($o['pays'] ?? '') . " - " . ($o['ville'] ?? '')) ?></td>
-                    <td><?= (int)($o['pourcentage_reduction'] ?? 0) ?>%</td>
-                    <td><?= htmlspecialchars($o['date_debut'] ?? '') ?></td>
-                    <td><?= htmlspecialchars($o['date_fin'] ?? '') ?></td>
-                    <td><?= ((int)($o['actif'] ?? 0) === 1) ? "Oui" : "Non" ?></td>
-                    <td>
-                        <a class="btn btn-danger btn-sm"
-                           href="index.php?page=admin_offres&action=sup&id_offre=<?= (int)$o['id_offre'] ?>"
-                           onclick="return confirm('Voulez-vous vraiment supprimer cette offre ?');">
-                           🗑
-                        </a>
 
-                        <a class="btn btn-warning btn-sm"
-                           href="index.php?page=admin_offres&action=edit&id_offre=<?= (int)$o['id_offre'] ?>">
-                           ✏️
-                        </a>
+        <tbody>
+            <?php if (!empty($lesOffres)): ?>
+                <?php foreach ($lesOffres as $o): ?>
+
+                    <?php
+                    $idOffre = (int) ($o["id_offre"] ?? 0);
+                    $titre = $o["titre"] ?? "";
+                    $pays = $o["pays"] ?? "";
+                    $ville = $o["ville"] ?? "";
+                    $destinationTexte = trim($pays . " - " . $ville, " -");
+
+                    $reduc = (int) ($o["pourcentage_reduction"] ?? 0);
+                    $dateDebut = $o["date_debut"] ?? "";
+                    $dateFin = $o["date_fin"] ?? "";
+                    $actif = ((int) ($o["actif"] ?? 0) === 1);
+                    ?>
+
+                    <tr>
+                        <td><?= $idOffre ?></td>
+                        <td><?= htmlspecialchars($titre) ?></td>
+                        <td><?= htmlspecialchars($destinationTexte) ?></td>
+                        <td><?= $reduc ?>%</td>
+                        <td><?= htmlspecialchars($dateDebut) ?></td>
+                        <td><?= htmlspecialchars($dateFin) ?></td>
+                        <td><?= $actif ? "oui" : "non" ?></td>
+                        <td>
+                            <a
+                                class="btn btn-danger btn-sm"
+                                href="index.php?page=admin_offres&action=sup&id_offre=<?= $idOffre ?>"
+                                onclick="return confirm('voulez-vous vraiment supprimer cette offre ?');"
+                                title="supprimer"
+                            >
+                                🗑
+                            </a>
+
+                            <a
+                                class="btn btn-warning btn-sm"
+                                href="index.php?page=admin_offres&action=edit&id_offre=<?= $idOffre ?>"
+                                title="modifier"
+                            >
+                                ✏️
+                            </a>
+                        </td>
+                    </tr>
+
+                <?php endforeach; ?>
+            <?php else: ?>
+                <tr>
+                    <td colspan="8" class="text-center text-muted">
+                        aucune offre trouvée
                     </td>
                 </tr>
-            <?php endforeach; ?>
-        <?php endif; ?>
+            <?php endif; ?>
         </tbody>
     </table>
 </div>

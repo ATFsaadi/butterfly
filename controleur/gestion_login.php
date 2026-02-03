@@ -1,65 +1,68 @@
 <?php
-// controleur/gestion_login.php
 
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+// variables de retour ui
 
-// CSRF
+$erreurLogin = "";
+$successLogin = "";
+
+// csrf
+
 if (empty($_SESSION["csrf_token"])) {
     $_SESSION["csrf_token"] = bin2hex(random_bytes(32));
 }
 
-$erreurLogin  = "";
-$successLogin = "";
+// traitement connexion
 
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["Connexion"])) {
 
-    // 1) CSRF check
-    if (!isset($_POST["csrf_token"]) || !hash_equals($_SESSION["csrf_token"], $_POST["csrf_token"])) {
-        $erreurLogin = "Action non autorisée. Veuillez réessayer.";
+    if (
+        !isset($_POST["csrf_token"]) ||
+        !hash_equals($_SESSION["csrf_token"], $_POST["csrf_token"])
+    ) {
+        $erreurLogin = "action non autorisée. veuillez réessayer.";
     } else {
 
-        // 2) Récup champs
         $email = trim($_POST["email"] ?? "");
-        $mdp   = $_POST["mdp"] ?? "";
+        $mdp = $_POST["mdp"] ?? "";
 
-        // 3) Champs obligatoires
         if ($email === "" || $mdp === "") {
-            $erreurLogin = "Veuillez remplir tous les champs.";
+            $erreurLogin = "veuillez remplir tous les champs.";
         } else {
 
-            // 4) Récup user actif
             $unUser = $unControleur->select_user_login($email);
+            $hash = $unUser["mot_de_passe_hash"] ?? "";
 
-            // 5) Vérif identifiants
-            if (!$unUser || !password_verify($mdp, $unUser["mot_de_passe_hash"])) {
-                $erreurLogin = "Email ou mot de passe incorrect.";
+            if (!$unUser || $hash === "" || !password_verify($mdp, $hash)) {
+                $erreurLogin = "email ou mot de passe incorrect.";
             } else {
 
-                // 6) OK -> session
                 session_regenerate_id(true);
 
                 $_SESSION["user"] = [
-                    "id_utilisateur" => (int)$unUser["id_utilisateur"],
+                    "id_utilisateur" => (int) $unUser["id_utilisateur"],
                     "email" => $unUser["email"],
-                    "role"  => $unUser["role"]
+                    "role" => $unUser["role"],
                 ];
 
-                // Client en session (si rôle client)
                 unset($_SESSION["client"]);
+
                 if (($unUser["role"] ?? "") === "client") {
-                    $client = $unControleur->selectWhere_client_by_user((int)$unUser["id_utilisateur"]);
+                    $client = $unControleur->selectWhere_client_by_user(
+                        (int) $unUser["id_utilisateur"]
+                    );
+
                     if ($client) {
                         $_SESSION["client"] = [
-                            "id_client" => (int)$client["id_client"],
+                            "id_client" => (int) $client["id_client"],
                             "nom" => $client["nom"],
-                            "prenom" => $client["prenom"]
+                            "prenom" => $client["prenom"],
                         ];
                     }
                 }
 
-                header("Location: index.php?page=home");
+                $_SESSION["csrf_token"] = bin2hex(random_bytes(32));
+
+                header("location: index.php?page=home");
                 exit();
             }
         }

@@ -2,65 +2,93 @@
 $lesDestinations = $lesDestinations ?? ($destinations ?? []);
 ?>
 
-<h3 class="text-center mt-5 mb-4">Liste des destinations</h3>
+<h3 class="text-center mt-5 mb-4">liste des destinations</h3>
 
 <form method="post" class="mb-4">
-  <input type="text"
-         name="filtre"
-         placeholder="Filtrer (pays / ville / continent)"
-         class="form-control mb-2"
-         value="<?= htmlspecialchars($_POST['filtre'] ?? '') ?>">
+    <input
+        type="text"
+        name="filtre"
+        placeholder="filtrer (pays / ville / continent)"
+        class="form-control mb-2"
+        value="<?= htmlspecialchars($_POST["filtre"] ?? "") ?>"
+    >
 
-  <div class="d-flex justify-content-center">
-    <button type="submit" name="Filtrer" class="btn btn-primary">Filtrer</button>
-  </div>
+    <div class="d-flex justify-content-center">
+        <button type="submit" name="Filtrer" class="btn btn-primary">filtrer</button>
+    </div>
 </form>
 
 <div class="container mt-4">
-  <table class="table table-bordered">
-    <thead>
-      <tr>
-        <th>Image</th>
-        <th>Pays</th>
-        <th>Ville</th>
-        <th>Continent</th>
-        <th>Prix base</th>
-        <th>Actif</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>image</th>
+                <th>pays</th>
+                <th>ville</th>
+                <th>continent</th>
+                <th>prix base</th>
+                <th>actif</th>
+                <th>actions</th>
+            </tr>
+        </thead>
 
-    <tbody>
-      <?php if (!empty($lesDestinations)): ?>
-        <?php foreach ($lesDestinations as $d): ?>
-          <tr>
-            <td>
-              <?php if (!empty($d['image_url'])): ?>
-                <img src="<?= htmlspecialchars((string)$d['image_url']) ?>" width="100">
-              <?php endif; ?>
-            </td>
+        <tbody>
+            <?php if (!empty($lesDestinations)): ?>
+                <?php foreach ($lesDestinations as $d): ?>
 
-            <td><?= htmlspecialchars((string)($d['pays'] ?? '')) ?></td>
-            <td><?= htmlspecialchars((string)($d['ville'] ?? '')) ?></td>
-            <td><?= htmlspecialchars((string)($d['continent'] ?? '')) ?></td>
-            <td><?= number_format((float)($d['prix_base'] ?? 0), 2, ',', ' ') ?> €</td>
-            <td><?= ((int)($d['actif'] ?? 0) === 1) ? 'Oui' : 'Non' ?></td>
+                    <?php
+                    $id = (int) ($d["id_destination"] ?? 0);
+                    $pays = $d["pays"] ?? "";
+                    $ville = $d["ville"] ?? "";
+                    $continent = $d["continent"] ?? "";
+                    $prixBase = (float) ($d["prix_base"] ?? 0);
+                    $actif = ((int) ($d["actif"] ?? 0) === 1);
+                    $image = $d["image_url"] ?? "";
+                    ?>
 
-            <td>
-              <a href="index.php?page=admin_destinations&action=edit&id_destination=<?= (int)$d['id_destination'] ?>"
-                 class="btn btn-warning btn-sm">Modifier</a>
+                    <tr>
+                        <td>
+                            <?php if (!empty($image)): ?>
+                                <img
+                                    src="<?= htmlspecialchars($image) ?>"
+                                    width="100"
+                                    alt="destination"
+                                >
+                            <?php endif; ?>
+                        </td>
 
-              <a href="index.php?page=admin_destinations&action=sup&id_destination=<?= (int)$d['id_destination'] ?>"
-                 onclick="return confirm('Supprimer (désactiver) cette destination ?');"
-                 class="btn btn-danger btn-sm">Supprimer</a>
-            </td>
-          </tr>
-        <?php endforeach; ?>
-      <?php else: ?>
-        <tr>
-          <td colspan="7">Aucune destination pour le moment</td>
-        </tr>
-      <?php endif; ?>
-    </tbody>
-  </table>
+                        <td><?= htmlspecialchars($pays) ?></td>
+                        <td><?= htmlspecialchars($ville) ?></td>
+                        <td><?= htmlspecialchars($continent) ?></td>
+                        <td><?= number_format($prixBase, 2, ",", " ") ?> €</td>
+                        <td><?= $actif ? "oui" : "non" ?></td>
+
+                        <td>
+                            <a
+                                href="index.php?page=admin_destinations&action=edit&id_destination=<?= $id ?>"
+                                class="btn btn-warning btn-sm"
+                            >
+                                modifier
+                            </a>
+
+                            <a
+                                href="index.php?page=admin_destinations&action=sup&id_destination=<?= $id ?>"
+                                onclick="return confirm('supprimer (désactiver) cette destination ?');"
+                                class="btn btn-danger btn-sm"
+                            >
+                                supprimer
+                            </a>
+                        </td>
+                    </tr>
+
+                <?php endforeach; ?>
+            <?php else: ?>
+                <tr>
+                    <td colspan="7" class="text-center text-muted">
+                        aucune destination pour le moment
+                    </td>
+                </tr>
+            <?php endif; ?>
+        </tbody>
+    </table>
 </div>

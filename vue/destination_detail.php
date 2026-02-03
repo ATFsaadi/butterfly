@@ -1,19 +1,33 @@
 <?php
+
 $destination = $destination ?? null;
 $offreActive = $offreActive ?? null;
+
 ?>
 
-<?php if (!$destination): ?>
+<?php if (empty($destination)): ?>
 
     <div class="container mt-4">
-        <div class="alert alert-danger">Destination introuvable.</div>
+        <div class="alert alert-danger">destination introuvable.</div>
     </div>
 
 <?php else: ?>
 
-    <!-- titre page (style école) -->
+    <?php
+    $id = (int) ($destination["id_destination"] ?? 0);
+    $pays = $destination["pays"] ?? "";
+    $ville = $destination["ville"] ?? "";
+    $continent = $destination["continent"] ?? "";
+    $description = $destination["description"] ?? "";
+    $prixBase = (float) ($destination["prix_base"] ?? 0);
+    $image = $destination["image_url"] ?? "";
+
+    $titre = trim($pays . " - " . $ville, " -");
+    ?>
+
+    <!-- titre page -->
     <h3 class="section-title text-center mt-5">
-        <?= htmlspecialchars(($destination['pays'] ?? '').' - '.($destination['ville'] ?? '')) ?>
+        <?= htmlspecialchars($titre) ?>
     </h3>
 
     <div class="container mt-4">
@@ -23,48 +37,55 @@ $offreActive = $offreActive ?? null;
 
             <!-- image -->
             <div class="col-md-6 mb-3">
-                <?php if (!empty($destination['image_url'])): ?>
-                    <img src="<?= htmlspecialchars($destination['image_url']) ?>"
-                         alt="image"
-                         class="img-fluid"
-                         style="width:100%; max-height:380px; object-fit:cover; border:1px solid #ccc; padding:2px;">
+                <?php if ($image !== ""): ?>
+                    <img
+                        src="<?= htmlspecialchars($image) ?>"
+                        alt="image destination"
+                        class="img-fluid"
+                        style="width:100%; max-height:380px; object-fit:cover; border:1px solid #ccc; padding:2px;"
+                    >
                 <?php else: ?>
-                    <div class="alert alert-secondary">Aucune image disponible.</div>
+                    <div class="alert alert-secondary">aucune image disponible.</div>
                 <?php endif; ?>
             </div>
 
             <!-- contenu -->
             <div class="col-md-6 mb-3">
 
-                <?php if (!empty($destination['continent'])): ?>
-                    <p class="text-muted mb-2"><?= htmlspecialchars($destination['continent']) ?></p>
+                <?php if ($continent !== ""): ?>
+                    <p class="text-muted mb-2"><?= htmlspecialchars($continent) ?></p>
                 <?php endif; ?>
 
-                <?php if (!empty($destination['description'])): ?>
-                    <p><?= nl2br(htmlspecialchars($destination['description'])) ?></p>
+                <?php if ($description !== ""): ?>
+                    <p><?= nl2br(htmlspecialchars($description)) ?></p>
                 <?php endif; ?>
 
                 <p>
-                    <strong>Prix base :</strong>
-                    <?= number_format((float)($destination['prix_base'] ?? 0), 2, ',', ' ') ?> €
+                    <strong>prix base :</strong>
+                    <?= number_format($prixBase, 2, ",", " ") ?> €
                 </p>
 
                 <?php if (!empty($offreActive)): ?>
+                    <?php
+                    $offreTitre = $offreActive["titre"] ?? "";
+                    $offreReduc = (int) ($offreActive["pourcentage_reduction"] ?? 0);
+                    $offreDebut = $offreActive["date_debut"] ?? "";
+                    $offreFin = $offreActive["date_fin"] ?? "";
+                    ?>
                     <div class="alert alert-success">
-                        Offre active :
-                        <strong><?= htmlspecialchars($offreActive['titre'] ?? '') ?></strong>
-                        (<?= (int)($offreActive['pourcentage_reduction'] ?? 0) ?>%)
+                        offre active :
+                        <strong><?= htmlspecialchars($offreTitre) ?></strong>
+                        (<?= $offreReduc ?>%)
                         <br>
-                        Du <?= htmlspecialchars($offreActive['date_debut'] ?? '') ?>
-                        au <?= htmlspecialchars($offreActive['date_fin'] ?? '') ?>
+                        du <?= htmlspecialchars($offreDebut) ?>
+                        au <?= htmlspecialchars($offreFin) ?>
                     </div>
                 <?php endif; ?>
 
-                <!-- bouton centré style "exemple école" -->
+                <!-- bouton reserver -->
                 <div class="d-flex justify-content-center mt-3">
-                    <a class="btn btn-sm btn-success"
-                       href="index.php?page=reservation&id_destination=<?= (int)$destination['id_destination'] ?>">
-                        Réserver
+                    <a class="btn btn-sm btn-success" href="index.php?page=reservation&id_destination=<?= $id ?>">
+                        réserver
                     </a>
                 </div>
 

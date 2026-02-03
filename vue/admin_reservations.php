@@ -1,83 +1,76 @@
-<h3 class="section-title text-center mt-5">Gestion des Réservations</h3>
+<h3 class="section-title text-center mt-5">gestion des réservations</h3>
 
-<!-- si aucune réservation -->
-<div class="alert alert-info text-center mt-4 d-none">
-  Aucune réservation pour le moment.
-</div>
+<?php if (empty($lesReservations)): ?>
+    <div class="alert alert-info text-center mt-4">
+        aucune réservation pour le moment.
+    </div>
+<?php else: ?>
 
-<!-- tableau des réservations -->
 <table class="table table-bordered mt-4 align-middle">
-  <thead>
-    <tr>
-      <th>#</th>
-      <th>Client</th>
-      <th>Destination</th>
-      <th>Dates</th>
-      <th>Voyageurs</th>
-      <th>Total</th>
-      <th>Statut</th>
-      <th>Action</th>
-    </tr>
-  </thead>
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>client</th>
+            <th>destination</th>
+            <th>dates</th>
+            <th>voyageurs</th>
+            <th>total</th>
+            <th>statut</th>
+            <th>action</th>
+        </tr>
+    </thead>
 
-  <tbody>
+    <tbody>
+        <?php foreach ($lesReservations as $r): ?>
+            <tr>
+                <td><?= (int) $r["id_reservation"] ?></td>
 
-    <!-- réservation confirmée -->
-    <tr>
-      <td>1</td>
-      <td>Dupont Jean</td>
-      <td>Paris — France</td>
-      <td>2026-02-10 → 2026-02-15</td>
-      <td>2</td>
-      <td><strong>800,00 €</strong></td>
-      <td>
-        <span class="badge bg-success">✅ Confirmée</span>
-      </td>
-      <td>
-        <a href="#" class="btn btn-sm btn-outline-danger">
-          Annuler
-        </a>
-      </td>
-    </tr>
+                <td>
+                    <?= htmlspecialchars(($r["prenom"] ?? "")." ".($r["nom"] ?? "")) ?>
+                </td>
 
-    <!-- réservation en attente -->
-    <tr>
-      <td>2</td>
-      <td>Martin Sarah</td>
-      <td>Barcelone — Espagne</td>
-      <td>2026-03-01 → 2026-03-06</td>
-      <td>1</td>
-      <td><strong>297,50 €</strong></td>
-      <td>
-        <span class="badge bg-warning text-dark">⏳ En attente</span>
-      </td>
-      <td>
-        <a href="#" class="btn btn-sm btn-success">
-          Confirmer
-        </a>
-        <a href="#" class="btn btn-sm btn-outline-danger">
-          Annuler
-        </a>
-      </td>
-    </tr>
+                <td>
+                    <?= htmlspecialchars(($r["ville"] ?? "")." — ".($r["pays"] ?? "")) ?>
+                </td>
 
-    <!-- réservation annulée -->
-    <tr>
-      <td>3</td>
-      <td>Benali Youssef</td>
-      <td>Marrakech — Maroc</td>
-      <td>2026-01-20 → 2026-01-25</td>
-      <td>3</td>
-      <td><strong>1 260,00 €</strong></td>
-      <td>
-        <span class="badge bg-danger">⛔ Annulée</span>
-      </td>
-      <td>
-        <a href="#" class="btn btn-sm btn-success">
-          Confirmer
-        </a>
-      </td>
-    </tr>
+                <td>
+                    <?= htmlspecialchars($r["date_depart"]) ?>
+                    →
+                    <?= htmlspecialchars($r["date_retour"]) ?>
+                </td>
 
-  </tbody>
+                <td><?= (int) $r["nb_personnes"] ?></td>
+
+                <td>
+                    <strong><?= number_format((float) $r["prix_total"], 2, ",", " ") ?> €</strong>
+                </td>
+
+                <td>
+                    <?php if ($r["statut"] === "confirmee"): ?>
+                        <span class="badge bg-success">confirmée</span>
+                    <?php elseif ($r["statut"] === "annulee"): ?>
+                        <span class="badge bg-danger">annulée</span>
+                    <?php else: ?>
+                        <span class="badge bg-warning text-dark">en attente</span>
+                    <?php endif; ?>
+                </td>
+
+                <td>
+                    <?php if ($r["statut"] === "en_attente"): ?>
+                        <a class="btn btn-sm btn-success"
+                           href="index.php?page=admin_reservations&action=confirmer&id_reservation=<?= (int) $r["id_reservation"] ?>">
+                            confirmer
+                        </a>
+
+                        <a class="btn btn-sm btn-outline-danger"
+                           href="index.php?page=admin_reservations&action=annuler&id_reservation=<?= (int) $r["id_reservation"] ?>">
+                            annuler
+                        </a>
+                    <?php endif; ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
 </table>
+
+<?php endif; ?>

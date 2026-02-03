@@ -1,79 +1,118 @@
 <div class="container mt-4">
-    <form method="post" class="p-4 border rounded shadow" style="max-width: 700px; margin:auto;">
+    <form method="post" class="p-4 border rounded shadow" style="max-width:700px; margin:auto;">
+
+        <?php
+        $isEdit = ($offre !== null);
+        $idOffre = (int) ($offre["id_offre"] ?? 0);
+        $idOffreDestination = (int) ($offre["id_destination"] ?? 0);
+
+        $titre = $offre["titre"] ?? "";
+        $reduc = (int) ($offre["pourcentage_reduction"] ?? 0);
+        $dateDebut = $offre["date_debut"] ?? "";
+        $dateFin = $offre["date_fin"] ?? "";
+        $actif = (int) ($offre["actif"] ?? 1);
+        ?>
 
         <h3 class="text-center mb-4">
-            <?= ($offre == null) ? "Ajouter une offre" : "Modifier l'offre" ?>
+            <?= $isEdit ? "Modifier l'offre" : "Ajouter une offre" ?>
         </h3>
 
-        <!-- Destination -->
+        <!-- destination -->
         <div class="mb-3">
             <label class="form-label">Destination</label>
             <select name="id_destination" class="form-select" required>
-                <option value="">-- Choisir --</option>
+                <option value="">-- choisir --</option>
+
                 <?php foreach ($destinations as $d): ?>
-                    <option value="<?= (int)$d['id_destination'] ?>"
-                        <?= ($offre && (int)$offre['id_destination'] === (int)$d['id_destination']) ? "selected" : "" ?>>
-                        <?= htmlspecialchars($d['pays'] . " - " . $d['ville']) ?>
+                    <?php
+                    $idDest = (int) ($d["id_destination"] ?? 0);
+                    $labelDest = trim(($d["pays"] ?? "") . " - " . ($d["ville"] ?? ""));
+                    $selected = ($isEdit && $idOffreDestination === $idDest) ? "selected" : "";
+                    ?>
+                    <option value="<?= $idDest ?>" <?= $selected ?>>
+                        <?= htmlspecialchars($labelDest) ?>
                     </option>
                 <?php endforeach; ?>
             </select>
         </div>
 
-        <!-- Titre -->
+        <!-- titre -->
         <div class="mb-3">
             <label class="form-label">Titre</label>
-            <input type="text" name="titre" class="form-control"
-                   value="<?= ($offre == null) ? "" : htmlspecialchars($offre['titre']) ?>"
-                   required>
+            <input
+                type="text"
+                name="titre"
+                class="form-control"
+                value="<?= htmlspecialchars($titre) ?>"
+                required
+            >
         </div>
 
-        <!-- Réduction -->
+        <!-- reduction -->
         <div class="mb-3">
             <label class="form-label">Réduction (%)</label>
-            <input type="number" name="pourcentage_reduction" class="form-control" min="0" max="100"
-                   value="<?= ($offre == null) ? "0" : (int)$offre['pourcentage_reduction'] ?>"
-                   required>
+            <input
+                type="number"
+                name="pourcentage_reduction"
+                class="form-control"
+                min="0"
+                max="100"
+                value="<?= $reduc ?>"
+                required
+            >
         </div>
 
-        <!-- Dates -->
+        <!-- dates -->
         <div class="row">
             <div class="col-md-6 mb-3">
                 <label class="form-label">Date début</label>
-                <input type="date" name="date_debut" class="form-control"
-                       value="<?= ($offre == null) ? "" : htmlspecialchars($offre['date_debut']) ?>"
-                       required>
+                <input
+                    type="date"
+                    name="date_debut"
+                    class="form-control"
+                    value="<?= htmlspecialchars($dateDebut) ?>"
+                    required
+                >
             </div>
 
             <div class="col-md-6 mb-3">
                 <label class="form-label">Date fin</label>
-                <input type="date" name="date_fin" class="form-control"
-                       value="<?= ($offre == null) ? "" : htmlspecialchars($offre['date_fin']) ?>"
-                       required>
+                <input
+                    type="date"
+                    name="date_fin"
+                    class="form-control"
+                    value="<?= htmlspecialchars($dateFin) ?>"
+                    required
+                >
             </div>
         </div>
 
-        <!-- Actif (optionnel) -->
+        <!-- actif -->
         <div class="mb-3">
             <label class="form-label">Actif</label>
             <select name="actif" class="form-select">
-                <option value="1" <?= ($offre && (int)$offre['actif'] === 1) ? "selected" : "" ?>>Oui</option>
-                <option value="0" <?= ($offre && (int)$offre['actif'] === 0) ? "selected" : "" ?>>Non</option>
+                <option value="1" <?= $actif === 1 ? "selected" : "" ?>>Oui</option>
+                <option value="0" <?= $actif === 0 ? "selected" : "" ?>>Non</option>
             </select>
         </div>
 
-        <!-- Boutons -->
+        <!-- boutons -->
         <div class="d-flex gap-2">
             <button type="reset" class="btn btn-secondary">Annuler</button>
 
-            <button type="submit"
-                <?= ($offre == null) ? 'name="Valider"' : 'name="Modifier"' ?>
-                class="btn btn-primary">
-                <?= ($offre == null) ? "Valider" : "Modifier" ?>
+            <button
+                type="submit"
+                name="<?= $isEdit ? "Modifier" : "Valider" ?>"
+                class="btn btn-primary"
+            >
+                <?= $isEdit ? "Modifier" : "Valider" ?>
             </button>
         </div>
 
-        <!-- Hidden id si edit -->
-        <?= ($offre == null) ? '' : '<input type="hidden" name="id_offre" value="'.(int)$offre['id_offre'].'">' ?>
+        <!-- hidden id si edit -->
+        <?php if ($isEdit): ?>
+            <input type="hidden" name="id_offre" value="<?= $idOffre ?>">
+        <?php endif; ?>
 
     </form>
 </div>
