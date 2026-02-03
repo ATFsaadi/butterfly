@@ -75,6 +75,20 @@ class Controleur
     }
 
     /* =========================
+       CONTINENTS
+    ========================== */
+
+    public function selectAll_continents()
+    {
+        return $this->unModele->selectAll_continents();
+    }
+
+    public function selectWhere_continent($id_continent)
+    {
+        return $this->unModele->selectWhere_continent($id_continent);
+    }
+
+    /* =========================
        DESTINATIONS
     ========================== */
 
@@ -86,6 +100,11 @@ class Controleur
     public function selectAll_destinations()
     {
         return $this->unModele->selectAll_destinations();
+    }
+
+    public function selectAll_destinations_admin()
+    {
+        return $this->unModele->selectAll_destinations_admin();
     }
 
     public function selectLike_destination($filtre)

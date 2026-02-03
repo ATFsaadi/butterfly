@@ -29,4 +29,4 @@ $offres       = $offres ?? [];
 <!-- carousel offres -->
 <?php include __DIR__ . "/components/carouselOffres.php"; ?>
 
-<script src="js/home.js" defer></script>
+

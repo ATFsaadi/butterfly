@@ -1,7 +1,11 @@
 <?php
 $unControleur->verifAdmin();
 
-$destination = null;
+$errors = [];
+$success = "";
+
+$destinationToEdit = null;
+$continents = $unControleur->selectAll_continents();
 
 /* =========================
    ACTIONS GET (sup / edit)
@@ -17,17 +21,24 @@ if (isset($_GET['action'], $_GET['id_destination'])) {
             exit();
 
         case "edit":
-            $destination = $unControleur->selectWhere_destination($id_destination);
+            $destinationToEdit = $unControleur->selectWhere_destination($id_destination);
             break;
     }
 }
 
 /* =========================
-   UPLOAD IMAGE (comme l'école)
+   UPLOAD IMAGE
 ========================= */
 function handleImageUpload($file)
 {
     if (!isset($file) || $file['error'] !== UPLOAD_ERR_OK) {
+        return null;
+    }
+
+    $allowed = ["jpg","jpeg","png","gif","webp"];
+    $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+
+    if (!in_array($ext, $allowed, true)) {
         return null;
     }
 
@@ -36,62 +47,116 @@ function handleImageUpload($file)
         mkdir($targetDir, 0755, true);
     }
 
-    $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
-    $fileName = time() . "_" . uniqid() . "." . $ext;
+    $fileName = "dest_" . time() . "_" . uniqid() . "." . $ext;
     $targetFile = $targetDir . $fileName;
 
-    move_uploaded_file($file['tmp_name'], $targetFile);
-    return $targetFile;
+    if (move_uploaded_file($file['tmp_name'], $targetFile)) {
+        return $targetFile; // chemin relatif stocké en BDD
+    }
+    return null;
 }
 
 /* =========================
-   ACTIONS POST (Valider / Modifier / Filtrer)
+   ACTIONS POST (submit / Filtrer)
 ========================= */
 
-// ajout
-if (isset($_POST['Valider'])) {
+// AJOUT
+if (isset($_POST['submit']) && empty($_POST['id_destination'])) {
 
-    // image (optionnelle)
-    if (!empty($_FILES['image_url']['name'])) {
-        $imgPath = handleImageUpload($_FILES['image_url']);
+    // validation mini
+    $pays = trim($_POST["pays"] ?? "");
+    $ville = trim($_POST["ville"] ?? "");
+    $prix_base = (float)($_POST["prix_base"] ?? 0);
+
+    if ($pays === "") $errors[] = "Le pays est obligatoire.";
+    if ($ville === "") $errors[] = "La ville est obligatoire.";
+    if ($prix_base <= 0) $errors[] = "Le prix base doit être > 0.";
+
+    // upload image (input name = image)
+    if (!empty($_FILES['image']['name'])) {
+        $imgPath = handleImageUpload($_FILES['image']);
         if ($imgPath) {
             $_POST['image_url'] = $imgPath;
-        }
-    }
-
-    $unControleur->insert_destination($_POST);
-    echo '<div style="text-align:center; color:green; font-weight:bold;">&#10004; Destination ajoutée.</div>';
-}
-
-// modification
-if (isset($_POST['Modifier'])) {
-
-    // si nouvelle image -> upload, sinon on garde l'ancienne
-    if (!empty($_FILES['image_url']['name'])) {
-        $imgPath = handleImageUpload($_FILES['image_url']);
-        if ($imgPath) {
-            $_POST['image_url'] = $imgPath;
+        } else {
+            $errors[] = "Image invalide ou upload échoué (jpg/jpeg/png/gif/webp).";
         }
     } else {
-        $_POST['image_url'] = $destination['image_url'] ?? null;
+        $_POST['image_url'] = null;
     }
 
-    $unControleur->update_destination($_POST);
-    header("Location: index.php?page=admin_destinations");
-    exit();
+    // actif checkbox
+    $_POST['actif'] = isset($_POST['actif']) ? 1 : 0;
+
+    if (empty($errors)) {
+        $unControleur->insert_destination($_POST);
+        $success = "✅ Destination ajoutée.";
+    }
 }
 
-// filtrage
-if (isset($_POST['Filtrer'])) {
-    $filtre = $_POST['filtre'] ?? '';
-    $lesDestinations = $unControleur->selectLike_destination($filtre);
-} else {
-    $lesDestinations = $unControleur->selectAll_destinations();
+// MODIFICATION
+if (isset($_POST['submit']) && !empty($_POST['id_destination'])) {
+
+    // on recharge la destination si pas déjà dispo (au cas où)
+    $idEdit = (int)$_POST['id_destination'];
+    if ($destinationToEdit === null || (int)($destinationToEdit['id_destination'] ?? 0) !== $idEdit) {
+        $destinationToEdit = $unControleur->selectWhere_destination($idEdit);
+    }
+
+    // upload si nouvelle image sinon conserver
+    if (!empty($_FILES['image']['name'])) {
+        $imgPath = handleImageUpload($_FILES['image']);
+        if ($imgPath) {
+            $_POST['image_url'] = $imgPath;
+        } else {
+            $errors[] = "Image invalide ou upload échoué (jpg/jpeg/png/gif/webp).";
+        }
+    } else {
+        $_POST['image_url'] = $destinationToEdit['image_url'] ?? null;
+    }
+
+    // actif checkbox
+    $_POST['actif'] = isset($_POST['actif']) ? 1 : 0;
+
+    if (empty($errors)) {
+        $unControleur->update_destination($_POST);
+        header("Location: index.php?page=admin_destinations");
+        exit();
+    }
 }
+
+// LISTE + FILTRE ADMIN
+if (isset($_POST['Filtrer'])) {
+    $filtre = trim($_POST['filtre'] ?? '');
+
+    // IMPORTANT: selectLike_destination filtre actif=1 dans ton modèle,
+    // donc pour l'admin on filtre sur la liste complète (actif + inactif)
+    $all = $unControleur->selectAll_destinations_admin();
+
+    if ($filtre !== "") {
+        $f = mb_strtolower($filtre);
+        $lesDestinations = array_values(array_filter($all, function ($d) use ($f) {
+            return str_contains(mb_strtolower($d['pays'] ?? ''), $f)
+                || str_contains(mb_strtolower($d['ville'] ?? ''), $f)
+                || str_contains(mb_strtolower($d['continent'] ?? ''), $f);
+        }));
+    } else {
+        $lesDestinations = $all;
+    }
+} else {
+    // ADMIN => tout
+    $lesDestinations = $unControleur->selectAll_destinations_admin();
+}
+
+/* =========================
+   VARIABLES ATTENDUES PAR TES VUES
+========================= */
+$destinations = $lesDestinations;         // certaines de tes vues utilisent $destinations
+$destination  = $destinationToEdit;       // si tu avais déjà $destination
+$destinationToEdit = $destinationToEdit;  // pour les vues corrigées
 
 /* =========================
    CHARGEMENT DES VUES
 ========================= */
-require_once("vue/vue_insert_destination.php");
+require_once("vue/vue_insert_destinations.php");
 require_once("vue/vue_select_destinations.php");
 ?>

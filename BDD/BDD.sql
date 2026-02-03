@@ -109,3 +109,32 @@ CREATE TABLE slides (
   ordre INT NOT NULL DEFAULT 1,
   actif TINYINT(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB;
+
+
+
+CREATE TABLE continents (
+  id_continent INT AUTO_INCREMENT PRIMARY KEY,
+  nom VARCHAR(50) NOT NULL UNIQUE
+) ENGINE=InnoDB;
+
+
+INSERT INTO continents (nom) VALUES
+('Afrique'),
+('Europe'),
+('Asie'),
+('Amérique du Nord'),
+('Amérique du Sud'),
+('Océanie'),
+('Antarctique');
+
+
+ALTER TABLE destinations
+DROP COLUMN continent;
+
+ALTER TABLE destinations
+ADD id_continent INT AFTER ville;
+
+ALTER TABLE destinations
+ADD CONSTRAINT fk_destination_continent
+FOREIGN KEY (id_continent)
+REFERENCES continents(id_continent);

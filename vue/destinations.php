@@ -1,21 +1,16 @@
 <?php
+// vue/destinations.php
 $destinations = $destinations ?? [];
-$q = htmlspecialchars($_GET['q'] ?? '');
 ?>
 
+<div class="container-fluid">
+
+    <!-- 🔍 composant recherche destinations -->
+    <?php require_once __DIR__ . "/components/searchDestinations.php"; ?>
+
+</div>
+
 <div class="container mt-4">
-
-    <h2 class="mb-3">Nos destinations</h2>
-
-    <!-- Filtre (comme à l'école : simple) -->
-    <form method="get" action="index.php" class="mb-4">
-        <input type="hidden" name="page" value="destinations">
-        <div class="input-group">
-            <input type="text" name="q" class="form-control" placeholder="Rechercher (pays, ville, continent)" value="<?= $q ?>">
-            <button class="btn btn-primary" type="submit">Filtrer</button>
-            <a class="btn btn-secondary" href="index.php?page=destinations">Reset</a>
-        </div>
-    </form>
 
     <?php if (empty($destinations)): ?>
         <div class="alert alert-info">Aucune destination trouvée.</div>
@@ -27,7 +22,7 @@ $q = htmlspecialchars($_GET['q'] ?? '');
                     <div class="card h-100">
 
                         <?php if (!empty($d['image_url'])): ?>
-                            <img src="<?= htmlspecialchars($d['image_url']) ?>"
+                            <img src="<?= htmlspecialchars((string)$d['image_url']) ?>"
                                  class="card-img-top"
                                  alt="<?= htmlspecialchars(($d['pays'] ?? '').' '.($d['ville'] ?? '')) ?>"
                                  style="height:180px; object-fit:cover;">
@@ -39,12 +34,15 @@ $q = htmlspecialchars($_GET['q'] ?? '');
                             </h5>
 
                             <?php if (!empty($d['continent'])): ?>
-                                <div class="text-muted small mb-2"><?= htmlspecialchars($d['continent']) ?></div>
+                                <div class="text-muted small mb-2">
+                                    <?= htmlspecialchars((string)$d['continent']) ?>
+                                </div>
                             <?php endif; ?>
 
-                            <?php if (!empty($d['prix_base'])): ?>
-                                <div class="mb-2"><strong><?= number_format((float)$d['prix_base'], 2, ',', ' ') ?> €</strong> (prix base)</div>
-                            <?php endif; ?>
+                            <div class="mb-2">
+                                <strong><?= number_format((float)($d['prix_base'] ?? 0), 2, ',', ' ') ?> €</strong>
+                                <span class="text-muted">(prix base)</span>
+                            </div>
 
                             <a class="btn btn-outline-primary"
                                href="index.php?page=destination_detail&id_destination=<?= (int)$d['id_destination'] ?>">
@@ -58,4 +56,5 @@ $q = htmlspecialchars($_GET['q'] ?? '');
         </div>
 
     <?php endif; ?>
+
 </div>
