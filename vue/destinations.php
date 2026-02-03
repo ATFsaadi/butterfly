@@ -3,14 +3,14 @@ $destinations = $destinations ?? [];
 ?>
 
 <div
-    id="voyageBar"
-    class="position-sticky start-0 w-100 bg-white"
-    style="z-index:1030; border-bottom:1px solid #eee;"
->
+    id="voyageBar">
+    
     <?php require_once __DIR__ . "/components/searchDestinations.php"; ?>
 </div>
 
 <div class="container mt-4">
+
+        <h3 class="section-title text-center mt-5">Destinations en cours</h3>
 
     <?php if (empty($destinations)): ?>
         <div class="alert alert-info">aucune destination trouvée.</div>

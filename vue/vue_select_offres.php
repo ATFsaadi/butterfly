@@ -1,21 +1,26 @@
-<h3 class="text-center mt-5 mb-4">Liste des offres</h3>
+<?php
+$lesOffres = $lesOffres ?? ($offres ?? []);
+?>
 
-<form method="post" class="container mt-3 p-3 border rounded shadow" style="max-width:600px;">
-    <div class="input-group">
-        <input
-            type="text"
-            name="filtre"
-            class="form-control"
-            placeholder="filtrer (titre / pays / ville)"
-            value="<?= htmlspecialchars($_POST["filtre"] ?? "") ?>"
-        >
+<h3 class="section-title text-center mt-5">liste des offres</h3>
+
+<form method="post" class="mb-4">
+    <input
+        type="text"
+        name="filtre"
+        placeholder="filtrer (titre / pays / ville)"
+        class="form-control mb-2"
+        value="<?= htmlspecialchars($_POST["filtre"] ?? "") ?>"
+    >
+
+    <div class="d-flex justify-content-center">
         <button type="submit" name="Filtrer" class="btn btn-primary">filtrer</button>
     </div>
 </form>
 
 <div class="container mt-4">
-    <table class="table table-striped table-bordered">
-        <thead class="table-dark">
+    <table class="table table-bordered">
+        <thead>
             <tr>
                 <th>id</th>
                 <th>titre</th>
@@ -53,22 +58,21 @@
                         <td><?= htmlspecialchars($dateDebut) ?></td>
                         <td><?= htmlspecialchars($dateFin) ?></td>
                         <td><?= $actif ? "oui" : "non" ?></td>
+
                         <td>
                             <a
-                                class="btn btn-danger btn-sm"
-                                href="index.php?page=admin_offres&action=sup&id_offre=<?= $idOffre ?>"
-                                onclick="return confirm('voulez-vous vraiment supprimer cette offre ?');"
-                                title="supprimer"
+                                href="index.php?page=admin_offres&action=edit&id_offre=<?= $idOffre ?>"
+                                class="btn btn-warning btn-sm"
                             >
-                                🗑
+                                modifier
                             </a>
 
                             <a
-                                class="btn btn-warning btn-sm"
-                                href="index.php?page=admin_offres&action=edit&id_offre=<?= $idOffre ?>"
-                                title="modifier"
+                                href="index.php?page=admin_offres&action=sup&id_offre=<?= $idOffre ?>"
+                                onclick="return confirm('voulez-vous vraiment supprimer cette offre ?');"
+                                class="btn btn-danger btn-sm"
                             >
-                                ✏️
+                                supprimer
                             </a>
                         </td>
                     </tr>

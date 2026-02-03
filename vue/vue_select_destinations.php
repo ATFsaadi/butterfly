@@ -2,7 +2,7 @@
 $lesDestinations = $lesDestinations ?? ($destinations ?? []);
 ?>
 
-<h3 class="text-center mt-5 mb-4">liste des destinations</h3>
+<h3 class="section-title text-center mt-5">liste des destinations</h3>
 
 <form method="post" class="mb-4">
     <input

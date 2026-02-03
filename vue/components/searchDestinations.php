@@ -11,7 +11,7 @@ $q = trim((string)($_GET["q"] ?? ""));
 
     <!-- destination -->
     <div class="voyage-field">
-        <label class="form-label">destination</label>
+        <label class="form-label">Destination</label>
         <input
             type="text"
             name="q"

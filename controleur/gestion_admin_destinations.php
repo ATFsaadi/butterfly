@@ -160,5 +160,3 @@ $destination = $destinationToEdit;
 
 // chargement des vues
 
-require_once "vue/vue_insert_destinations.php";
-require_once "vue/vue_select_destinations.php";

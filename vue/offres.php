@@ -3,16 +3,13 @@ $offres = $offres ?? [];
 ?>
 
 <div
-    id="voyageBar"
-    class="position-sticky start-0 w-100 bg-white"
-    style="z-index:1030; border-bottom:1px solid #eee;"
->
+    id="voyageBar">
     <?php require_once __DIR__ . "/components/searchOffres.php"; ?>
 </div>
 
 <div class="container mt-4">
 
-    <h2 class="mb-3">offres en cours</h2>
+    <h3 class="section-title text-center mt-5">Offres en cours</h3>
 
     <?php if (empty($offres)): ?>
         <div class="alert alert-info">aucune offre trouvée.</div>

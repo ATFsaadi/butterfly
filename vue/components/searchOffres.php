@@ -11,12 +11,12 @@ $q = trim((string)($_GET["q"] ?? ""));
 
     <!-- destination / titre -->
     <div class="voyage-field">
-        <label class="form-label">destination</label>
+        <label class="form-label">Offres</label>
         <input
             type="text"
             name="q"
             class="form-control"
-            placeholder="titre, pays, ville ou continent..."
+            placeholder="pays, ville ou continent..."
             value="<?= htmlspecialchars($q) ?>"
         >
     </div>

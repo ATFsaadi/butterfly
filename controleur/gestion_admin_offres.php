@@ -47,7 +47,3 @@ if (isset($_POST["Filtrer"])) {
     $lesOffres = $unControleur->selectAll_offres();
 }
 
-// chargement des vues
-
-require_once "vue/vue_insert_offre.php";
-require_once "vue/vue_select_offres.php";
