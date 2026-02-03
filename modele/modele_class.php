@@ -313,6 +313,27 @@ class Modele
                 order by o.date_debut desc";
         return $this->fetchAll($sql);
     }
+    
+    public function selectLike_offres_actives(string $filtre): array
+    {
+        $sql = "select o.*, d.pays, d.ville, d.image_url, d.prix_base, cont.nom as continent
+                from offres o
+                join destinations d on d.id_destination = o.id_destination
+                left join continents cont on cont.id_continent = d.id_continent
+                where o.actif = 1
+                and d.actif = 1
+                and curdate() between o.date_debut and o.date_fin
+                and (
+                        o.titre like :filtre
+                    or d.pays like :filtre
+                    or d.ville like :filtre
+                    or cont.nom like :filtre
+                )
+                order by o.date_debut desc";
+
+        return $this->fetchAll($sql, [":filtre" => "%" . $filtre . "%"]);
+    }
+
 
     public function selectWhere_offre_active_by_destination(int $id_destination): array|false
     {

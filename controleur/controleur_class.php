@@ -144,6 +144,12 @@ class Controleur
         return $this->modele->selectLike_offre($filtre);
     }
 
+        public function selectLike_offres_actives(string $filtre): array
+    {
+        return $this->modele->selectLike_offres_actives($filtre);
+    }
+
+
     public function selectWhere_offre(int $id_offre)
     {
         return $this->modele->selectWhere_offre($id_offre);

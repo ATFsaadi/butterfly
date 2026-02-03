@@ -1,5 +1,8 @@
 <?php
+$q = trim((string)($_GET["q"] ?? ""));
 
-// donnees des offres actives
-
-$offres = $unControleur->selectAll_offres_actives();
+if ($q !== "") {
+    $offres = $unControleur->selectLike_offres_actives($q);
+} else {
+    $offres = $unControleur->selectAll_offres_actives();
+}

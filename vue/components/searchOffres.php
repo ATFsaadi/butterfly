@@ -7,16 +7,16 @@ $q = trim((string)($_GET["q"] ?? ""));
     method="get"
     action="index.php"
 >
-    <input type="hidden" name="page" value="destinations">
+    <input type="hidden" name="page" value="offres">
 
-    <!-- destination -->
+    <!-- destination / titre -->
     <div class="voyage-field">
         <label class="form-label">destination</label>
         <input
             type="text"
             name="q"
             class="form-control"
-            placeholder="pays, ville ou continent..."
+            placeholder="titre, pays, ville ou continent..."
             value="<?= htmlspecialchars($q) ?>"
         >
     </div>
@@ -28,7 +28,7 @@ $q = trim((string)($_GET["q"] ?? ""));
             <img src="icons/loupe.png" class="search-icon" alt="search">
         </button>
 
-        <a class="voyage-reset-icon" href="index.php?page=destinations">
+        <a class="voyage-reset-icon" href="index.php?page=offres">
             <img src="icons/reste.png" width="18" height="18" alt="reset">
         </a>
     </div>

@@ -18,12 +18,8 @@ $offres = $offres ?? [];
     </div>
 </section>
 
-<!-- barre recherche sticky -->
-<div
-    id="voyageBar"
-    class="position-sticky top-0 start-0 w-100 bg-white"
-    style="z-index:1030; border-bottom:1px solid #eee;"
->
+<!-- barre recherche -->
+<div id="voyageBar" class="w-100 bg-white" style="border-bottom:1px solid #eee;">
     <?php require_once __DIR__ . "/components/searchDestinations.php"; ?>
 </div>
 

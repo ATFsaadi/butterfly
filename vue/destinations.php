@@ -1,16 +1,13 @@
 <?php
-
-// valeurs par defaut
-
 $destinations = $destinations ?? [];
-
 ?>
 
-<div class="container-fluid">
-
-    <!-- composant recherche destinations -->
+<div
+    id="voyageBar"
+    class="position-sticky start-0 w-100 bg-white"
+    style="z-index:1030; border-bottom:1px solid #eee;"
+>
     <?php require_once __DIR__ . "/components/searchDestinations.php"; ?>
-
 </div>
 
 <div class="container mt-4">
@@ -24,12 +21,12 @@ $destinations = $destinations ?? [];
             <?php foreach ($destinations as $d): ?>
 
                 <?php
-                $id = (int) ($d["id_destination"] ?? 0);
-                $pays = $d["pays"] ?? "";
-                $ville = $d["ville"] ?? "";
-                $continent = $d["continent"] ?? "";
-                $prixBase = (float) ($d["prix_base"] ?? 0);
-                $image = $d["image_url"] ?? "";
+                $id = (int)($d["id_destination"] ?? 0);
+                $pays = (string)($d["pays"] ?? "");
+                $ville = (string)($d["ville"] ?? "");
+                $continent = (string)($d["continent"] ?? "");
+                $prixBase = (float)($d["prix_base"] ?? 0);
+                $image = (string)($d["image_url"] ?? "");
 
                 $titre = trim($pays . " - " . $ville, " -");
                 $alt = trim($pays . " " . $ville);
@@ -49,9 +46,7 @@ $destinations = $destinations ?? [];
 
                         <div class="card-body">
 
-                            <h5 class="card-title">
-                                <?= htmlspecialchars($titre) ?>
-                            </h5>
+                            <h5 class="card-title"><?= htmlspecialchars($titre) ?></h5>
 
                             <?php if ($continent !== ""): ?>
                                 <div class="text-muted small mb-2">
