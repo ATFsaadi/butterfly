@@ -6,13 +6,14 @@ class Modele
 
     public function __construct()
     {
-        $dsn = "mysql:host=localhost;dbname=agence_bfly;charset=utf8mb4";
+        $dsn = "mysql:host=localhost;dbname=bfly_ppe;charset=utf8mb4";
         $user = "root";
         $password = "";
 
         try {
             $this->pdo = new PDO($dsn, $user, $password, [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
             ]);
         } catch (PDOException $e) {
             echo "erreur de connexion à " . $dsn . "<br>";
@@ -21,20 +22,18 @@ class Modele
         }
     }
 
-    // pdo
-
     private function fetchOne(string $sql, array $params = []): array|false
     {
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute($params);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        return $stmt->fetch();
     }
 
     private function fetchAll(string $sql, array $params = []): array
     {
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute($params);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll();
     }
 
     private function execute(string $sql, array $params = []): void
@@ -43,7 +42,7 @@ class Modele
         $stmt->execute($params);
     }
 
-    // utilisateurs et authentification
+    /* ===================== utilisateurs / client ===================== */
 
     public function select_user_login(string $email): array|false
     {
@@ -73,8 +72,6 @@ class Modele
         ]);
     }
 
-    // clients
-
     public function insert_client(array $tab): void
     {
         $sql = "insert into client (id_utilisateur, nom, prenom, telephone, adresse, ville, pays)
@@ -98,8 +95,6 @@ class Modele
         return $this->fetchOne($sql, [":id_utilisateur" => $id_utilisateur]);
     }
 
-    // inscription complete
-
     public function inscription_complete(array $userTab, array $clientTab): array|false
     {
         try {
@@ -115,13 +110,15 @@ class Modele
             $this->pdo->commit();
             return ["id_utilisateur" => $idUser, "id_client" => $idClient];
         } catch (Exception $e) {
-            $this->pdo->rollBack();
+            if ($this->pdo->inTransaction()) {
+                $this->pdo->rollBack();
+            }
             echo "erreur inscription : " . $e->getMessage();
             return false;
         }
     }
 
-    // continents
+    /* ===================== continents / destinations ===================== */
 
     public function selectAll_continents(): array
     {
@@ -138,8 +135,6 @@ class Modele
                 where id_continent = :id_continent";
         return $this->fetchOne($sql, [":id_continent" => $id_continent]);
     }
-
-    // destinations
 
     public function insert_destination(array $tab): void
     {
@@ -225,7 +220,18 @@ class Modele
         $this->execute($sql, [":id_destination" => $id_destination]);
     }
 
-    // offres
+    public function set_destination_actif(int $id_destination, int $actif): void
+    {
+        $sql = "update destinations
+                set actif = :actif
+                where id_destination = :id_destination";
+        $this->execute($sql, [
+            ":id_destination" => $id_destination,
+            ":actif" => $actif,
+        ]);
+    }
+
+    /* ===================== offres ===================== */
 
     public function insert_offre(array $tab): void
     {
@@ -301,6 +307,17 @@ class Modele
         $this->execute($sql, [":id_offre" => $id_offre]);
     }
 
+    public function set_offre_actif(int $id_offre, int $actif): void
+    {
+        $sql = "update offres
+                set actif = :actif
+                where id_offre = :id_offre";
+        $this->execute($sql, [
+            ":id_offre" => $id_offre,
+            ":actif" => $actif,
+        ]);
+    }
+
     public function selectAll_offres_actives(): array
     {
         $sql = "select o.*, d.pays, d.ville, d.image_url, d.prix_base, cont.nom as continent
@@ -313,7 +330,7 @@ class Modele
                 order by o.date_debut desc";
         return $this->fetchAll($sql);
     }
-    
+
     public function selectLike_offres_actives(string $filtre): array
     {
         $sql = "select o.*, d.pays, d.ville, d.image_url, d.prix_base, cont.nom as continent
@@ -321,19 +338,17 @@ class Modele
                 join destinations d on d.id_destination = o.id_destination
                 left join continents cont on cont.id_continent = d.id_continent
                 where o.actif = 1
-                and d.actif = 1
-                and curdate() between o.date_debut and o.date_fin
-                and (
+                  and d.actif = 1
+                  and curdate() between o.date_debut and o.date_fin
+                  and (
                         o.titre like :filtre
-                    or d.pays like :filtre
-                    or d.ville like :filtre
-                    or cont.nom like :filtre
-                )
+                     or d.pays like :filtre
+                     or d.ville like :filtre
+                     or cont.nom like :filtre
+                  )
                 order by o.date_debut desc";
-
         return $this->fetchAll($sql, [":filtre" => "%" . $filtre . "%"]);
     }
-
 
     public function selectWhere_offre_active_by_destination(int $id_destination): array|false
     {
@@ -346,120 +361,412 @@ class Modele
         return $this->fetchOne($sql, [":id_destination" => $id_destination]);
     }
 
-    // reservations
+    /* ===================== voyages ===================== */
 
-    public function insert_reservation(array $tab): void
+    public function insert_voyage(array $tab): void
     {
-        $sql = "insert into reservations
-                (id_client, id_destination, date_depart, date_retour, nb_personnes, prix_total, statut)
+        $sql = "insert into voyages_organises
+                (id_destination, titre, description, date_depart, date_retour, prix, nb_places, nb_places_restantes, image_url, statut)
                 values
-                (:id_client, :id_destination, :date_depart, :date_retour, :nb_personnes, :prix_total, 'en_attente')";
+                (:id_destination, :titre, :description, :date_depart, :date_retour, :prix, :nb_places, :nb_places_restantes, :image_url, :statut)";
         $this->execute($sql, [
-            ":id_client" => $tab["id_client"],
             ":id_destination" => $tab["id_destination"],
+            ":titre" => $tab["titre"],
+            ":description" => $tab["description"] ?? null,
             ":date_depart" => $tab["date_depart"],
             ":date_retour" => $tab["date_retour"],
-            ":nb_personnes" => $tab["nb_personnes"],
-            ":prix_total" => $tab["prix_total"],
+            ":prix" => $tab["prix"],
+            ":nb_places" => $tab["nb_places"],
+            ":nb_places_restantes" => $tab["nb_places_restantes"],
+            ":image_url" => $tab["image_url"] ?? null,
+            ":statut" => $tab["statut"] ?? "actif",
         ]);
     }
 
-    public function selectAll_reservations(): array
+    public function selectAll_voyages_admin(): array
     {
-        $sql = "select r.*, c.nom, c.prenom, d.pays, d.ville, cont.nom as continent
-                from reservations r
-                join client c on c.id_client = r.id_client
-                join destinations d on d.id_destination = r.id_destination
+        $sql = "select v.*, d.pays, d.ville, cont.nom as continent
+                from voyages_organises v
+                join destinations d on d.id_destination = v.id_destination
                 left join continents cont on cont.id_continent = d.id_continent
-                order by r.date_reservation desc";
+                order by v.date_depart desc";
         return $this->fetchAll($sql);
     }
 
-    public function selectWhere_reservations_by_client(int $id_client): array
+    public function selectAll_voyages_actifs(): array
     {
-        $sql = "select r.*, d.pays, d.ville, d.image_url, cont.nom as continent
-                from reservations r
-                join destinations d on d.id_destination = r.id_destination
+        $sql = "select v.*, d.pays, d.ville, d.image_url as destination_image_url, cont.nom as continent
+                from voyages_organises v
+                join destinations d on d.id_destination = v.id_destination
                 left join continents cont on cont.id_continent = d.id_continent
-                where r.id_client = :id_client
-                order by r.date_reservation desc";
+                where v.statut = 'actif'
+                order by v.date_depart asc";
+        return $this->fetchAll($sql);
+    }
+
+    public function selectWhere_voyage(int $id_voyage): array|false
+    {
+        $sql = "select v.*, d.pays, d.ville, d.description as destination_description, d.prix_base, d.image_url as destination_image_url, cont.nom as continent
+                from voyages_organises v
+                join destinations d on d.id_destination = v.id_destination
+                left join continents cont on cont.id_continent = d.id_continent
+                where v.id_voyage = :id_voyage";
+        return $this->fetchOne($sql, [":id_voyage" => $id_voyage]);
+    }
+
+    public function update_voyage(array $tab): void
+    {
+        $sql = "update voyages_organises
+                set id_destination = :id_destination,
+                    titre = :titre,
+                    description = :description,
+                    date_depart = :date_depart,
+                    date_retour = :date_retour,
+                    prix = :prix,
+                    nb_places = :nb_places,
+                    nb_places_restantes = :nb_places_restantes,
+                    image_url = :image_url,
+                    statut = :statut
+                where id_voyage = :id_voyage";
+        $this->execute($sql, [
+            ":id_voyage" => $tab["id_voyage"],
+            ":id_destination" => $tab["id_destination"],
+            ":titre" => $tab["titre"],
+            ":description" => $tab["description"] ?? null,
+            ":date_depart" => $tab["date_depart"],
+            ":date_retour" => $tab["date_retour"],
+            ":prix" => $tab["prix"],
+            ":nb_places" => $tab["nb_places"],
+            ":nb_places_restantes" => $tab["nb_places_restantes"],
+            ":image_url" => $tab["image_url"] ?? null,
+            ":statut" => $tab["statut"] ?? "actif",
+        ]);
+    }
+
+    public function delete_voyage(int $id_voyage): void
+    {
+        $sql = "delete from voyages_organises
+                where id_voyage = :id_voyage";
+        $this->execute($sql, [":id_voyage" => $id_voyage]);
+    }
+
+    public function set_voyage_statut(int $id_voyage, string $statut): void
+    {
+        $sql = "update voyages_organises
+                set statut = :statut
+                where id_voyage = :id_voyage";
+        $this->execute($sql, [
+            ":id_voyage" => $id_voyage,
+            ":statut" => $statut,
+        ]);
+    }
+
+    public function selectAll_voyages_actifs_by_destination(int $id_destination): array
+    {
+        $sql = "select v.*, d.pays, d.ville, cont.nom as continent
+                from voyages_organises v
+                join destinations d on d.id_destination = v.id_destination
+                left join continents cont on cont.id_continent = d.id_continent
+                where v.id_destination = :id_destination
+                  and v.statut = 'actif'
+                order by v.date_depart asc";
+        return $this->fetchAll($sql, [":id_destination" => $id_destination]);
+    }
+
+    /* ===================== reservations (nouvelle bdd) ===================== */
+
+    public function insert_reservation_voyage(array $tab): void
+    {
+        $sql = "insert into reservations_voyages
+                (id_client, id_voyage, nb_personnes, prix_total, statut)
+                values
+                (:id_client, :id_voyage, :nb_personnes, :prix_total, :statut)";
+        $this->execute($sql, [
+            ":id_client" => (int) $tab["id_client"],
+            ":id_voyage" => (int) $tab["id_voyage"],
+            ":nb_personnes" => (int) $tab["nb_personnes"],
+            ":prix_total" => (float) $tab["prix_total"],
+            ":statut" => $tab["statut"] ?? "en_attente",
+        ]);
+    }
+
+    public function insert_reservation_destination(array $tab): void
+    {
+        $sql = "insert into reservations_destinations
+                (id_client, id_destination, date_depart, date_retour, nb_personnes, prix_total, statut)
+                values
+                (:id_client, :id_destination, :date_depart, :date_retour, :nb_personnes, :prix_total, :statut)";
+        $this->execute($sql, [
+            ":id_client" => (int) $tab["id_client"],
+            ":id_destination" => (int) $tab["id_destination"],
+            ":date_depart" => $tab["date_depart"],
+            ":date_retour" => $tab["date_retour"],
+            ":nb_personnes" => (int) $tab["nb_personnes"],
+            ":prix_total" => (float) $tab["prix_total"],
+            ":statut" => $tab["statut"] ?? "en_attente",
+        ]);
+    }
+
+    public function selectAll_reservations_destinations(): array
+    {
+        $sql = "select rd.*,
+                       c.nom, c.prenom,
+                       d.pays, d.ville,
+                       cont.nom as continent
+                from reservations_destinations rd
+                join client c on c.id_client = rd.id_client
+                join destinations d on d.id_destination = rd.id_destination
+                left join continents cont on cont.id_continent = d.id_continent
+                order by rd.date_reservation desc";
+        return $this->fetchAll($sql);
+    }
+
+    public function selectAll_reservations_voyages(): array
+    {
+        $sql = "select rv.*,
+                       c.nom, c.prenom,
+                       v.titre as voyage_titre, v.date_depart as voyage_date_depart, v.date_retour as voyage_date_retour, v.prix as voyage_prix, v.statut as voyage_statut,
+                       d.pays, d.ville,
+                       cont.nom as continent
+                from reservations_voyages rv
+                join client c on c.id_client = rv.id_client
+                join voyages_organises v on v.id_voyage = rv.id_voyage
+                join destinations d on d.id_destination = v.id_destination
+                left join continents cont on cont.id_continent = d.id_continent
+                order by rv.date_reservation desc";
+        return $this->fetchAll($sql);
+    }
+
+    public function selectWhere_reservations_destinations_by_client(int $id_client): array
+    {
+        $sql = "select rd.*,
+                       d.pays, d.ville, d.image_url as destination_image_url,
+                       cont.nom as continent
+                from reservations_destinations rd
+                join destinations d on d.id_destination = rd.id_destination
+                left join continents cont on cont.id_continent = d.id_continent
+                where rd.id_client = :id_client
+                order by rd.date_reservation desc";
         return $this->fetchAll($sql, [":id_client" => $id_client]);
     }
 
-    public function update_reservation_statut(array $tab): void
+    public function selectWhere_reservations_voyages_by_client(int $id_client): array
     {
-        $sql = "update reservations
+        $sql = "select rv.*,
+                       v.titre as voyage_titre, v.date_depart as voyage_date_depart, v.date_retour as voyage_date_retour, v.prix as voyage_prix, v.image_url as voyage_image_url, v.statut as voyage_statut,
+                       d.pays, d.ville, d.image_url as destination_image_url,
+                       cont.nom as continent
+                from reservations_voyages rv
+                join voyages_organises v on v.id_voyage = rv.id_voyage
+                join destinations d on d.id_destination = v.id_destination
+                left join continents cont on cont.id_continent = d.id_continent
+                where rv.id_client = :id_client
+                order by rv.date_reservation desc";
+        return $this->fetchAll($sql, [":id_client" => $id_client]);
+    }
+
+    public function update_reservation_destination_statut(array $tab): void
+    {
+        $sql = "update reservations_destinations
                 set statut = :statut
-                where id_reservation = :id_reservation";
+                where id_reservation_destination = :id_reservation_destination";
         $this->execute($sql, [
-            ":id_reservation" => $tab["id_reservation"],
+            ":id_reservation_destination" => (int) $tab["id_reservation_destination"],
             ":statut" => $tab["statut"],
         ]);
     }
 
-    // slides
-
-    public function insert_slide(array $tab): void
+    public function update_reservation_voyage_statut(array $tab): void
     {
-        $sql = "insert into slides (titre, sous_titre, image_url, ordre, actif)
-                values (:titre, :sous_titre, :image_url, :ordre, 1)";
+        $sql = "update reservations_voyages
+                set statut = :statut
+                where id_reservation_voyage = :id_reservation_voyage";
         $this->execute($sql, [
-            ":titre" => $tab["titre"],
-            ":sous_titre" => $tab["sous_titre"] ?? null,
-            ":image_url" => $tab["image_url"],
-            ":ordre" => $tab["ordre"] ?? 1,
+            ":id_reservation_voyage" => (int) $tab["id_reservation_voyage"],
+            ":statut" => $tab["statut"],
         ]);
     }
 
-    public function selectAll_slides(): array
+   public function selectAll_reservations_union(): array
+{
+    $sql = "
+        select
+            rd.id_reservation_destination as id_reservation,
+            'destination' as type_reservation,
+            rd.date_depart as date_depart,
+            rd.date_retour as date_retour,
+            rd.nb_personnes as nb_personnes,
+            rd.prix_total as prix_total,
+            rd.statut as statut,
+            rd.date_reservation as date_reservation,
+
+            c.nom as nom,
+            c.prenom as prenom,
+
+            d.pays as pays,
+            d.ville as ville,
+            cont.nom as continent,
+
+            '' as voyage_titre,
+            null as voyage_date_depart,
+            null as voyage_date_retour
+        from reservations_destinations rd
+        join client c on c.id_client = rd.id_client
+        join destinations d on d.id_destination = rd.id_destination
+        left join continents cont on cont.id_continent = d.id_continent
+
+        union all
+
+        select
+            rv.id_reservation_voyage as id_reservation,
+            'voyage' as type_reservation,
+            v.date_depart as date_depart,
+            v.date_retour as date_retour,
+            rv.nb_personnes as nb_personnes,
+            rv.prix_total as prix_total,
+            rv.statut as statut,
+            rv.date_reservation as date_reservation,
+
+            c.nom as nom,
+            c.prenom as prenom,
+
+            d.pays as pays,
+            d.ville as ville,
+            cont.nom as continent,
+
+            v.titre as voyage_titre,
+            v.date_depart as voyage_date_depart,
+            v.date_retour as voyage_date_retour
+        from reservations_voyages rv
+        join client c on c.id_client = rv.id_client
+        join voyages_organises v on v.id_voyage = rv.id_voyage
+        join destinations d on d.id_destination = v.id_destination
+        left join continents cont on cont.id_continent = d.id_continent
+
+        order by date_reservation desc
+    ";
+
+    return $this->fetchAll($sql);
+}
+
+
+    public function selectWhere_reservations_by_client_union(int $id_client): array
     {
         $sql = "select *
-                from slides
-                order by ordre asc";
-        return $this->fetchAll($sql);
+                from (
+                    select
+                        'destination' as type_reservation,
+                        rd.id_reservation_destination as id_reservation,
+                        rd.id_client,
+                        rd.id_destination,
+                        null as id_voyage,
+                        rd.date_depart,
+                        rd.date_retour,
+                        rd.nb_personnes,
+                        rd.prix_total,
+                        rd.statut,
+                        rd.date_reservation,
+                        null as voyage_titre,
+                        null as voyage_image_url,
+                        d.image_url as destination_image_url,
+                        d.pays, d.ville,
+                        cont.nom as continent
+                    from reservations_destinations rd
+                    join destinations d on d.id_destination = rd.id_destination
+                    left join continents cont on cont.id_continent = d.id_continent
+                    where rd.id_client = :id_client
+
+                    union all
+
+                    select
+                        'voyage' as type_reservation,
+                        rv.id_reservation_voyage as id_reservation,
+                        rv.id_client,
+                        v.id_destination as id_destination,
+                        rv.id_voyage,
+                        v.date_depart,
+                        v.date_retour,
+                        rv.nb_personnes,
+                        rv.prix_total,
+                        rv.statut,
+                        rv.date_reservation,
+                        v.titre as voyage_titre,
+                        v.image_url as voyage_image_url,
+                        d.image_url as destination_image_url,
+                        d.pays, d.ville,
+                        cont.nom as continent
+                    from reservations_voyages rv
+                    join voyages_organises v on v.id_voyage = rv.id_voyage
+                    join destinations d on d.id_destination = v.id_destination
+                    left join continents cont on cont.id_continent = d.id_continent
+                    where rv.id_client = :id_client
+                ) x
+                order by date_reservation desc";
+        return $this->fetchAll($sql, [":id_client" => $id_client]);
     }
 
-    public function selectAll_slides_actifs(): array
+    public function decrement_places_voyage(int $id_voyage, int $nb_personnes): int
     {
-        $sql = "select *
-                from slides
-                where actif = 1
-                order by ordre asc";
-        return $this->fetchAll($sql);
-    }
-
-    public function selectWhere_slide(int $id_slide): array|false
-    {
-        $sql = "select *
-                from slides
-                where id_slide = :id_slide";
-        return $this->fetchOne($sql, [":id_slide" => $id_slide]);
-    }
-
-    public function update_slide(array $tab): void
-    {
-        $sql = "update slides
-                set titre = :titre,
-                    sous_titre = :sous_titre,
-                    image_url = :image_url,
-                    ordre = :ordre,
-                    actif = :actif
-                where id_slide = :id_slide";
-        $this->execute($sql, [
-            ":id_slide" => $tab["id_slide"],
-            ":titre" => $tab["titre"],
-            ":sous_titre" => $tab["sous_titre"] ?? null,
-            ":image_url" => $tab["image_url"],
-            ":ordre" => $tab["ordre"],
-            ":actif" => $tab["actif"] ?? 1,
+        $sql = "update voyages_organises
+                set nb_places_restantes = nb_places_restantes - :nb
+                where id_voyage = :id_voyage
+                  and statut = 'actif'
+                  and nb_places_restantes >= :nb";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([
+            ":id_voyage" => $id_voyage,
+            ":nb" => $nb_personnes,
         ]);
+        return $stmt->rowCount();
     }
 
-    public function delete_slide(int $id_slide): void
+    public function reserver_voyage(array $tab): bool
     {
-        $sql = "update slides
-                set actif = 0
-                where id_slide = :id_slide";
-        $this->execute($sql, [":id_slide" => $id_slide]);
+        try {
+            $this->pdo->beginTransaction();
+
+            $changed = $this->decrement_places_voyage((int) $tab["id_voyage"], (int) $tab["nb_personnes"]);
+            if ($changed !== 1) {
+                $this->pdo->rollBack();
+                return false;
+            }
+
+            $this->insert_reservation_voyage([
+                "id_client" => (int) $tab["id_client"],
+                "id_voyage" => (int) $tab["id_voyage"],
+                "nb_personnes" => (int) $tab["nb_personnes"],
+                "prix_total" => (float) $tab["prix_total"],
+                "statut" => "en_attente",
+            ]);
+
+            $this->pdo->commit();
+            return true;
+        } catch (Exception $e) {
+            if ($this->pdo->inTransaction()) {
+                $this->pdo->rollBack();
+            }
+            return false;
+        }
     }
+
+    public function select_id_voyage_by_reservation_voyage(int $id_reservation_voyage): int
+{
+    $sql = "select id_voyage
+            from reservations_voyages
+            where id_reservation_voyage = :id
+            limit 1";
+    $row = $this->fetchOne($sql, [":id" => $id_reservation_voyage]);
+    return $row ? (int)$row["id_voyage"] : 0;
+}
+
+public function maj_statut_voyage_si_complet(int $id_voyage): void
+{
+    $sql = "update voyages_organises
+            set statut = 'complet'
+            where id_voyage = :id_voyage
+              and nb_places_restantes <= 0
+              and statut = 'actif'";
+    $this->execute($sql, [":id_voyage" => $id_voyage]);
+}
+
 }

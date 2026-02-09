@@ -1,0 +1,103 @@
+========================================
+MVC — GESTION DES RÉSERVATIONS (2 tables)
+========================================
+
+TABLES BDD :
+- reservations_destinations  (sur mesure)  -> destination + dates libres
+- reservations_voyages       (organisé)    -> voyage + places + dates fixes
+
+----------------------------------------
+ROUTES (exemples)
+----------------------------------------
+Client :
+- index.php?page=reservations
+- index.php?page=reservation&type=destination&id_destination=3
+- index.php?page=reservation&type=voyage&id_voyage=5
+
+Admin :
+- index.php?page=admin_reservations
+
+----------------------------------------
+CONTROLEURS
+----------------------------------------
+
+controleur/gestion_reservations.php
+- Objectif :
+  * Afficher toutes les réservations du client (les 2 types)
+  * Créer une réservation selon le type (destination ou voyage)
+
+- Logique :
+  1) Vérifier session (client connecté)
+  2) Lire $_GET['type'] si création
+  3) Si POST :
+      - si type = destination -> insert dans reservations_destinations
+      - si type = voyage      -> insert dans reservations_voyages
+  4) Récupérer :
+      - reservations destinations du client
+      - reservations voyages du client
+  5) Charger la vue : vue/reservation.php
+
+
+controleur/admin/gestion_admin_reservations.php
+- Objectif :
+  * Voir toutes les réservations (les 2 tables)
+  * Modifier statut (en_attente / confirmee / annulee) (optionnel)
+
+- Logique :
+  1) Vérifier role admin
+  2) Charger :
+      - toutes reservations_destinations
+      - toutes reservations_voyages
+  3) Charger la vue : vue/admin/admin_reservations.php
+
+----------------------------------------
+MODELE (recommandé)
+----------------------------------------
+
+modele/ReservationModel.php
+- Méthodes "SUR MESURE" (reservations_destinations)
+  * createReservationDestination(id_client, id_destination, date_depart, date_retour, nb_personnes, prix_total)
+  * getReservationsDestinationsByClient(id_client)
+  * getAllReservationsDestinations()
+  * updateStatutReservationDestination(id_reservation_destination, statut)  (optionnel)
+
+- Méthodes "VOYAGE ORGANISÉ" (reservations_voyages)
+  * createReservationVoyage(id_client, id_voyage, nb_personnes, prix_total)
+  * getReservationsVoyagesByClient(id_client)
+  * getAllReservationsVoyages()
+  * updateStatutReservationVoyage(id_reservation_voyage, statut)           (optionnel)
+
+BONUS IMPORTANT (si tu le fais) :
+- Quand une reservation_voyage passe "confirmee" :
+  -> diminuer voyages_organises.nb_places_restantes
+  (sinon tu risques d'accepter plus de places que possible)
+
+----------------------------------------
+VUES
+----------------------------------------
+
+vue/reservation.php
+- Affiche 2 sections :
+  1) "Mes réservations sur mesure" (reservations_destinations)
+  2) "Mes réservations voyages organisés" (reservations_voyages)
+- Formulaire de création selon type (destination ou voyage)
+
+vue/admin/admin_reservations.php
+- Affiche 2 tableaux :
+  1) Tableau réservations sur mesure
+  2) Tableau réservations voyages organisés
+- (Option) boutons statut : en_attente / confirmee / annulee
+
+----------------------------------------
+CONVENTION "TYPE"
+----------------------------------------
+type = destination  => utilise reservations_destinations
+type = voyage       => utilise reservations_voyages
+
+Exemple :
+- reservation&type=destination&id_destination=3
+- reservation&type=voyage&id_voyage=5
+
+========================================
+FIN
+========================================

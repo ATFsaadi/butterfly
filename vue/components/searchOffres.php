@@ -9,19 +9,17 @@ $q = trim((string)($_GET["q"] ?? ""));
 >
     <input type="hidden" name="page" value="offres">
 
-    <!-- destination / titre -->
     <div class="voyage-field">
         <label class="form-label">Offres</label>
         <input
             type="text"
             name="q"
             class="form-control"
-            placeholder="pays, ville ou continent..."
+            placeholder="pays, ville, titre ou continent..."
             value="<?= htmlspecialchars($q) ?>"
         >
     </div>
 
-    <!-- actions -->
     <div class="voyage-search-group">
         <button class="voyage-search-btn" type="submit">
             <span>rechercher</span>

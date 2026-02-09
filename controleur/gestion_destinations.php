@@ -1,8 +1,8 @@
 <?php
 
-$q = trim((string) ($_GET["q"] ?? ""));
+$q = trim((string)($_GET["q"] ?? ""));
 
-if ($q !== "") {
+if ($q !== "" && mb_strlen($q) >= 2) {
     $destinations = $unControleur->selectLike_destination($q);
 } else {
     $destinations = $unControleur->selectAll_destinations();

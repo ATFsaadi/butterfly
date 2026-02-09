@@ -5,47 +5,46 @@
 
 <div id="offresCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="6000">
 
-    <!-- indicateurs -->
     <div class="carousel-indicators">
         <?php foreach ($offres as $i => $offre): ?>
             <button
                 type="button"
                 data-bs-target="#offresCarousel"
-                data-bs-slide-to="<?= (int) $i ?>"
-                class="<?= $i === 0 ? 'active' : '' ?>"
-                aria-current="<?= $i === 0 ? 'true' : 'false' ?>"
+                data-bs-slide-to="<?= (int)$i ?>"
+                class="<?= $i === 0 ? "active" : "" ?>"
+                aria-current="<?= $i === 0 ? "true" : "false" ?>"
+                aria-label="Slide <?= (int)($i + 1) ?>"
             ></button>
         <?php endforeach; ?>
     </div>
 
-    <!-- contenu -->
     <div class="carousel-inner">
 
         <?php foreach ($offres as $i => $offre): ?>
 
             <?php
-            // calculs offre
+            $reduc = (int)($offre["pourcentage_reduction"] ?? 0);
+            $prixBase = (float)($offre["prix_base"] ?? 0);
+            $prixRemise = $prixBase;
 
-            $reduc = (int) ($offre["pourcentage_reduction"] ?? 0);
-            $prixBase = (float) ($offre["prix_base"] ?? 0);
-            $coef = (100 - $reduc) / 100;
-            $prixRemise = ($prixBase > 0 && $reduc > 0) ? $prixBase * $coef : $prixBase;
+            if ($prixBase > 0 && $reduc > 0 && $reduc <= 100) {
+                $prixRemise = $prixBase * (1 - ($reduc / 100));
+            }
 
-            // donnees destination
+            $img = (string)($offre["image_url"] ?? "");
+            $titre = (string)($offre["titre"] ?? "offre");
+            $pays = (string)($offre["pays"] ?? "");
+            $ville = (string)($offre["ville"] ?? "");
+            $dateDebut = (string)($offre["date_debut"] ?? "");
+            $dateFin = (string)($offre["date_fin"] ?? "");
+            $idDestination = (int)($offre["id_destination"] ?? 0);
 
-            $img = $offre["image_url"] ?? "";
-            $titre = $offre["titre"] ?? "offre";
-            $pays = $offre["pays"] ?? "";
-            $ville = $offre["ville"] ?? "";
-            $dateDebut = $offre["date_debut"] ?? "";
-            $dateFin = $offre["date_fin"] ?? "";
-            $idDestination = (int) ($offre["id_destination"] ?? 0);
+            $lieu = trim($pays . " - " . $ville, " -");
             ?>
 
-            <div class="carousel-item <?= $i === 0 ? 'active' : '' ?>">
+            <div class="carousel-item <?= $i === 0 ? "active" : "" ?>">
                 <div class="row g-0" style="min-height:500px;">
 
-                    <!-- image -->
                     <div class="col-md-9">
                         <?php if ($img !== ""): ?>
                             <img
@@ -56,53 +55,53 @@
                             >
                         <?php else: ?>
                             <div class="d-flex align-items-center justify-content-center bg-light" style="height:500px;">
-                                <span class="text-muted">Image non disponible</span>
+                                <span class="text-muted">image non disponible</span>
                             </div>
                         <?php endif; ?>
                     </div>
 
-                    <!-- details -->
                     <div class="col-md-3 d-flex align-items-stretch" style="background: var(--secondary-color);">
-                        <div
-                            class="carousel-caption d-flex h-100 w-100 align-items-center justify-content-center"
-                            style="position: static; padding: 20px;"
-                        >
+                        <div class="carousel-caption d-flex h-100 w-100 align-items-center justify-content-center" style="position: static; padding: 20px;">
                             <div class="text-center text-white">
 
-                                <h6>
+                                <h6 class="mb-2">
                                     <?= htmlspecialchars($titre) ?>
                                     <?php if ($reduc > 0): ?>
                                         (-<?= $reduc ?>%)
                                     <?php endif; ?>
                                 </h6>
 
-                                <p class="d-none d-md-block">
-                                    <?= htmlspecialchars(trim($pays . " - " . $ville)) ?><br>
-                                    <small>
-                                        du <?= htmlspecialchars($dateDebut) ?>
-                                        au <?= htmlspecialchars($dateFin) ?>
-                                    </small>
-                                </p>
+                                <?php if ($lieu !== "" || $dateDebut !== "" || $dateFin !== ""): ?>
+                                    <p class="d-none d-md-block mb-3">
+                                        <?= htmlspecialchars($lieu) ?><br>
+                                        <small>
+                                            du <?= htmlspecialchars($dateDebut) ?>
+                                            au <?= htmlspecialchars($dateFin) ?>
+                                        </small>
+                                    </p>
+                                <?php endif; ?>
 
                                 <?php if ($prixBase > 0): ?>
-                                    <p class="d-none d-md-block">
+                                    <p class="d-none d-md-block mb-3">
                                         <?php if ($reduc > 0): ?>
                                             <del><?= number_format($prixBase, 2, ",", " ") ?> €</del><br>
                                             <strong><?= number_format($prixRemise, 2, ",", " ") ?> €</strong>
                                         <?php else: ?>
                                             <strong><?= number_format($prixBase, 2, ",", " ") ?> €</strong>
                                         <?php endif; ?>
-                                        <br><small>prix par personne (base)</small>
+                                        <br><small>prix base</small>
                                     </p>
                                 <?php endif; ?>
 
                                 <?php if ($idDestination > 0): ?>
                                     <a
-                                        href="index.php?page=destination_detail&id_destination=<?= $idDestination ?>"
-                                        class="btn btn-outline-light rounded-pill px-4 mt-2"
-                                    >
-                                        voir / réserver
-                                    </a>
+  href="index.php?page=destination_detail&id_destination=<?= $idDestination ?>"
+  class="btn btn-outline-light rounded-pill px-4 mt-2 position-relative"
+  style="z-index: 9999;"
+>
+  voir
+</a>
+
                                 <?php else: ?>
                                     <a
                                         href="index.php?page=offres"
@@ -122,7 +121,6 @@
         <?php endforeach; ?>
     </div>
 
-    <!-- controles -->
     <button class="carousel-control-prev" type="button" data-bs-target="#offresCarousel" data-bs-slide="prev">
         <span class="carousel-control-prev-icon"></span>
         <span class="visually-hidden">Précédent</span>

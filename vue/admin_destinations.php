@@ -1,12 +1,6 @@
-<?php
-// vue/admin_destinations.php
-
-// messages
-?>
-
 <?php if (!empty($success)): ?>
   <div class="container mt-4">
-    <div class="alert alert-success text-center"><?= htmlspecialchars($success) ?></div>
+    <div class="alert alert-success text-center"><?= htmlspecialchars((string)$success) ?></div>
   </div>
 <?php endif; ?>
 

@@ -10,11 +10,13 @@ $lesDestinations = $lesDestinations ?? ($destinations ?? []);
         name="filtre"
         placeholder="filtrer (pays / ville / continent)"
         class="form-control mb-2"
-        value="<?= htmlspecialchars($_POST["filtre"] ?? "") ?>"
+        value="<?= htmlspecialchars((string)($_POST["filtre"] ?? "")) ?>"
     >
 
     <div class="d-flex justify-content-center">
-        <button type="submit" name="Filtrer" class="btn btn-primary">filtrer</button>
+        <button type="submit" name="Filtrer" class="btn btn-primary">
+            filtrer
+        </button>
     </div>
 </form>
 
@@ -37,23 +39,25 @@ $lesDestinations = $lesDestinations ?? ($destinations ?? []);
                 <?php foreach ($lesDestinations as $d): ?>
 
                     <?php
-                    $id = (int) ($d["id_destination"] ?? 0);
-                    $pays = $d["pays"] ?? "";
-                    $ville = $d["ville"] ?? "";
-                    $continent = $d["continent"] ?? "";
-                    $prixBase = (float) ($d["prix_base"] ?? 0);
-                    $actif = ((int) ($d["actif"] ?? 0) === 1);
-                    $image = $d["image_url"] ?? "";
+                    $id = (int)($d["id_destination"] ?? 0);
+                    $pays = (string)($d["pays"] ?? "");
+                    $ville = (string)($d["ville"] ?? "");
+                    $continent = (string)($d["continent"] ?? "");
+                    $prixBase = (float)($d["prix_base"] ?? 0);
+                    $actif = ((int)($d["actif"] ?? 0) === 1);
+                    $image = (string)($d["image_url"] ?? "");
                     ?>
 
                     <tr>
                         <td>
-                            <?php if (!empty($image)): ?>
+                            <?php if ($image !== ""): ?>
                                 <img
                                     src="<?= htmlspecialchars($image) ?>"
                                     width="100"
                                     alt="destination"
                                 >
+                            <?php else: ?>
+                                <span class="text-muted">—</span>
                             <?php endif; ?>
                         </td>
 

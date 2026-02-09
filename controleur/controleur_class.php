@@ -16,8 +16,6 @@ class Controleur
         return $this->modele;
     }
 
-    // securite et sessions
-
     public function verifConnexion(): void
     {
         if (!isset($_SESSION["user"])) {
@@ -30,16 +28,42 @@ class Controleur
     {
         $this->verifConnexion();
 
-        if (
-            !isset($_SESSION["user"]["role"]) ||
-            $_SESSION["user"]["role"] !== "admin"
-        ) {
+        if (!isset($_SESSION["user"]["role"]) || $_SESSION["user"]["role"] !== "admin") {
             header("location: index.php?page=home");
             exit();
         }
     }
 
-    // utilisateurs et authentification
+    public function getIdClientConnecte(): int
+    {
+        $this->verifConnexion();
+
+        if (!isset($_SESSION["user"]["id_client"])) {
+            header("location: index.php?page=home");
+            exit();
+        }
+
+        return (int) $_SESSION["user"]["id_client"];
+    }
+
+    public function getIdUtilisateurConnecte(): int
+    {
+        $this->verifConnexion();
+
+        if (!isset($_SESSION["user"]["id_utilisateur"])) {
+            header("location: index.php?page=home");
+            exit();
+        }
+
+        return (int) $_SESSION["user"]["id_utilisateur"];
+    }
+
+    public function estAdmin(): bool
+    {
+        return isset($_SESSION["user"]["role"]) && $_SESSION["user"]["role"] === "admin";
+    }
+
+    /* ===================== utilisateurs / client ===================== */
 
     public function select_user_login(string $email)
     {
@@ -61,8 +85,6 @@ class Controleur
         return $this->modele->inscription_complete($userTab, $clientTab);
     }
 
-    // clients
-
     public function insert_client(array $tab): void
     {
         $this->modele->insert_client($tab);
@@ -73,7 +95,7 @@ class Controleur
         return $this->modele->selectWhere_client_by_user($id_utilisateur);
     }
 
-    // continents
+    /* ===================== continents / destinations ===================== */
 
     public function selectAll_continents()
     {
@@ -84,8 +106,6 @@ class Controleur
     {
         return $this->modele->selectWhere_continent($id_continent);
     }
-
-    // destinations
 
     public function insert_destination(array $tab): void
     {
@@ -122,7 +142,12 @@ class Controleur
         $this->modele->delete_destination($id_destination);
     }
 
-    // offres
+    public function set_destination_actif(int $id_destination, int $actif): void
+    {
+        $this->modele->set_destination_actif($id_destination, $actif);
+    }
+
+    /* ===================== offres ===================== */
 
     public function insert_offre(array $tab): void
     {
@@ -144,11 +169,10 @@ class Controleur
         return $this->modele->selectLike_offre($filtre);
     }
 
-        public function selectLike_offres_actives(string $filtre): array
+    public function selectLike_offres_actives(string $filtre): array
     {
         return $this->modele->selectLike_offres_actives($filtre);
     }
-
 
     public function selectWhere_offre(int $id_offre)
     {
@@ -170,57 +194,128 @@ class Controleur
         $this->modele->delete_offre($id_offre);
     }
 
-    // reservations
-
-    public function insert_reservation(array $tab): void
+    public function set_offre_actif(int $id_offre, int $actif): void
     {
-        $this->modele->insert_reservation($tab);
+        $this->modele->set_offre_actif($id_offre, $actif);
+    }
+
+    /* ===================== voyages ===================== */
+
+    public function insert_voyage(array $tab): void
+    {
+        $this->modele->insert_voyage($tab);
+    }
+
+    public function selectAll_voyages_admin()
+    {
+        return $this->modele->selectAll_voyages_admin();
+    }
+
+    public function selectAll_voyages_actifs()
+    {
+        return $this->modele->selectAll_voyages_actifs();
+    }
+
+    public function selectWhere_voyage(int $id_voyage)
+    {
+        return $this->modele->selectWhere_voyage($id_voyage);
+    }
+
+    public function update_voyage(array $tab): void
+    {
+        $this->modele->update_voyage($tab);
+    }
+
+    public function delete_voyage(int $id_voyage): void
+    {
+        $this->modele->delete_voyage($id_voyage);
+    }
+
+    public function selectAll_voyages_actifs_by_destination(int $id_destination): array
+    {
+        return $this->modele->selectAll_voyages_actifs_by_destination($id_destination);
+    }
+
+    public function set_voyage_statut(int $id_voyage, string $statut): void
+    {
+        $this->modele->set_voyage_statut($id_voyage, $statut);
+    }
+
+    /* ===================== reservations (nouvelle bdd) ===================== */
+
+    public function insert_reservation_destination(array $tab): void
+    {
+        $this->modele->insert_reservation_destination($tab);
+    }
+
+    public function insert_reservation_voyage(array $tab): void
+    {
+        $this->modele->insert_reservation_voyage($tab);
+    }
+
+    public function reserver_voyage(array $tab): bool
+    {
+        return $this->modele->reserver_voyage($tab);
+    }
+
+    public function selectAll_reservations_destinations()
+    {
+        return $this->modele->selectAll_reservations_destinations();
+    }
+
+    public function selectAll_reservations_voyages()
+    {
+        return $this->modele->selectAll_reservations_voyages();
+    }
+
+    public function selectWhere_reservations_destinations_by_client(int $id_client)
+    {
+        return $this->modele->selectWhere_reservations_destinations_by_client($id_client);
+    }
+
+    public function selectWhere_reservations_voyages_by_client(int $id_client)
+    {
+        return $this->modele->selectWhere_reservations_voyages_by_client($id_client);
+    }
+
+    public function selectMesReservations(): array
+    {
+        $idClient = $this->getIdClientConnecte();
+
+        return [
+            "destinations" => $this->modele->selectWhere_reservations_destinations_by_client($idClient),
+            "voyages" => $this->modele->selectWhere_reservations_voyages_by_client($idClient),
+        ];
+    }
+
+    public function update_reservation_destination_statut(array $tab): void
+    {
+        $this->modele->update_reservation_destination_statut($tab);
+    }
+
+    public function update_reservation_voyage_statut(array $tab): void
+    {
+        $this->modele->update_reservation_voyage_statut($tab);
     }
 
     public function selectAll_reservations()
     {
-        return $this->modele->selectAll_reservations();
+        return $this->modele->selectAll_reservations_union();
     }
 
     public function selectWhere_reservations_by_client(int $id_client)
     {
-        return $this->modele->selectWhere_reservations_by_client($id_client);
+        return $this->modele->selectWhere_reservations_by_client_union($id_client);
     }
 
-    public function update_reservation_statut(array $tab): void
-    {
-        $this->modele->update_reservation_statut($tab);
-    }
+    public function select_id_voyage_by_reservation_voyage(int $id_reservation_voyage): int
+{
+    return $this->modele->select_id_voyage_by_reservation_voyage($id_reservation_voyage);
+}
 
-    // slides
+public function maj_statut_voyage_si_complet(int $id_voyage): void
+{
+    $this->modele->maj_statut_voyage_si_complet($id_voyage);
+}
 
-    public function insert_slide(array $tab): void
-    {
-        $this->modele->insert_slide($tab);
-    }
-
-    public function selectAll_slides()
-    {
-        return $this->modele->selectAll_slides();
-    }
-
-    public function selectAll_slides_actifs()
-    {
-        return $this->modele->selectAll_slides_actifs();
-    }
-
-    public function selectWhere_slide(int $id_slide)
-    {
-        return $this->modele->selectWhere_slide($id_slide);
-    }
-
-    public function update_slide(array $tab): void
-    {
-        $this->modele->update_slide($tab);
-    }
-
-    public function delete_slide(int $id_slide): void
-    {
-        $this->modele->delete_slide($id_slide);
-    }
 }

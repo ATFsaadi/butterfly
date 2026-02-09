@@ -2,8 +2,7 @@
 $offres = $offres ?? [];
 ?>
 
-<div
-    id="voyageBar">
+<div id="voyageBar">
     <?php require_once __DIR__ . "/components/searchOffres.php"; ?>
 </div>
 
@@ -29,25 +28,31 @@ $offres = $offres ?? [];
                 }
 
                 $idDest = (int)($o["id_destination"] ?? 0);
+                $image = (string)($o["image_url"] ?? "");
+                $lieu = trim((string)($o["pays"] ?? "") . " - " . (string)($o["ville"] ?? ""), " -");
                 ?>
 
                 <div class="col-12 col-md-6 col-lg-4">
                     <div class="card h-100">
 
-                        <?php if (!empty($o["image_url"])): ?>
+                        <?php if ($image !== ""): ?>
                             <img
-                                src="<?= htmlspecialchars((string)$o["image_url"]) ?>"
+                                src="<?= htmlspecialchars($image) ?>"
                                 class="card-img-top"
-                                alt="<?= htmlspecialchars(($o["pays"] ?? "") . " " . ($o["ville"] ?? "")) ?>"
+                                alt="<?= htmlspecialchars($lieu) ?>"
                                 style="height:180px; object-fit:cover;"
                             >
+                        <?php else: ?>
+                            <div class="d-flex align-items-center justify-content-center bg-light" style="height:180px;">
+                                <span class="text-muted">aucune image</span>
+                            </div>
                         <?php endif; ?>
 
                         <div class="card-body">
 
-                            <div class="text-muted small">
-                                <?= htmlspecialchars(($o["pays"] ?? "") . " - " . ($o["ville"] ?? "")) ?>
-                            </div>
+                            <?php if ($lieu !== ""): ?>
+                                <div class="text-muted small mb-1"><?= htmlspecialchars($lieu) ?></div>
+                            <?php endif; ?>
 
                             <h5 class="card-title"><?= htmlspecialchars((string)($o["titre"] ?? "")) ?></h5>
 
@@ -72,21 +77,26 @@ $offres = $offres ?? [];
                                 <?php endif; ?>
                             <?php endif; ?>
 
-                            <div class="mt-3 d-flex gap-2">
-                                <a
-                                    class="btn btn-outline-primary"
-                                    href="index.php?page=destination_detail&id_destination=<?= $idDest ?>"
-                                >
-                                    voir destination
-                                </a>
+                            <div class="mt-3 d-flex justify-content-center gap-2">
 
-                                <a
-                                    class="btn btn-primary"
-                                    href="index.php?page=reservation&id_destination=<?= $idDest ?>"
-                                >
-                                    réserver
-                                </a>
-                            </div>
+    <a
+        class="btn btn-outline-primary btn-sm flex-fill text-center px-3"
+        style="max-width:160px"
+        href="index.php?page=destination_detail&id_destination=<?= $idDest ?>"
+    >
+        voir destination
+    </a>
+
+    <a
+        class="btn btn-success btn-sm flex-fill text-center px-3"
+        style="max-width:160px"
+        href="index.php?page=destination_detail&id_destination=<?= $idDest ?>"
+    >
+        réserver
+    </a>
+
+</div>
+
 
                         </div>
                     </div>

@@ -1,0 +1,89 @@
+-- arborescence projet
+
+bfly/
+├── index.php
+├── readme.txt
+│
+├── bdd/
+│   ├── bfly_bdd.sql
+│   ├── seed.sql
+│   ├── reset.sql
+│   ├── schema_relationnel.txt
+│   └── schema_uml.txt
+│
+├── config/
+│   ├── config.php
+│   └── database.php
+│
+├── controleur/
+│   ├── controleur_class.php
+│   ├── gestion_home.php
+│   ├── gestion_login.php
+│   ├── gestion_register.php
+│   ├── gestion_logout.php
+│   ├── gestion_destinations.php
+│   ├── gestion_destination_detail.php
+│   ├── gestion_voyages.php
+│   ├── gestion_voyage_detail.php
+│   ├── gestion_offres.php
+│   ├── gestion_reservations.php
+│   ├── gestion_dashboard_client.php
+│   └── admin/
+│       ├── gestion_admin_destinations.php
+│       ├── gestion_admin_offres.php
+│       ├── gestion_admin_voyages.php
+│       └── gestion_admin_reservations.php
+│
+├── modele/
+│   ├── modele_class.php
+│   ├── destinationmodel.php
+│   ├── voyagemodel.php
+│   ├── offremodel.php
+│   ├── reservationmodel.php
+│   └── usermodel.php
+│
+├── vue/
+│   ├── layout.php
+│   ├── home.php
+│   ├── destinations.php
+│   ├── destination_detail.php
+│   ├── voyages.php
+│   ├── voyage_detail.php
+│   ├── offres.php
+│   ├── reservation.php
+│   ├── dashboard_client.php
+│   │
+│   ├── admin/
+│   │   ├── admin_destinations.php
+│   │   ├── admin_offres.php
+│   │   ├── admin_voyages.php
+│   │   └── admin_reservations.php
+│   │
+│   ├── components/
+│   │   ├── navbar.php
+│   │   ├── footer.php
+│   │   ├── carouseloffres.php
+│   │   ├── carouselvoyages.php
+│   │   ├── searchdestinations.php
+│   │   ├── searchoffres.php
+│   │   └── searchvoyages.php
+│   │
+│   └── modales/
+│       ├── login.php
+│       ├── register.php
+│       └── map.php
+│
+├── public/
+│   ├── icons/
+│   ├── images/
+│   │   ├── destinations/
+│   │   └── voyages/
+│   ├── js/
+│   └── style/
+│       ├── admin.css
+│       ├── page.css
+│       ├── responsive.css
+│       ├── root.css
+│       ├── style.css
+│       └── fonts/
+│

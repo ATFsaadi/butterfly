@@ -1,6 +1,17 @@
 <?php
 // vue/modales/login.php
 // session déjà démarrée dans index.php
+
+$redirect = (string)($_GET["redirect"] ?? "");
+$id_voyage_redirect = (int)($_GET["id_voyage"] ?? 0);
+
+$action = "index.php?page=login";
+if ($redirect !== "") {
+    $action .= "&redirect=" . urlencode($redirect);
+}
+if ($id_voyage_redirect > 0) {
+    $action .= "&id_voyage=" . $id_voyage_redirect;
+}
 ?>
 
 <div class="modal fade"
@@ -20,32 +31,37 @@
         <div class="auth-form">
           <h2>Connexion</h2>
 
-          <!-- message erreur -->
           <?php if (!empty($erreurLogin)): ?>
             <div class="alert alert-danger">
               <?= htmlspecialchars($erreurLogin) ?>
             </div>
           <?php endif; ?>
 
-          <!-- message succès (optionnel) -->
           <?php if (!empty($successLogin)): ?>
             <div class="alert alert-success">
               <?= htmlspecialchars($successLogin) ?>
             </div>
           <?php endif; ?>
 
-          <form method="POST" action="index.php?page=login">
+          <form method="POST" action="<?= htmlspecialchars($action) ?>">
 
-            <!-- CSRF -->
             <input type="hidden"
                    name="csrf_token"
                    value="<?= htmlspecialchars($_SESSION["csrf_token"] ?? "") ?>">
+
+            <input type="hidden"
+                   name="redirect"
+                   value="<?= htmlspecialchars((string)($_GET["redirect"] ?? "")) ?>">
+
+            <input type="hidden"
+                   name="id_voyage"
+                   value="<?= (int)($_GET["id_voyage"] ?? 0) ?>">
 
             <input type="email"
                    name="email"
                    placeholder="Adresse email"
                    required
-                   value="<?= htmlspecialchars($_POST['email'] ?? '') ?>">
+                   value="<?= htmlspecialchars($_POST["email"] ?? "") ?>">
 
             <input type="password"
                    name="mdp"
@@ -99,8 +115,7 @@
   </div>
 </div>
 
-<!-- Réouverture automatique du modal si erreur -->
-<?php if (!empty($erreurLogin)): ?>
+<?php if (!empty($erreurLogin) || (($_GET["page"] ?? "") === "login")): ?>
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     const modal = new bootstrap.Modal(document.getElementById('loginModal'));

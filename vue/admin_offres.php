@@ -1,11 +1,7 @@
-<?php
-// vue/admin_offres.php
-?>
-
 <?php if (!empty($success)): ?>
   <div class="container mt-4">
     <div class="alert alert-success text-center">
-      <?= htmlspecialchars($success) ?>
+      <?= htmlspecialchars((string)$success) ?>
     </div>
   </div>
 <?php endif; ?>
@@ -13,9 +9,11 @@
 <?php if (!empty($errors)): ?>
   <div class="container mt-4">
     <div class="alert alert-danger">
-      <?php foreach ($errors as $err): ?>
-        <p class="mb-0"><?= htmlspecialchars((string)$err) ?></p>
-      <?php endforeach; ?>
+      <ul class="mb-0">
+        <?php foreach ($errors as $err): ?>
+          <li><?= htmlspecialchars((string)$err) ?></li>
+        <?php endforeach; ?>
+      </ul>
     </div>
   </div>
 <?php endif; ?>

@@ -4,16 +4,12 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// csrf token
-
 if (empty($_SESSION["csrf_token"])) {
     $_SESSION["csrf_token"] = bin2hex(random_bytes(32));
 }
 
-// logout post
-
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["logout"])) {
-    if (!hash_equals($_SESSION["csrf_token"], $_POST["csrf_token"] ?? "")) {
+    if (!hash_equals($_SESSION["csrf_token"], (string)($_POST["csrf_token"] ?? ""))) {
         die("csrf invalide");
     }
 
@@ -22,25 +18,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["logout"])) {
     exit();
 }
 
-// initialisation controleur
-
 require_once __DIR__ . "/controleur/controleur_class.php";
 $unControleur = new Controleur();
-
-// routage
 
 $page = $_GET["page"] ?? "home";
 $vue = "home.php";
 
 switch ($page) {
-
-    // pages publiques
-
-    
     case "login":
         require_once __DIR__ . "/controleur/gestion_login.php";
-        $vue = "login.php";
+        require_once __DIR__ . "/controleur/gestion_home.php";
+        $vue = "home.php";
         break;
+
 
     case "home":
         require_once __DIR__ . "/controleur/gestion_home.php";
@@ -62,12 +52,20 @@ switch ($page) {
         $vue = "destination_detail.php";
         break;
 
+    case "voyages":
+        require_once __DIR__ . "/controleur/gestion_voyages.php";
+        $vue = "voyages.php";
+        break;
+
+    case "voyage_detail":
+        require_once __DIR__ . "/controleur/gestion_voyage_detail.php";
+        $vue = "voyage_detail.php";
+        break;
+
     case "offres":
         require_once __DIR__ . "/controleur/gestion_offres.php";
         $vue = "offres.php";
         break;
-
-    // pages client
 
     case "reservation":
         $unControleur->verifConnexion();
@@ -81,8 +79,6 @@ switch ($page) {
         $vue = "dashboard_client.php";
         break;
 
-    // pages admin
-
     case "admin_offres":
         $unControleur->verifAdmin();
         require_once __DIR__ . "/controleur/gestion_admin_offres.php";
@@ -94,21 +90,23 @@ switch ($page) {
         require_once __DIR__ . "/controleur/gestion_admin_destinations.php";
         $vue = "admin_destinations.php";
         break;
-    
-     case "admin_reservations":
+
+    case "admin_reservations":
         $unControleur->verifAdmin();
-        require_once "controleur/gestion_admin_reservations.php";
+        require_once __DIR__ . "/controleur/gestion_admin_reservations.php";
         $vue = "admin_reservations.php";
         break;
 
-    // fallback
+    case "admin_voyages":
+        $unControleur->verifAdmin();
+        require_once __DIR__ . "/controleur/gestion_admin_voyages.php";
+        $vue = "admin_voyages.php";
+        break;
 
     default:
         require_once __DIR__ . "/controleur/gestion_home.php";
         $vue = "home.php";
         break;
 }
-
-// layout
 
 require_once __DIR__ . "/vue/layout.php";

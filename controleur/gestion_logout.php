@@ -1,8 +1,6 @@
 <?php
 
-// gestion de la deconnexion
-
-if (session_status() === PHP_SESSION_NONE) {
+if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
 
@@ -17,8 +15,8 @@ if (ini_get("session.use_cookies")) {
         time() - 42000,
         $params["path"],
         $params["domain"],
-        $params["secure"],
-        $params["httponly"]
+        $params["secure"] ?? false,
+        $params["httponly"] ?? true
     );
 }
 

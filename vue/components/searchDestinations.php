@@ -1,5 +1,10 @@
 <?php
 $q = trim((string)($_GET["q"] ?? ""));
+$page = (string)($_GET["page"] ?? "destinations");
+$allowed = ["home", "destinations", "offres", "voyages"];
+if (!in_array($page, $allowed, true)) {
+    $page = "destinations";
+}
 ?>
 
 <form
@@ -7,9 +12,8 @@ $q = trim((string)($_GET["q"] ?? ""));
     method="get"
     action="index.php"
 >
-    <input type="hidden" name="page" value="destinations">
+    <input type="hidden" name="page" value="<?= htmlspecialchars($page) ?>">
 
-    <!-- destination -->
     <div class="voyage-field">
         <label class="form-label">Destination</label>
         <input
@@ -21,14 +25,13 @@ $q = trim((string)($_GET["q"] ?? ""));
         >
     </div>
 
-    <!-- actions -->
     <div class="voyage-search-group">
         <button class="voyage-search-btn" type="submit">
             <span>rechercher</span>
             <img src="icons/loupe.png" class="search-icon" alt="search">
         </button>
 
-        <a class="voyage-reset-icon" href="index.php?page=destinations">
+        <a class="voyage-reset-icon" href="index.php?page=<?= htmlspecialchars($page) ?>">
             <img src="icons/reste.png" width="18" height="18" alt="reset">
         </a>
     </div>

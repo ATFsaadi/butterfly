@@ -1,36 +1,26 @@
 <?php
 
-// csrf token
-
 if (empty($_SESSION["csrf_token"])) {
     $_SESSION["csrf_token"] = bin2hex(random_bytes(32));
 }
 
-// page actuelle
-
 $pageActuelle = $_GET["page"] ?? "home";
-$continentActif = isset($_GET["continent"]) ? (int) $_GET["continent"] : 0;
+$continentActif = isset($_GET["continent"]) ? (int)$_GET["continent"] : 0;
 
 $notifReservations = 0;
-
-// prenom affichable
 
 $prenomAffiche =
     $_SESSION["user"]["prenom"]
     ?? $_SESSION["client"]["prenom"]
     ?? (($_SESSION["user"]["role"] ?? "") === "admin" ? "admin" : "");
 
-
 ?>
 
-<!-- navbar superieure -->
 <nav class="custom-navbar navbar-expand-lg">
     <div class="container-fluid d-flex justify-content-between" style="padding: 20px 100px;">
 
-        <!-- logo et bouton menu mobile -->
         <div class="d-flex align-items-center">
 
-            <!-- bouton menu mobile -->
             <button
                 class="navbar-toggler d-lg-none nav-link d-flex flex-column align-items-center"
                 type="button"
@@ -45,14 +35,12 @@ $prenomAffiche =
                 <span class="mt-1">menu</span>
             </button>
 
-            <!-- logo desktop -->
             <a href="index.php?page=home" class="navbar-brand logo-spacing d-none d-lg-flex">
-                <img src="icons/logo-1.png" alt="logo" class="logo-size">
+                <img src="icons/bfly-logo.png" alt="logo" class="logo-size">
             </a>
 
         </div>
 
-        <!-- actions utilisateur -->
         <div class="navbar-right">
             <ul class="navbar-nav flex-row align-items-center gap-3">
 
@@ -60,54 +48,6 @@ $prenomAffiche =
 
                     <?php if (($_SESSION["user"]["role"] ?? "") === "admin"): ?>
 
-                        <!-- menu admin -->
-
-                        <!-- destinations -->
-                        <li class="nav-item d-flex flex-column align-items-center nav-item-fixed">
-                            <a
-                                class="nav-link d-flex flex-column align-items-center <?= $pageActuelle === "admin_destinations" ? "active" : "" ?>"
-                                href="index.php?page=admin_destinations"
-                            >
-                                <span class="icon-circle">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15">
-                                        <path d="M12 2L15 8H9L12 2ZM12 22V12H2L12 22ZM22 12H12V2L22 12Z"/>
-                                    </svg>
-                                </span>
-                                <span class="mt-1">destinations</span>
-                            </a>
-                        </li>
-
-                        <!-- slides -->
-                        <li class="nav-item d-flex flex-column align-items-center nav-item-fixed">
-                            <a
-                                class="nav-link d-flex flex-column align-items-center <?= $pageActuelle === "admin_slides" ? "active" : "" ?>"
-                                href="index.php?page=admin_slides"
-                            >
-                                <span class="icon-circle">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15">
-                                        <path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 8h14v-2H7v2zm0-4h14v-2H7v2zm0-6v2h14V7H7z"/>
-                                    </svg>
-                                </span>
-                                <span class="mt-1">gestion slides</span>
-                            </a>
-                        </li>
-
-                        <!-- offres -->
-                        <li class="nav-item d-flex flex-column align-items-center nav-item-fixed">
-                            <a
-                                class="nav-link d-flex flex-column align-items-center <?= $pageActuelle === "admin_offres" ? "active" : "" ?>"
-                                href="index.php?page=admin_offres"
-                            >
-                                <span class="icon-circle">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15">
-                                        <path d="M12 2l9 4v6c0 5-4 9-9 10C7 21 3 17 3 12V6l9-4zm4 7H8v2h8V9zm0 4H8v2h8v-2z"/>
-                                    </svg>
-                                </span>
-                                <span class="mt-1">offres</span>
-                            </a>
-                        </li>
-
-                        <!-- reservations -->
                         <li class="nav-item d-flex flex-column align-items-center position-relative">
                             <a
                                 class="nav-link d-flex flex-column align-items-center <?= $pageActuelle === "admin_reservations" ? "active" : "" ?>"
@@ -123,16 +63,57 @@ $prenomAffiche =
                                             class="badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle"
                                             style="font-size:10px;"
                                         >
-                                            <?= (int) $notifReservations ?>
+                                            <?= (int)$notifReservations ?>
                                         </span>
                                     <?php endif; ?>
                                 </span>
 
-                                <span class="mt-1">réservations</span>
+                                <span class="mt-1">Réservations</span>
                             </a>
                         </li>
 
-                        <!-- deconnexion -->
+                        <li class="nav-item d-flex flex-column align-items-center nav-item-fixed">
+                            <a
+                                class="nav-link d-flex flex-column align-items-center <?= $pageActuelle === "admin_voyages" ? "active" : "" ?> <?= $pageActuelle === "admin_slides" ? "active" : "" ?>"
+                                href="index.php?page=admin_voyages"
+                            >
+                                <span class="icon-circle">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15">
+                                        <path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 8h14v-2H7v2zm0-4h14v-2H7v2zm0-6v2h14V7H7z"/>
+                                    </svg>
+                                </span>
+                                <span class="mt-1">Voyages</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item d-flex flex-column align-items-center nav-item-fixed">
+                            <a
+                                class="nav-link d-flex flex-column align-items-center <?= $pageActuelle === "admin_destinations" ? "active" : "" ?>"
+                                href="index.php?page=admin_destinations"
+                            >
+                                <span class="icon-circle">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15">
+                                        <path d="M12 2L15 8H9L12 2ZM12 22V12H2L12 22ZM22 12H12V2L22 12Z"/>
+                                    </svg>
+                                </span>
+                                <span class="mt-1">Destinations</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item d-flex flex-column align-items-center nav-item-fixed">
+                            <a
+                                class="nav-link d-flex flex-column align-items-center <?= $pageActuelle === "admin_offres" ? "active" : "" ?>"
+                                href="index.php?page=admin_offres"
+                            >
+                                <span class="icon-circle">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15">
+                                        <path d="M12 2l9 4v6c0 5-4 9-9 10C7 21 3 17 3 12V6l9-4zm4 7H8v2h8V9zm0 4H8v2h8v-2z"/>
+                                    </svg>
+                                </span>
+                                <span class="mt-1">Offres</span>
+                            </a>
+                        </li>
+
                         <li class="nav-item d-flex flex-column align-items-center nav-item-fixed">
                             <form
                                 method="post"
@@ -140,7 +121,7 @@ $prenomAffiche =
                                 class="nav-link d-flex flex-column align-items-center m-0 p-0"
                                 style="background:none; border:0;"
                             >
-                                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION["csrf_token"]) ?>">
+                                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars((string)$_SESSION["csrf_token"]) ?>">
                                 <button
                                     type="submit"
                                     name="logout"
@@ -157,16 +138,12 @@ $prenomAffiche =
                             </form>
                         </li>
 
-                        <!-- prenom -->
                         <li class="nav-item d-flex flex-column align-items-center nav-item-fixed">
-                            <span class="nav-link"><?= htmlspecialchars($prenomAffiche) ?></span>
+                            <span class="nav-link"><?= htmlspecialchars((string)$prenomAffiche) ?></span>
                         </li>
 
                     <?php else: ?>
 
-                        <!-- menu client connecte -->
-
-                        <!-- mes reservations -->
                         <li class="nav-item d-flex flex-column align-items-center nav-item-fixed">
                             <a
                                 class="nav-link d-flex flex-column align-items-center <?= $pageActuelle === "dashboard_client" ? "active" : "" ?>"
@@ -181,7 +158,6 @@ $prenomAffiche =
                             </a>
                         </li>
 
-                        <!-- deconnexion -->
                         <li class="nav-item d-flex flex-column align-items-center nav-item-fixed">
                             <form
                                 method="post"
@@ -189,7 +165,7 @@ $prenomAffiche =
                                 class="nav-link d-flex flex-column align-items-center m-0 p-0"
                                 style="background:none; border:0;"
                             >
-                                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION["csrf_token"]) ?>">
+                                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars((string)$_SESSION["csrf_token"]) ?>">
                                 <button
                                     type="submit"
                                     name="logout"
@@ -206,18 +182,14 @@ $prenomAffiche =
                             </form>
                         </li>
 
-                        <!-- prenom -->
                         <li class="nav-item d-flex flex-column align-items-center nav-item-fixed">
-                            <span class="nav-link"><?= htmlspecialchars($prenomAffiche) ?></span>
+                            <span class="nav-link"><?= htmlspecialchars((string)$prenomAffiche) ?></span>
                         </li>
 
                     <?php endif; ?>
 
                 <?php else: ?>
 
-                    <!-- menu visiteur -->
-
-                    <!-- notre agence -->
                     <li class="nav-item d-flex flex-column align-items-center d-none d-lg-block nav-item-fixed">
                         <a class="nav-link d-flex flex-column align-items-center" href="#" onclick="openAgenceMap(); return false;">
                             <span class="icon-circle">
@@ -229,7 +201,6 @@ $prenomAffiche =
                         </a>
                     </li>
 
-                    <!-- a propos -->
                     <li class="nav-item d-flex flex-column align-items-center d-none d-lg-block nav-item-fixed">
                         <a class="nav-link d-flex flex-column align-items-center" href="index.php?page=about">
                             <span class="icon-circle">
@@ -241,7 +212,6 @@ $prenomAffiche =
                         </a>
                     </li>
 
-                    <!-- bouton connexion -->
                     <li class="nav-item d-flex flex-column align-items-center nav-item-fixed">
                         <button
                             class="nav-link signin-nav-link d-flex flex-column align-items-center btn p-0"
@@ -257,7 +227,6 @@ $prenomAffiche =
                         </button>
                     </li>
 
-                    <!-- bouton inscription -->
                     <li class="nav-item d-flex flex-column align-items-center nav-item-fixed">
                         <button
                             class="nav-link d-flex flex-column align-items-center btn p-0"
@@ -281,20 +250,23 @@ $prenomAffiche =
     </div>
 </nav>
 
-<!-- menu principal sticky -->
 <div class="custom-navbar navbar-expand-lg navbar-light bg-white sticky-top">
     <div class="container-fluid">
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mx-auto">
 
-                <!-- lien destinations -->
                 <li class="nav-item me-4">
                     <a class="nav-link <?= $pageActuelle === "destinations" ? "active" : "" ?>" href="index.php?page=destinations">
                         <i class="fas fa-map-marked-alt nav-icon"></i> Destinations
                     </a>
                 </li>
 
-                <!-- lien offres -->
+                <li class="nav-item me-4">
+                    <a class="nav-link <?= $pageActuelle === "voyages" ? "active" : "" ?>" href="index.php?page=voyages">
+                        <i class="fas fa-route nav-icon"></i> Voyages
+                    </a>
+                </li>
+
                 <li class="nav-item me-4">
                     <a class="nav-link <?= $pageActuelle === "offres" ? "active" : "" ?>" href="index.php?page=offres">
                         <i class="fas fa-tags nav-icon"></i> Offres

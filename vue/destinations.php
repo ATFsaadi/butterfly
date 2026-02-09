@@ -2,15 +2,13 @@
 $destinations = $destinations ?? [];
 ?>
 
-<div
-    id="voyageBar">
-    
+<div id="voyageBar">
     <?php require_once __DIR__ . "/components/searchDestinations.php"; ?>
 </div>
 
 <div class="container mt-4">
 
-        <h3 class="section-title text-center mt-5">Destinations en cours</h3>
+    <h3 class="section-title text-center mt-5">destinations en cours</h3>
 
     <?php if (empty($destinations)): ?>
         <div class="alert alert-info">aucune destination trouvée.</div>
@@ -42,6 +40,10 @@ $destinations = $destinations ?? [];
                                 alt="<?= htmlspecialchars($alt) ?>"
                                 style="height:180px; object-fit:cover;"
                             >
+                        <?php else: ?>
+                            <div class="d-flex align-items-center justify-content-center bg-light" style="height:180px;">
+                                <span class="text-muted">aucune image</span>
+                            </div>
                         <?php endif; ?>
 
                         <div class="card-body">
@@ -59,12 +61,34 @@ $destinations = $destinations ?? [];
                                 <span class="text-muted">(prix base)</span>
                             </div>
 
-                            <a
-                                class="btn btn-outline-primary"
-                                href="index.php?page=destination_detail&id_destination=<?= $id ?>"
-                            >
-                                voir détail
-                            </a>
+                            <?php if ($id > 0): ?>
+    <div class="d-flex justify-content-center gap-2">
+
+        <a
+            class="btn btn-outline-primary btn-sm flex-fill text-center px-3"
+            style="max-width:140px"
+            href="index.php?page=destination_detail&id_destination=<?= $id ?>"
+        >
+            voir détail
+        </a>
+
+        <a
+            class="btn btn-success btn-sm flex-fill text-center px-3"
+            style="max-width:140px"
+            href="index.php?page=destination_detail&id_destination=<?= $id ?>"
+        >
+            réserver
+        </a>
+
+    </div>
+<?php else: ?>
+    <div class="d-flex justify-content-center">
+        <button class="btn btn-secondary btn-sm px-3" disabled>
+            indisponible
+        </button>
+    </div>
+<?php endif; ?>
+
 
                         </div>
 

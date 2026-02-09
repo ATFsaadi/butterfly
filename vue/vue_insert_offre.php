@@ -2,102 +2,112 @@
 $destinations = $destinations ?? [];
 $offre = $offre ?? null;
 
-// mode edition
 $isEdit = ($offre !== null);
 
-$idOffre = (int) ($offre["id_offre"] ?? 0);
-$idOffreDestination = (int) ($offre["id_destination"] ?? 0);
+$idOffre = (int)($offre["id_offre"] ?? 0);
+$idOffreDestination = (int)($offre["id_destination"] ?? 0);
 
-$titre = $offre["titre"] ?? "";
-$reduc = (int) ($offre["pourcentage_reduction"] ?? 0);
-$dateDebut = $offre["date_debut"] ?? "";
-$dateFin = $offre["date_fin"] ?? "";
-$isActif = ((int) ($offre["actif"] ?? 1) === 1);
+$titre = (string)($offre["titre"] ?? "");
+$reduc = (int)($offre["pourcentage_reduction"] ?? 0);
+$dateDebut = (string)($offre["date_debut"] ?? "");
+$dateFin = (string)($offre["date_fin"] ?? "");
+$isActif = ((int)($offre["actif"] ?? 1) === 1);
 ?>
 
 <h3 class="section-title text-center mt-5">Gestion des Offres</h3>
 
 <form action="" method="post" class="mb-4">
 
-    <!-- hidden id si edit -->
-    <input type="hidden" name="id_offre" value="<?= htmlspecialchars((string) $idOffre) ?>">
+    <input type="hidden" name="id_offre" value="<?= htmlspecialchars((string)$idOffre) ?>">
 
-    <!-- destination -->
-    <select name="id_destination" class="form-control mb-2" required>
-        <option value="">-- choisir une destination --</option>
+    <!-- ===== COLONNE UNIQUE CENTRÉE ===== -->
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-6 col-xl-5">
 
-        <?php foreach ($destinations as $d): ?>
-            <?php
-            $idDest = (int) ($d["id_destination"] ?? 0);
-            $labelDest = trim(($d["pays"] ?? "") . " - " . ($d["ville"] ?? ""));
-            $selected = ($isEdit && $idOffreDestination === $idDest) ? "selected" : "";
-            ?>
-            <option value="<?= $idDest ?>" <?= $selected ?>>
-                <?= htmlspecialchars($labelDest) ?>
-            </option>
-        <?php endforeach; ?>
-    </select>
+            <select name="id_destination" class="form-control mb-2" required>
+                <option value="">-- choisir une destination --</option>
 
-    <!-- titre -->
-    <input
-        type="text"
-        name="titre"
-        placeholder="titre"
-        required
-        class="form-control mb-2"
-        value="<?= htmlspecialchars($titre) ?>"
-    >
+                <?php foreach ($destinations as $d): ?>
+                    <?php
+                    $idDest = (int)($d["id_destination"] ?? 0);
+                    $labelDest = trim((string)($d["pays"] ?? "") . " - " . (string)($d["ville"] ?? ""), " -");
+                    $selected = ($isEdit && $idOffreDestination === $idDest) ? "selected" : "";
+                    ?>
+                    <option value="<?= $idDest ?>" <?= $selected ?>>
+                        <?= htmlspecialchars($labelDest) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
 
-    <!-- reduction -->
-    <input
-        type="number"
-        name="pourcentage_reduction"
-        placeholder="réduction (%)"
-        required
-        min="0"
-        max="100"
-        class="form-control mb-2"
-        value="<?= htmlspecialchars((string) $reduc) ?>"
-    >
+            <input
+                type="text"
+                name="titre"
+                placeholder="titre"
+                required
+                class="form-control mb-2"
+                value="<?= htmlspecialchars($titre) ?>"
+                maxlength="150"
+            >
 
-    <!-- dates -->
-    <input
-        type="date"
-        name="date_debut"
-        required
-        class="form-control mb-2"
-        value="<?= htmlspecialchars($dateDebut) ?>"
-    >
+            <input
+                type="number"
+                name="pourcentage_reduction"
+                placeholder="réduction (%)"
+                required
+                min="0"
+                max="100"
+                class="form-control mb-2"
+                value="<?= htmlspecialchars((string)$reduc) ?>"
+            >
 
-    <input
-        type="date"
-        name="date_fin"
-        required
-        class="form-control mb-2"
-        value="<?= htmlspecialchars($dateFin) ?>"
-    >
+            <div class="row g-2">
+                <div class="col-12 col-md-6">
+                    <input
+                        type="date"
+                        name="date_debut"
+                        required
+                        class="form-control mb-2"
+                        value="<?= htmlspecialchars($dateDebut) ?>"
+                    >
+                </div>
+                <div class="col-12 col-md-6">
+                    <input
+                        type="date"
+                        name="date_fin"
+                        required
+                        class="form-control mb-2"
+                        value="<?= htmlspecialchars($dateFin) ?>"
+                    >
+                </div>
+            </div>
 
-    <!-- actif (checkbox comme destinations) -->
-    <div class="form-check mb-3 mt-2">
-        <input
-            class="form-check-input"
-            type="checkbox"
-            value="1"
-            id="actif"
-            name="actif"
-            <?= $isActif ? "checked" : "" ?>
-        >
-        <label class="form-check-label" for="actif">offre active</label>
-    </div>
+            <!-- ===== SWITCH ACTIF ===== -->
+            <div class="form-check form-switch mt-2">
+                <input
+                    class="form-check-input"
+                    type="checkbox"
+                    role="switch"
+                    value="1"
+                    id="actif_offre"
+                    name="actif"
+                    <?= $isActif ? "checked" : "" ?>
+                >
+                <label class="form-check-label" for="actif_offre">
+                    offre active
+                </label>
+            </div>
 
-    <div class="d-flex justify-content-center">
-        <button
-            type="submit"
-            name="<?= $isEdit ? "Modifier" : "Valider" ?>"
-            class="btn btn-primary"
-        >
-            <?= $isEdit ? "modifier l'offre" : "ajouter l'offre" ?>
-        </button>
+            <div class="d-flex justify-content-center mt-4">
+                <button
+                    type="submit"
+                    name="<?= $isEdit ? "Modifier" : "Valider" ?>"
+                    class="btn btn-primary px-5"
+                >
+                    <?= $isEdit ? "modifier l'offre" : "ajouter l'offre" ?>
+                </button>
+            </div>
+
+        </div>
     </div>
 
 </form>

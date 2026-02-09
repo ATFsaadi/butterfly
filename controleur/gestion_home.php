@@ -1,13 +1,9 @@
 <?php
 
-// donnees pour la page d'accueil
-
-$slides = $unControleur->selectAll_slides_actifs();
+$voyages = $unControleur->selectAll_voyages_actifs();
 $offres = $unControleur->selectAll_offres_actives();
 $destinations = $unControleur->selectAll_destinations();
 $villesDepart = [];
-
-// message apres inscription
 
 $successRegister = "";
 $openLoginAfterRegister = false;

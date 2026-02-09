@@ -8,9 +8,9 @@ $lesOffres = $lesOffres ?? ($offres ?? []);
     <input
         type="text"
         name="filtre"
-        placeholder="filtrer (titre / pays / ville)"
+        placeholder="filtrer (titre / pays / ville / continent)"
         class="form-control mb-2"
-        value="<?= htmlspecialchars($_POST["filtre"] ?? "") ?>"
+        value="<?= htmlspecialchars((string)($_POST["filtre"] ?? "")) ?>"
     >
 
     <div class="d-flex justify-content-center">
@@ -19,7 +19,7 @@ $lesOffres = $lesOffres ?? ($offres ?? []);
 </form>
 
 <div class="container mt-4">
-    <table class="table table-bordered">
+    <table class="table table-bordered align-middle">
         <thead>
             <tr>
                 <th>id</th>
@@ -38,16 +38,20 @@ $lesOffres = $lesOffres ?? ($offres ?? []);
                 <?php foreach ($lesOffres as $o): ?>
 
                     <?php
-                    $idOffre = (int) ($o["id_offre"] ?? 0);
-                    $titre = $o["titre"] ?? "";
-                    $pays = $o["pays"] ?? "";
-                    $ville = $o["ville"] ?? "";
+                    $idOffre = (int)($o["id_offre"] ?? 0);
+                    $titre = (string)($o["titre"] ?? "");
+                    $pays = (string)($o["pays"] ?? "");
+                    $ville = (string)($o["ville"] ?? "");
+                    $continent = (string)($o["continent"] ?? "");
                     $destinationTexte = trim($pays . " - " . $ville, " -");
+                    if ($continent !== "") {
+                        $destinationTexte .= " (" . $continent . ")";
+                    }
 
-                    $reduc = (int) ($o["pourcentage_reduction"] ?? 0);
-                    $dateDebut = $o["date_debut"] ?? "";
-                    $dateFin = $o["date_fin"] ?? "";
-                    $actif = ((int) ($o["actif"] ?? 0) === 1);
+                    $reduc = (int)($o["pourcentage_reduction"] ?? 0);
+                    $dateDebut = (string)($o["date_debut"] ?? "");
+                    $dateFin = (string)($o["date_fin"] ?? "");
+                    $actif = ((int)($o["actif"] ?? 0) === 1);
                     ?>
 
                     <tr>
@@ -59,7 +63,8 @@ $lesOffres = $lesOffres ?? ($offres ?? []);
                         <td><?= htmlspecialchars($dateFin) ?></td>
                         <td><?= $actif ? "oui" : "non" ?></td>
 
-                        <td>
+                      <td>
+                        <div class="d-flex gap-2 justify-content-center">
                             <a
                                 href="index.php?page=admin_offres&action=edit&id_offre=<?= $idOffre ?>"
                                 class="btn btn-warning btn-sm"
@@ -74,7 +79,9 @@ $lesOffres = $lesOffres ?? ($offres ?? []);
                             >
                                 supprimer
                             </a>
-                        </td>
+                        </div>
+                    </td>
+
                     </tr>
 
                 <?php endforeach; ?>

@@ -4,11 +4,9 @@ $unControleur->verifAdmin();
 
 $offre = null;
 
-// actions get
-
 if (isset($_GET["action"], $_GET["id_offre"])) {
     $action = $_GET["action"];
-    $id_offre = (int) $_GET["id_offre"];
+    $id_offre = (int)$_GET["id_offre"];
 
     if ($action === "sup") {
         $unControleur->delete_offre($id_offre);
@@ -21,29 +19,41 @@ if (isset($_GET["action"], $_GET["id_offre"])) {
     }
 }
 
-// donnees pour select
-
-$destinations = $unControleur->selectAll_destinations();
-
-// actions post
+$destinations = $unControleur->selectAll_destinations_admin();
 
 if (isset($_POST["Valider"])) {
-    $unControleur->insert_offre($_POST);
-    echo '<div style="text-align:center; color:green; font-weight:bold;">&#10004; offre ajoutée.</div>';
-}
+    $tab = [
+        "id_destination" => (int)($_POST["id_destination"] ?? 0),
+        "titre" => trim((string)($_POST["titre"] ?? "")),
+        "pourcentage_reduction" => (int)($_POST["pourcentage_reduction"] ?? 0),
+        "date_debut" => $_POST["date_debut"] ?? "",
+        "date_fin" => $_POST["date_fin"] ?? "",
+    ];
 
-if (isset($_POST["Modifier"])) {
-    $unControleur->update_offre($_POST);
+    $unControleur->insert_offre($tab);
     header("location: index.php?page=admin_offres");
     exit();
 }
 
-// liste et filtre
+if (isset($_POST["Modifier"])) {
+    $tab = [
+        "id_offre" => (int)($_POST["id_offre"] ?? 0),
+        "id_destination" => (int)($_POST["id_destination"] ?? 0),
+        "titre" => trim((string)($_POST["titre"] ?? "")),
+        "pourcentage_reduction" => (int)($_POST["pourcentage_reduction"] ?? 0),
+        "date_debut" => $_POST["date_debut"] ?? "",
+        "date_fin" => $_POST["date_fin"] ?? "",
+        "actif" => isset($_POST["actif"]) ? 1 : 0,
+    ];
+
+    $unControleur->update_offre($tab);
+    header("location: index.php?page=admin_offres");
+    exit();
+}
 
 if (isset($_POST["Filtrer"])) {
-    $filtre = $_POST["filtre"] ?? "";
-    $lesOffres = $unControleur->selectLike_offre($filtre);
+    $filtre = trim((string)($_POST["filtre"] ?? ""));
+    $lesOffres = $filtre !== "" ? $unControleur->selectLike_offre($filtre) : $unControleur->selectAll_offres();
 } else {
     $lesOffres = $unControleur->selectAll_offres();
 }
-

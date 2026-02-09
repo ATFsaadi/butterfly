@@ -1,7 +1,7 @@
 /* font face */
 @font-face {
-    font-family: 'Brown Pen';
-    src: url('fonts/BrownPen.ttf') format('truetype');
+    font-family: "Brown Pen";
+    src: url("fonts/BrownPen.ttf") format("truetype");
     font-weight: normal;
     font-style: normal;
     font-display: swap;
@@ -9,29 +9,29 @@
 
 /* variables */
 :root {
-    --primary-color: #F27438;     
-    --secondary-color: #007F8C;    
-    --text-color: #2C3E50;         
-    --muted-color: #7FA7A9;        
-    --bg-light: #F4F9F9;           
-    --border-color: #DCE6E6;       
-    --border-radius: 14px;         
-    --btn-radius: 50rem;           
+    --primary-color: #f27438;
+    --secondary-color: #007f8c;
+    --text-color: #2c3e50;
+    --muted-color: #7fa7a9;
+    --bg-light: #f4f9f9;
+    --border-color: #dce6e6;
+    --border-radius: 14px;
+    --btn-radius: 50rem;
     --shadow: 0 8px 20px rgba(0, 127, 140, 0.15);
 }
 
-/* body */
+/* base */
 body {
     font-family: "Poiret One", sans-serif;
     font-weight: bold;
-    background-color: white;
+    background-color: #fff;
     margin: 0;
     padding: 0;
 }
 
 /* titres */
 h1 {
-    font-family: 'Brown Pen';
+    font-family: "Brown Pen";
     font-weight: 100;
     font-size: 50px;
     color: var(--text-color);
@@ -53,15 +53,15 @@ h6 {
     margin-left: 0;
 }
 
-/* navbar */
+/* navbar container */
 nav.custom-navbar {
     padding: 0;
     background-color: #fff;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
     z-index: 1050;
 }
 
-/* liste navbar */
+/* navbar liste */
 .navbar-nav {
     display: flex;
     justify-content: center;
@@ -70,12 +70,12 @@ nav.custom-navbar {
     margin-right: 0;
 }
 
-/* item navbar */
+/* navbar item */
 .navbar-nav .nav-item {
     margin: 0;
 }
 
-/* liens navbar */
+/* navbar link */
 .nav-link {
     font-size: 15px;
     color: var(--secondary-color);
@@ -86,15 +86,17 @@ nav.custom-navbar {
     justify-content: center;
     gap: 0.5rem;
     position: relative;
+    background: transparent !important;
+    box-shadow: none !important;
 }
 
-/* hover liens navbar */
+/* navbar link hover */
 .nav-link:hover {
     color: var(--primary-color);
     background: transparent;
 }
 
-/* icones navbar */
+/* navbar icone */
 .icon-circle {
     display: flex;
     justify-content: center;
@@ -109,30 +111,30 @@ nav.custom-navbar {
     transition: var(--transition);
 }
 
-/* svg icones */
+/* navbar svg */
 .icon-circle svg {
     fill: var(--secondary-color);
     transition: fill 0.3s ease;
 }
 
-/* hover icones */
+/* navbar icone hover */
 .icon-circle:hover {
     transform: scale(1.1);
     background: #f0f8ff;
     border-color: var(--text-color);
 }
 
-/* hover svg icones */
+/* navbar svg hover */
 .icon-circle:hover svg {
     fill: var(--primary-color);
 }
 
-/* separateur navbar */
+/* separateur navbar (menu bas) */
 #navbarNav {
     border-bottom: 0.5px solid var(--primary-color);
 }
 
-/* dropdown container */
+/* dropdown */
 .navbar-nav .dropdown {
     position: relative;
 }
@@ -153,9 +155,9 @@ nav.custom-navbar {
     transition: background 0.3s ease, color 0.3s ease;
 }
 
-/* hover dropdown item */
+/* dropdown item hover */
 .navbar-nav .dropdown-item:hover {
-    background-color: rgba(255,179,71,0.1);
+    background-color: rgba(255, 179, 71, 0.1);
     color: var(--primary-color);
 }
 
@@ -166,6 +168,26 @@ nav.custom-navbar {
         transform: none !important;
         width: 100%;
     }
+}
+
+/* alignement icones navbar du haut */
+nav.custom-navbar .navbar-right .nav-item-fixed {
+    width: 95px;
+}
+
+nav.custom-navbar .navbar-right .nav-link,
+nav.custom-navbar .navbar-right form.nav-link,
+nav.custom-navbar .navbar-right form.nav-link button {
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+
+nav.custom-navbar .navbar-right .mt-1 {
+    font-size: 12px;
+    line-height: 1.1;
+    min-height: 28px;
+    text-align: center;
 }
 
 /* modale */
@@ -179,21 +201,21 @@ nav.custom-navbar {
     height: 100%;
     background-color: rgba(0, 0, 0, 0.6);
     backdrop-filter: blur(5px);
-    animation: fadeInModal 0.4s ease;
+    animation: fadeinmodal 0.4s ease;
     overflow: auto;
 }
 
 /* contenu modale */
 .modal-content {
     position: relative;
-    background: white;
+    background: #fff;
     margin: 5% auto;
     padding: 30px;
     width: 90%;
     max-width: 800px;
     border-radius: 20px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
-    animation: slideInModal 0.4s ease;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+    animation: slideinmodal 0.4s ease;
     max-height: 90vh;
 }
 
@@ -227,33 +249,33 @@ nav.custom-navbar {
     z-index: 10;
 }
 
-/* hover bouton fermer */
+/* bouton fermer hover */
 .close:hover {
     color: var(--primary-color);
     background: #f0f8ff;
     transform: scale(1.1);
 }
 
-/* carte map */
+/* map */
 #map {
     width: 100%;
     height: 400px;
     border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 /* animations */
-@keyframes fadeInModal {
+@keyframes fadeinmodal {
     from { opacity: 0; }
     to { opacity: 1; }
 }
 
-@keyframes slideInModal {
+@keyframes slideinmodal {
     from { transform: translateY(-60px); opacity: 0; }
     to { transform: translateY(0); opacity: 1; }
 }
 
-@keyframes fadeIn {
+@keyframes fadein {
     from { opacity: 0; transform: translateY(-10px); }
     to { opacity: 1; transform: translateY(0); }
 }
@@ -274,12 +296,11 @@ a:hover img {
     margin: 0 auto;
 }
 
-/* footer map */
+/* footer map hover */
 #footerMap {
     transition: transform 0.2s ease;
 }
 
-/* hover footer map */
 #footerMap:hover {
     transform: scale(1.02);
 }
@@ -287,7 +308,7 @@ a:hover img {
 /* footer */
 footer {
     background-color: var(--secondary-color) !important;
-    color: #ffffff;
+    color: #fff;
     padding-top: 40px;
     margin-top: 50px;
 }
@@ -301,11 +322,11 @@ footer h5 {
 
 /* footer liens */
 footer a {
-    color: #ffffff;
+    color: #fff;
     transition: color 0.3s ease;
 }
 
-/* hover footer liens */
+/* footer liens hover */
 footer a:hover {
     color: var(--primary-color);
     text-decoration: none;
@@ -321,7 +342,7 @@ footer i.fab {
     transition: transform 0.3s ease, color 0.3s ease;
 }
 
-/* hover footer icones */
+/* footer icones hover */
 footer i.fab:hover {
     transform: scale(1.2);
     color: var(--primary-color);
@@ -339,10 +360,3 @@ footer .text-center {
     color: #d4d4d4;
     padding-bottom: 20px;
 }
-
-/* navlink fond */
-.nav-link {
-    background: transparent !important;
-    box-shadow: none !important;
-}
-
