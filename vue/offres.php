@@ -79,23 +79,45 @@ $offres = $offres ?? [];
 
                             <div class="mt-3 d-flex justify-content-center gap-2">
 
-    <a
-        class="btn btn-outline-primary btn-sm flex-fill text-center px-3"
-        style="max-width:160px"
-        href="index.php?page=destination_detail&id_destination=<?= $idDest ?>"
-    >
-        voir destination
-    </a>
+    <?php if (!empty($_SESSION["user"])): ?>
+        <!-- UTILISATEUR CONNECTÉ -->
+        <a
+            class="btn btn-outline-primary btn-sm flex-fill text-center px-3"
+            style="max-width:160px"
+            href="index.php?page=destination_detail&id_destination=<?= (int)$idDest ?>"
+        >
+            voir destination
+        </a>
 
-    <a
-        class="btn btn-success btn-sm flex-fill text-center px-3"
-        style="max-width:160px"
-        href="index.php?page=destination_detail&id_destination=<?= $idDest ?>"
-    >
-        réserver
-    </a>
+        <a
+            class="btn btn-success btn-sm flex-fill text-center px-3"
+            style="max-width:160px"
+            href="index.php?page=destination_detail&id_destination=<?= (int)$idDest ?>"
+        >
+            réserver
+        </a>
+
+    <?php else: ?>
+        <!-- UTILISATEUR NON CONNECTÉ -->
+        <a
+            class="btn btn-outline-primary btn-sm flex-fill text-center px-3"
+            style="max-width:160px"
+            href="index.php?page=login&redirect=destination_detail&id_destination=<?= (int)$idDest ?>"
+        >
+            voir destination
+        </a>
+
+        <a
+            class="btn btn-success btn-sm flex-fill text-center px-3"
+            style="max-width:160px"
+            href="index.php?page=login&redirect=destination_detail&id_destination=<?= (int)$idDest ?>"
+        >
+            réserver
+        </a>
+    <?php endif; ?>
 
 </div>
+
 
 
                         </div>

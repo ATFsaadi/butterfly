@@ -85,25 +85,26 @@
         détails
     </a>
 
-    <?php if ($statut === "actif" && $places > 0): ?>
+   <?php if ($statut === "actif" && $places > 0): ?>
 
-        <?php if (!empty($_SESSION["user"])): ?>
-            <a
-                href="index.php?page=reservation&id_voyage=<?= $idVoyage ?>"
-                class="btn btn-light rounded-pill px-4 mt-2"
-            >
-                réserver
-            </a>
-        <?php else: ?>
-            <a
-                href="index.php?page=login&redirect=reservation&id_voyage=<?= $idVoyage ?>"
-                class="btn btn-light rounded-pill px-4 mt-2"
-            >
-                réserver
-            </a>
-        <?php endif; ?>
-
+    <?php if (!empty($_SESSION["user"])): ?>
+        <a
+            href="index.php?page=reservation&id_voyage=<?= (int)$idVoyage ?>"
+            class="btn btn-light rounded-pill px-4 mt-2"
+        >
+            réserver
+        </a>
+    <?php else: ?>
+        <a
+            href="index.php?page=login&redirect=reservation&id_voyage=<?= (int)$idVoyage ?>"
+            class="btn btn-light rounded-pill px-4 mt-2"
+        >
+            réserver
+        </a>
     <?php endif; ?>
+
+<?php endif; ?>
+
 
 </div>
 

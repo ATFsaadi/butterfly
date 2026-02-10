@@ -94,22 +94,36 @@
                                 <?php endif; ?>
 
                                 <?php if ($idDestination > 0): ?>
-                                    <a
-  href="index.php?page=destination_detail&id_destination=<?= $idDestination ?>"
-  class="btn btn-outline-light rounded-pill px-4 mt-2 position-relative"
-  style="z-index: 9999;"
->
-  voir
-</a>
 
-                                <?php else: ?>
-                                    <a
-                                        href="index.php?page=offres"
-                                        class="btn btn-outline-light rounded-pill px-4 mt-2"
-                                    >
-                                        voir les offres
-                                    </a>
-                                <?php endif; ?>
+    <?php if (!empty($_SESSION["user"])): ?>
+        <!-- UTILISATEUR CONNECTÉ -->
+        <a
+            href="index.php?page=destination_detail&id_destination=<?= (int)$idDestination ?>"
+            class="btn btn-outline-light rounded-pill px-4 mt-2 position-relative"
+            style="z-index: 9999;"
+        >
+            voir
+        </a>
+    <?php else: ?>
+        <!-- UTILISATEUR NON CONNECTÉ -->
+        <a
+            href="index.php?page=login&redirect=destination_detail&id_destination=<?= (int)$idDestination ?>"
+            class="btn btn-outline-light rounded-pill px-4 mt-2 position-relative"
+            style="z-index: 9999;"
+        >
+            voir
+        </a>
+    <?php endif; ?>
+
+<?php else: ?>
+    <a
+        href="index.php?page=offres"
+        class="btn btn-outline-light rounded-pill px-4 mt-2"
+    >
+        voir les offres
+    </a>
+<?php endif; ?>
+
 
                             </div>
                         </div>

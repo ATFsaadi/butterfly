@@ -76,36 +76,61 @@ $voyages = $voyages ?? [];
                             <div class="mb-2">
                                 <?= $places ?> place(s) restante(s)
                             </div>
+<div class="d-flex justify-content-center gap-2">
 
-                           <div class="d-flex justify-content-center gap-2">
+    <!-- BOUTON VOIR DÉTAIL -->
+    <?php if (!empty($_SESSION["user"])): ?>
+        <a
+            class="btn btn-outline-primary btn-sm px-3 flex-fill text-center"
+            href="index.php?page=voyage_detail&id_voyage=<?= (int)$id ?>"
+            style="max-width:140px"
+        >
+            voir détail
+        </a>
+    <?php else: ?>
+        <a
+            class="btn btn-outline-primary btn-sm px-3 flex-fill text-center"
+            href="index.php?page=login&redirect=voyage_detail&id_voyage=<?= (int)$id ?>"
+            style="max-width:140px"
+        >
+            voir détail
+        </a>
+    <?php endif; ?>
 
-                                <a
-                                    class="btn btn-outline-primary btn-sm px-3 flex-fill text-center"
-                                    href="index.php?page=voyage_detail&id_voyage=<?= $id ?>"
-                                    style="max-width:140px"
-                                >
-                                    voir détail
-                                </a>
 
-                                <?php if ($statut === "actif" && $places > 0): ?>
-                                    <a
-                                        class="btn btn-success btn-sm px-3 flex-fill text-center"
-                                        href="index.php?page=reservation&id_voyage=<?= $id ?>"
-                                        style="max-width:140px"
-                                    >
-                                        réserver
-                                    </a>
-                                <?php else: ?>
-                                    <button
-                                        class="btn btn-secondary btn-sm px-3 flex-fill text-center"
-                                        style="max-width:140px"
-                                        disabled
-                                    >
-                                        non réservable
-                                    </button>
-                                <?php endif; ?>
+    <!-- BOUTON RÉSERVER -->
+    <?php if ($statut === "actif" && $places > 0): ?>
 
-                            </div>
+        <?php if (!empty($_SESSION["user"])): ?>
+            <a
+                class="btn btn-success btn-sm px-3 flex-fill text-center"
+                href="index.php?page=reservation&id_voyage=<?= (int)$id ?>"
+                style="max-width:140px"
+            >
+                réserver
+            </a>
+        <?php else: ?>
+            <a
+                class="btn btn-success btn-sm px-3 flex-fill text-center"
+                href="index.php?page=login&redirect=reservation&id_voyage=<?= (int)$id ?>"
+                style="max-width:140px"
+            >
+                réserver
+            </a>
+        <?php endif; ?>
+
+    <?php else: ?>
+        <button
+            class="btn btn-secondary btn-sm px-3 flex-fill text-center"
+            style="max-width:140px"
+            disabled
+        >
+            non réservable
+        </button>
+    <?php endif; ?>
+
+</div>
+
 
 
                         </div>
