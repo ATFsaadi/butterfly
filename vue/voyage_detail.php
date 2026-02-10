@@ -37,7 +37,6 @@ $voyage = $voyage ?? null;
 
     <div class="container mt-4" style="max-width:700px;">
 
-        <!-- ✅ TOUT DANS UNE CARD => ton CSS .card .btn s'applique -->
         <div class="card">
             <div class="card-body">
 
@@ -73,7 +72,6 @@ $voyage = $voyage ?? null;
                     <p><?= nl2br(htmlspecialchars($description)) ?></p>
                 <?php endif; ?>
 
-                <!-- IMAGE APRES -->
                 <?php if ($img !== ""): ?>
                     <img
                         src="<?= htmlspecialchars($img) ?>"
@@ -85,7 +83,6 @@ $voyage = $voyage ?? null;
                     <div class="alert alert-secondary mb-3">aucune image disponible.</div>
                 <?php endif; ?>
 
-                <!-- ✅ BOUTONS : maintenant ils sont dans .card => même style que tes autres pages -->
                 <div class="d-flex justify-content-center gap-2 mt-3">
 
                     <?php if ($idDest > 0): ?>
@@ -99,13 +96,14 @@ $voyage = $voyage ?? null;
                     <?php endif; ?>
 
                     <?php if (!$bloque): ?>
-                        <a
+                       <a
                             class="btn btn-success btn-sm flex-fill text-center px-3"
                             style="max-width:140px"
-                            href="index.php?page=reservation&id_voyage=<?= $idVoyage ?>"
+                            href="index.php?page=reservation&id=<?= $idVoyage ?>"
                         >
                             réserver
                         </a>
+
                     <?php else: ?>
                         <button
                             class="btn btn-secondary btn-sm flex-fill text-center px-3"

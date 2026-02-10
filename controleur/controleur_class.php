@@ -318,4 +318,10 @@ public function maj_statut_voyage_si_complet(int $id_voyage): void
     $this->modele->maj_statut_voyage_si_complet($id_voyage);
 }
 
+public function reserver_destination(array $tab): bool
+{
+    return $this->modele->reserver_destination($tab);
+}
+
+
 }

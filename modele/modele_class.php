@@ -231,6 +231,46 @@ class Modele
         ]);
     }
 
+    public function reserver_destination(array $tab): bool
+{
+    try {
+        $this->pdo->beginTransaction();
+
+        // (Optionnel mais recommandé) : vérifier que la destination existe et est active
+        $sql = "select actif
+                from destinations
+                where id_destination = :id_destination
+                limit 1";
+        $row = $this->fetchOne($sql, [":id_destination" => (int)$tab["id_destination"]]);
+
+        if (!$row || (int)$row["actif"] !== 1) {
+            $this->pdo->rollBack();
+            return false;
+        }
+
+        // Insérer la réservation destination
+        $this->insert_reservation_destination([
+            "id_client" => (int)$tab["id_client"],
+            "id_destination" => (int)$tab["id_destination"],
+            "date_depart" => $tab["date_depart"],
+            "date_retour" => $tab["date_retour"],
+            "nb_personnes" => (int)$tab["nb_personnes"],
+            "prix_total" => (float)$tab["prix_total"],
+            "statut" => "en_attente",
+        ]);
+
+        $this->pdo->commit();
+        return true;
+
+    } catch (Exception $e) {
+        if ($this->pdo->inTransaction()) {
+            $this->pdo->rollBack();
+        }
+        return false;
+    }
+}
+
+
     /* ===================== offres ===================== */
 
     public function insert_offre(array $tab): void
