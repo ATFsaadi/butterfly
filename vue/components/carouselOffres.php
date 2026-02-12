@@ -5,30 +5,44 @@
 
 <div id="offresCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="6000">
 
-    <div class="carousel-indicators">
-        <?php foreach ($offres as $i => $offre): ?>
-            <button
-                type="button"
-                data-bs-target="#offresCarousel"
-                data-bs-slide-to="<?= (int)$i ?>"
-                class="<?= $i === 0 ? "active" : "" ?>"
-                aria-current="<?= $i === 0 ? "true" : "false" ?>"
-                aria-label="Slide <?= (int)($i + 1) ?>"
-            ></button>
-        <?php endforeach; ?>
-    </div>
+  <div class="carousel-indicators">
+    <?php $nbSlides = (int)ceil(count($offres) / 2); ?>
+    <?php for ($k = 0; $k < $nbSlides; $k++): ?>
+      <button
+        type="button"
+        data-bs-target="#offresCarousel"
+        data-bs-slide-to="<?= (int)$k ?>"
+        class="<?= $k === 0 ? "active" : "" ?>"
+        aria-current="<?= $k === 0 ? "true" : "false" ?>"
+        aria-label="Slide <?= (int)($k + 1) ?>"
+      ></button>
+    <?php endfor; ?>
+  </div>
 
-    <div class="carousel-inner">
+  <div class="carousel-inner">
+    <?php
+    $offresList = array_values($offres);
+    $total = count($offresList);
+    $slideIndex = 0;
 
-        <?php foreach ($offres as $i => $offre): ?>
+    for ($j = 0; $j < $total; $j += 2):
+      $isActive = ($slideIndex === 0) ? "active" : "";
+      $slideIndex++;
 
+      $pair = [$offresList[$j]];
+      if ($j + 1 < $total) $pair[] = $offresList[$j + 1];
+    ?>
+      <div class="carousel-item <?= $isActive ?>">
+        <div class="row g-3 justify-content-center">
+
+          <?php foreach ($pair as $offre): ?>
             <?php
             $reduc = (int)($offre["pourcentage_reduction"] ?? 0);
             $prixBase = (float)($offre["prix_base"] ?? 0);
             $prixRemise = $prixBase;
 
             if ($prixBase > 0 && $reduc > 0 && $reduc <= 100) {
-                $prixRemise = $prixBase * (1 - ($reduc / 100));
+              $prixRemise = $prixBase * (1 - ($reduc / 100));
             }
 
             $img = (string)($offre["image_url"] ?? "");
@@ -40,110 +54,89 @@
             $idDestination = (int)($offre["id_destination"] ?? 0);
 
             $lieu = trim($pays . " - " . $ville, " -");
+
+            $href = "index.php?page=offres";
+            if ($idDestination > 0) {
+              if (!empty($_SESSION["user"])) {
+                $href = "index.php?page=destination_detail&id_destination=" . (int)$idDestination;
+              } else {
+                $href = "index.php?page=login&redirect=destination_detail&id_destination=" . (int)$idDestination;
+              }
+            }
             ?>
 
-            <div class="carousel-item <?= $i === 0 ? "active" : "" ?>">
-                <div class="row g-0" style="min-height:500px;">
+            <div class="col-12 col-md-6">
+              <a href="<?= htmlspecialchars($href) ?>" class="offer-card">
+                <div class="offer-media">
+                  <?php if ($reduc > 0): ?>
+                    <span class="offer-badge" data-badge="-<?= (int)$reduc ?>%"></span>
+                  <?php endif; ?>
 
-                    <div class="col-md-9">
-                        <?php if ($img !== ""): ?>
-                            <img
-                                src="<?= htmlspecialchars($img) ?>"
-                                class="d-block w-100 carousel-image"
-                                alt="<?= htmlspecialchars($titre) ?>"
-                                style="height:500px; object-fit:cover;"
-                            >
-                        <?php else: ?>
-                            <div class="d-flex align-items-center justify-content-center bg-light" style="height:500px;">
-                                <span class="text-muted">image non disponible</span>
-                            </div>
-                        <?php endif; ?>
-                    </div>
+                  <?php if ($img !== ""): ?>
+                    <img src="<?= htmlspecialchars($img) ?>" alt="<?= htmlspecialchars($titre) ?>">
+                  <?php else: ?>
+                    <div class="offer-noimg">image non disponible</div>
+                  <?php endif; ?>
+                </div>
 
-                    <div class="col-md-3 d-flex align-items-stretch" style="background: var(--secondary-color);">
-                        <div class="carousel-caption d-flex h-100 w-100 align-items-center justify-content-center" style="position: static; padding: 20px;">
-                            <div class="text-center text-white">
+                <div class="offer-body">
 
-                                <h6 class="mb-2">
-                                    <?= htmlspecialchars($titre) ?>
-                                    <?php if ($reduc > 0): ?>
-                                        (-<?= $reduc ?>%)
-                                    <?php endif; ?>
-                                </h6>
+  <div class="offer-title"><?= htmlspecialchars($titre) ?></div>
 
-                                <?php if ($lieu !== "" || $dateDebut !== "" || $dateFin !== ""): ?>
-                                    <p class="d-none d-md-block mb-3">
-                                        <?= htmlspecialchars($lieu) ?><br>
-                                        <small>
-                                            du <?= htmlspecialchars($dateDebut) ?>
-                                            au <?= htmlspecialchars($dateFin) ?>
-                                        </small>
-                                    </p>
-                                <?php endif; ?>
+  <div class="offer-info">
 
-                                <?php if ($prixBase > 0): ?>
-                                    <p class="d-none d-md-block mb-3">
-                                        <?php if ($reduc > 0): ?>
-                                            <del><?= number_format($prixBase, 2, ",", " ") ?> €</del><br>
-                                            <strong><?= number_format($prixRemise, 2, ",", " ") ?> €</strong>
-                                        <?php else: ?>
-                                            <strong><?= number_format($prixBase, 2, ",", " ") ?> €</strong>
-                                        <?php endif; ?>
-                                        <br><small>prix base</small>
-                                    </p>
-                                <?php endif; ?>
-
-                                <?php if ($idDestination > 0): ?>
-
-    <?php if (!empty($_SESSION["user"])): ?>
-        <!-- UTILISATEUR CONNECTÉ -->
-        <a
-            href="index.php?page=destination_detail&id_destination=<?= (int)$idDestination ?>"
-            class="btn btn-outline-light rounded-pill px-4 mt-2 position-relative"
-            style="z-index: 9999;"
-        >
-            voir
-        </a>
-    <?php else: ?>
-        <!-- UTILISATEUR NON CONNECTÉ -->
-        <a
-            href="index.php?page=login&redirect=destination_detail&id_destination=<?= (int)$idDestination ?>"
-            class="btn btn-outline-light rounded-pill px-4 mt-2 position-relative"
-            style="z-index: 9999;"
-        >
-            voir
-        </a>
+    <?php if ($lieu !== ""): ?>
+      <div class="offer-line">
+        <svg viewBox="0 0 24 24" width="15" height="15" class="offer-icon">
+          <path d="M12 2C8 2 5 5 5 9c0 5 7 13 7 13s7-8 7-13c0-4-3-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"/>
+        </svg>
+        <span><?= htmlspecialchars($lieu) ?></span>
+      </div>
     <?php endif; ?>
 
-<?php else: ?>
-    <a
-        href="index.php?page=offres"
-        class="btn btn-outline-light rounded-pill px-4 mt-2"
-    >
-        voir les offres
-    </a>
-<?php endif; ?>
+    <?php if ($dateDebut !== "" || $dateFin !== ""): ?>
+      <div class="offer-line">
+        <svg viewBox="0 0 24 24" width="15" height="15" class="offer-icon">
+          <path d="M7 2v2H5a2 2 0 0 0-2 2v2h18V6a2 2 0 0 0-2-2h-2V2h-2v2H9V2H7zm14 8H3v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V10z"/>
+        </svg>
+        <span>du <?= htmlspecialchars($dateDebut) ?> au <?= htmlspecialchars($dateFin) ?></span>
+      </div>
+    <?php endif; ?>
 
+  </div>
 
-                            </div>
-                        </div>
-                    </div>
+  <?php if ($prixBase > 0): ?>
+    <div class="offer-price">
+      <?php if ($reduc > 0): ?>
+        <del><?= number_format($prixBase, 2, ",", " ") ?> €</del>
+        <strong><?= number_format($prixRemise, 2, ",", " ") ?> €</strong>
+      <?php else: ?>
+        <strong><?= number_format($prixBase, 2, ",", " ") ?> €</strong>
+      <?php endif; ?>
+    </div>
+  <?php endif; ?>
 
-                </div>
+</div>
+
+              </a>
             </div>
 
-        <?php endforeach; ?>
-    </div>
+          <?php endforeach; ?>
 
-    <button class="carousel-control-prev" type="button" data-bs-target="#offresCarousel" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon"></span>
-        <span class="visually-hidden">Précédent</span>
-    </button>
+        </div>
+      </div>
+    <?php endfor; ?>
+  </div>
 
-    <button class="carousel-control-next" type="button" data-bs-target="#offresCarousel" data-bs-slide="next">
-        <span class="carousel-control-next-icon"></span>
-        <span class="visually-hidden">Suivant</span>
-    </button>
+  <button class="carousel-control-prev" type="button" data-bs-target="#offresCarousel" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon"></span>
+    <span class="visually-hidden">Précédent</span>
+  </button>
+
+  <button class="carousel-control-next" type="button" data-bs-target="#offresCarousel" data-bs-slide="next">
+    <span class="carousel-control-next-icon"></span>
+    <span class="visually-hidden">Suivant</span>
+  </button>
 
 </div>
 

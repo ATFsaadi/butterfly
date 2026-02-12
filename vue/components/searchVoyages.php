@@ -3,6 +3,7 @@ $q = trim((string)($_GET["q"] ?? ""));
 ?>
 
 <form
+
     class="voyage-menu container-fluid py-3 justify-content-center align-items-center gap-3 d-flex flex-column flex-lg-row"
     method="get"
     action="index.php"

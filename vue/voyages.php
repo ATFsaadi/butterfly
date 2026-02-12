@@ -1,147 +1,133 @@
 <?php
 $voyages = $voyages ?? [];
+
+/* === Afficher plus (par pas de 9) === */
+$step  = 9;
+$limit = max($step, (int)($_GET["limit"] ?? $step));
+
+$total = count($voyages);
+$items = array_slice(array_values($voyages), 0, $limit);
+
+/* Conserver paramètres GET (search) */
+$params = $_GET;
+$params["limit"] = $limit + $step;
+$queryMore = http_build_query($params);
 ?>
 
 <div id="voyageBar">
-    <?php require_once __DIR__ . "/components/searchVoyages.php"; ?>
+  <?php require_once __DIR__ . "/components/searchVoyages.php"; ?>
 </div>
 
 <div class="container mt-4">
 
-    <h3 class="section-title text-center mt-5">Voyages organisés</h3>
+  <h3 class="section-title text-center mt-5">Voyages organisés</h3>
 
-    <?php if (empty($voyages)): ?>
-        <div class="alert alert-info">aucun voyage trouvé.</div>
-    <?php else: ?>
+  <?php if (empty($voyages)): ?>
+    <div class="alert alert-info">aucun voyage trouvé.</div>
+  <?php else: ?>
 
-        <div class="row g-3">
+    <div class="row g-3">
+      <?php foreach ($items as $v): ?>
+        <?php
+        $id = (int)($v["id_voyage"] ?? 0);
+        $titre = (string)($v["titre"] ?? "");
+        $prix = (float)($v["prix"] ?? 0);
+        $places = (int)($v["nb_places_restantes"] ?? 0);
+        $statut = (string)($v["statut"] ?? "");
 
-            <?php foreach ($voyages as $v): ?>
+        $imgVoyage = (string)($v["image_url"] ?? "");
+        $imgDest   = (string)($v["destination_image_url"] ?? "");
+        $img = $imgVoyage !== "" ? $imgVoyage : $imgDest;
 
-                <?php
-                $id = (int)($v["id_voyage"] ?? 0);
-                $titre = (string)($v["titre"] ?? "");
-                $pays = (string)($v["pays"] ?? "");
-                $ville = (string)($v["ville"] ?? "");
-                $continent = (string)($v["continent"] ?? "");
-                $dateDepart = (string)($v["date_depart"] ?? "");
-                $dateRetour = (string)($v["date_retour"] ?? "");
-                $prix = (float)($v["prix"] ?? 0);
-                $places = (int)($v["nb_places_restantes"] ?? 0);
-                $statut = (string)($v["statut"] ?? "");
-                $imgVoyage = (string)($v["image_url"] ?? "");
-                $imgDest = (string)($v["destination_image_url"] ?? "");
-                $img = $imgVoyage !== "" ? $imgVoyage : $imgDest;
+        $pays = (string)($v["pays"] ?? "");
+        $ville = (string)($v["ville"] ?? "");
+        $lieu = trim($pays . " - " . $ville, " -");
+        $alt = trim($titre . " " . $lieu);
 
-                $lieu = trim($pays . " - " . $ville, " -");
-                $alt = trim($titre . " " . $lieu);
-                ?>
+        $bloque = ($statut !== "actif" || $places <= 0);
+        ?>
 
-                <div class="col-12 col-md-6 col-lg-4">
-                    <div class="card h-100">
+        <div class="col-12 col-md-6 col-lg-4">
+          <div class="card h-100 grid-card">
 
-                        <?php if ($img !== ""): ?>
-                            <img
-                                src="<?= htmlspecialchars($img) ?>"
-                                class="card-img-top"
-                                alt="<?= htmlspecialchars($alt) ?>"
-                                style="height:180px; object-fit:cover;"
-                            >
-                        <?php else: ?>
-                            <div class="d-flex align-items-center justify-content-center bg-light" style="height:180px;">
-                                <span class="text-muted">aucune image</span>
-                            </div>
-                        <?php endif; ?>
+            <div class="grid-media">
 
-                        <div class="card-body">
-
-                            <h5 class="card-title"><?= htmlspecialchars($titre) ?></h5>
-
-                            <?php if ($lieu !== ""): ?>
-                                <div class="text-muted small mb-1"><?= htmlspecialchars($lieu) ?></div>
-                            <?php endif; ?>
-
-                            <?php if ($continent !== ""): ?>
-                                <div class="text-muted small mb-2"><?= htmlspecialchars($continent) ?></div>
-                            <?php endif; ?>
-
-                            <div class="mb-1">
-                                <?= htmlspecialchars($dateDepart) ?> → <?= htmlspecialchars($dateRetour) ?>
-                            </div>
-
-                            <div class="mb-2">
-                                <strong><?= number_format($prix, 2, ",", " ") ?> €</strong>
-                            </div>
-
-                            <div class="mb-2">
-                                <?= $places ?> place(s) restante(s)
-                            </div>
-<div class="d-flex justify-content-center gap-2">
-
-    <!-- BOUTON VOIR DÉTAIL -->
-    <?php if (!empty($_SESSION["user"])): ?>
-        <a
-            class="btn btn-outline-primary btn-sm px-3 flex-fill text-center"
-            href="index.php?page=voyage_detail&id_voyage=<?= (int)$id ?>"
-            style="max-width:140px"
-        >
-            voir détail
-        </a>
-    <?php else: ?>
-        <a
-            class="btn btn-outline-primary btn-sm px-3 flex-fill text-center"
-            href="index.php?page=login&redirect=voyage_detail&id_voyage=<?= (int)$id ?>"
-            style="max-width:140px"
-        >
-            voir détail
-        </a>
-    <?php endif; ?>
-
-
-    <!-- BOUTON RÉSERVER -->
-    <?php if ($statut === "actif" && $places > 0): ?>
-
-        <?php if (!empty($_SESSION["user"])): ?>
-            <a
-                class="btn btn-success btn-sm px-3 flex-fill text-center"
-                href="index.php?page=reservation&id_voyage=<?= (int)$id ?>"
-                style="max-width:140px"
-            >
-                réserver
-            </a>
-        <?php else: ?>
-            <a
-                class="btn btn-success btn-sm px-3 flex-fill text-center"
-                href="index.php?page=login&redirect=reservation&id_voyage=<?= (int)$id ?>"
-                style="max-width:140px"
-            >
-                réserver
-            </a>
-        <?php endif; ?>
-
-    <?php else: ?>
-        <button
-            class="btn btn-secondary btn-sm px-3 flex-fill text-center"
-            style="max-width:140px"
-            disabled
-        >
-            non réservable
-        </button>
-    <?php endif; ?>
-
-</div>
-
-
-
-                        </div>
-
-                    </div>
+              <?php if ($img !== ""): ?>
+                <img src="<?= htmlspecialchars($img) ?>" class="grid-img" alt="<?= htmlspecialchars($alt) ?>">
+              <?php else: ?>
+                <div class="d-flex align-items-center justify-content-center bg-light grid-noimg">
+                  <span class="text-muted">aucune image</span>
                 </div>
+              <?php endif; ?>
 
-            <?php endforeach; ?>
+              <!-- ✅ TITRE SUR IMAGE -->
+              <div class="grid-title-overlay">
+                <?= htmlspecialchars($titre) ?>
+              </div>
 
+              <!-- ✅ PRIX ANGLE -->
+              <?php if ($prix > 0): ?>
+                <span class="grid-price-badge">
+                  <?= number_format($prix, 0, ",", " ") ?> €
+                </span>
+              <?php endif; ?>
+
+            </div>
+
+            <!-- ✅ ACTIONS EN BAS -->
+            <div class="card-body grid-body">
+
+              <div class="grid-actions">
+
+                <?php if (!empty($_SESSION["user"])): ?>
+                  <a class="btn btn-outline-primary btn-sm grid-btn"
+                     href="index.php?page=voyage_detail&id_voyage=<?= $id ?>">
+                    voir détail
+                  </a>
+                <?php else: ?>
+                  <a class="btn btn-outline-primary btn-sm grid-btn"
+                     href="index.php?page=login&redirect=voyage_detail&id_voyage=<?= $id ?>">
+                    voir détail
+                  </a>
+                <?php endif; ?>
+
+                <?php if (!$bloque): ?>
+                  <?php if (!empty($_SESSION["user"])): ?>
+                    <a class="btn btn-success btn-sm grid-btn"
+                       href="index.php?page=reservation&id_voyage=<?= $id ?>">
+                      réserver
+                    </a>
+                  <?php else: ?>
+                    <a class="btn btn-success btn-sm grid-btn"
+                       href="index.php?page=login&redirect=reservation&id_voyage=<?= $id ?>">
+                      réserver
+                    </a>
+                  <?php endif; ?>
+                <?php else: ?>
+                  <button class="btn btn-secondary btn-sm grid-btn" disabled>
+                    non réservable
+                  </button>
+                <?php endif; ?>
+
+              </div>
+
+            </div>
+
+          </div>
         </div>
 
+      <?php endforeach; ?>
+    </div>
+
+    <!-- ✅ Bouton afficher plus -->
+    <?php if ($limit < $total): ?>
+      <div class="d-flex justify-content-center mt-4">
+        <a class="btn btn-outline-primary btn-sm grid-btn" href="?<?= htmlspecialchars($queryMore) ?>">
+          afficher plus
+        </a>
+      </div>
     <?php endif; ?>
+
+  <?php endif; ?>
 
 </div>

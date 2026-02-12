@@ -35,83 +35,63 @@
             $dateDepart = (string)($v["date_depart"] ?? "");
             $dateRetour = (string)($v["date_retour"] ?? "");
             $prix = (float)($v["prix"] ?? 0);
-            $places = (int)($v["nb_places_restantes"] ?? 0);
-            $statut = (string)($v["statut"] ?? "");
+
+            $href = "index.php?page=voyage_detail&id_voyage=" . (int)$idVoyage;
             ?>
 
             <div class="carousel-item <?= $i === 0 ? "active" : "" ?>">
+                <div class="row g-0 voyage-row">
 
-                <?php if ($img !== ""): ?>
-                    <img
-                        src="<?= htmlspecialchars($img) ?>"
-                        class="d-block w-100 carousel-image"
-                        alt="<?= htmlspecialchars($titre) ?>"
-                        style="max-height:500px; object-fit:cover;"
-                    >
-                <?php else: ?>
-                    <div class="d-flex align-items-center justify-content-center bg-light" style="height:500px;">
-                        <span class="text-muted">image non disponible</span>
-                    </div>
-                <?php endif; ?>
-
-                <div class="carousel-caption d-flex h-100 align-items-center justify-content-center">
-                    <div class="text-center text-white" style="text-shadow:0 2px 10px rgba(0,0,0,.6);">
-
-                        <?php if ($titre !== ""): ?>
-                            <h6 class="mb-2"><?= htmlspecialchars($titre) ?></h6>
+                    <!-- IMAGE À GAUCHE -->
+                    <div class="col-md-9">
+                        <?php if ($img !== ""): ?>
+                            <img
+                                src="<?= htmlspecialchars($img) ?>"
+                                class="d-block w-100 carousel-image"
+                                alt="<?= htmlspecialchars($titre) ?>"
+                            >
+                        <?php else: ?>
+                            <div class="d-flex align-items-center justify-content-center bg-light voyage-noimg">
+                                <span class="text-muted">image non disponible</span>
+                            </div>
                         <?php endif; ?>
-
-                        <p class="d-none d-md-block mb-3">
-                            <?= htmlspecialchars($lieu) ?>
-                            <?php if ($continent !== ""): ?>
-                                · <?= htmlspecialchars($continent) ?>
-                            <?php endif; ?>
-                            <br>
-                            <small>
-                                <?= htmlspecialchars($dateDepart) ?> → <?= htmlspecialchars($dateRetour) ?>
-                            </small>
-                            <?php if ($prix > 0): ?>
-                                <br>
-                                <strong><?= number_format($prix, 2, ",", " ") ?> €</strong>
-                            <?php endif; ?>
-                        </p>
-
-                        <div class="d-flex justify-content-center gap-2">
-
-    <a
-        href="index.php?page=voyage_detail&id_voyage=<?= $idVoyage ?>"
-        class="btn btn-outline-light rounded-pill px-4 mt-2"
-    >
-        détails
-    </a>
-
-   <?php if ($statut === "actif" && $places > 0): ?>
-
-    <?php if (!empty($_SESSION["user"])): ?>
-        <a
-            href="index.php?page=reservation&id_voyage=<?= (int)$idVoyage ?>"
-            class="btn btn-light rounded-pill px-4 mt-2"
-        >
-            réserver
-        </a>
-    <?php else: ?>
-        <a
-            href="index.php?page=login&redirect=reservation&id_voyage=<?= (int)$idVoyage ?>"
-            class="btn btn-light rounded-pill px-4 mt-2"
-        >
-            réserver
-        </a>
-    <?php endif; ?>
-
-<?php endif; ?>
-
-
-</div>
-
-
                     </div>
-                </div>
 
+                    <!-- PANNEAU À DROITE CLIQUABLE (COMME OFFRES) -->
+                    <a href="<?= htmlspecialchars($href) ?>" class="col-md-3 d-flex align-items-stretch voyage-link">
+                        <div class="carousel-caption d-flex h-100 w-100 align-items-center justify-content-center"
+                             style="position: static; padding: 20px;">
+                            <div class="text-center text-white">
+
+                                <?php if ($titre !== ""): ?>
+                                    <h6 class="mb-2"><?= htmlspecialchars($titre) ?></h6>
+                                <?php endif; ?>
+
+                                <?php if ($lieu !== "" || $continent !== "" || $dateDepart !== "" || $dateRetour !== ""): ?>
+                                    <p class="d-none d-md-block mb-3">
+                                        <?= htmlspecialchars($lieu) ?>
+                                        <?php if ($continent !== ""): ?>
+                                            <br><small><?= htmlspecialchars($continent) ?></small>
+                                        <?php endif; ?>
+                                        <br>
+                                        <small>
+                                            <?= htmlspecialchars($dateDepart) ?> → <?= htmlspecialchars($dateRetour) ?>
+                                        </small>
+                                    </p>
+                                <?php endif; ?>
+
+                                <?php if ($prix > 0): ?>
+                                    <p class="d-none d-md-block mb-0">
+                                        <strong><?= number_format($prix, 2, ",", " ") ?> €</strong>
+                                        <br><small>prix</small>
+                                    </p>
+                                <?php endif; ?>
+
+                            </div>
+                        </div>
+                    </a>
+
+                </div>
             </div>
 
         <?php endforeach; ?>

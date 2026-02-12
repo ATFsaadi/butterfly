@@ -9,7 +9,7 @@
 
 /* variables */
 :root {
-    --primary-color: #f27438;
+    --primary-color: #EB7814;
     --secondary-color: #007f8c;
     --text-color: #2c3e50;
     --muted-color: #7fa7a9;
@@ -23,10 +23,17 @@
 /* base */
 body {
     font-family: "Poiret One", sans-serif;
-    font-weight: bold;
+    font-weight: 400; /* poiret one n'a pas de vrai gras */
+    font-size: 16px;
+    line-height: 1.5;
+    letter-spacing: 0.35px; /* lisibilité */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
     background-color: #fff;
     margin: 0;
     padding: 0;
+    color: var(--text-color);
 }
 
 /* titres */
@@ -40,9 +47,12 @@ h1 {
 
 h6 {
     font-family: "Poiret One", sans-serif;
+    font-weight: 400;
     color: var(--primary-color);
     font-size: 50px;
     margin: 0;
+    letter-spacing: 0.6px;
+    text-shadow: 0 0 0.7px currentColor; /* renfort visuel */
 }
 
 /* logo */
@@ -79,7 +89,9 @@ nav.custom-navbar {
 .nav-link {
     font-size: 15px;
     color: var(--secondary-color);
-    font-weight: 500;
+    font-weight: 400; /* poiret one */
+    letter-spacing: 0.55px;            /* renfort lisibilité */
+    text-shadow: 0 0 0.6px currentColor; /* renfort visuel */
     transition: color 0.3s ease, background 0.3s ease;
     display: flex;
     align-items: center;
@@ -296,67 +308,3 @@ a:hover img {
     margin: 0 auto;
 }
 
-/* footer map hover */
-#footerMap {
-    transition: transform 0.2s ease;
-}
-
-#footerMap:hover {
-    transform: scale(1.02);
-}
-
-/* footer */
-footer {
-    background-color: var(--secondary-color) !important;
-    color: #fff;
-    padding-top: 40px;
-    margin-top: 50px;
-}
-
-/* footer titres */
-footer h5 {
-    font-size: 1.2rem;
-    color: var(--primary-color);
-    margin-bottom: 15px;
-}
-
-/* footer liens */
-footer a {
-    color: #fff;
-    transition: color 0.3s ease;
-}
-
-/* footer liens hover */
-footer a:hover {
-    color: var(--primary-color);
-    text-decoration: none;
-}
-
-/* footer liste */
-footer .list-unstyled li {
-    margin-bottom: 10px;
-}
-
-/* footer icones */
-footer i.fab {
-    transition: transform 0.3s ease, color 0.3s ease;
-}
-
-/* footer icones hover */
-footer i.fab:hover {
-    transform: scale(1.2);
-    color: var(--primary-color);
-}
-
-/* footer hr */
-footer hr {
-    border-color: var(--primary-color);
-    margin: 20px 0;
-}
-
-/* footer texte */
-footer .text-center {
-    font-size: 0.9rem;
-    color: #d4d4d4;
-    padding-bottom: 20px;
-}

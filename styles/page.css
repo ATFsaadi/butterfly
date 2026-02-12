@@ -1,0 +1,455 @@
+
+/* ======================
+   BASE (communs)
+   ====================== */
+
+.section-title {
+    font-weight: 800;
+    color: var(--text-color);
+    margin: 0 0 0.3rem;
+}
+.section-subtitle {
+    color: var(--muted-color);
+    font-size: 1.05rem;
+}
+
+.ui-card {
+    border: 0;
+    border-radius: 0;
+    box-shadow: var(--shadow);
+    background: #fff;
+}
+.ui-cover {
+    width: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 0;
+}
+
+/* Boutons style projet */
+.ui-btn {
+    font-size: 0.78rem;
+    padding: 4px 10px;
+    border-radius: 50rem;
+    border-width: 1px;
+    font-weight: 600;
+    line-height: 1.2;
+    transition: 0.15s ease;
+}
+.ui-btn-primary {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: #fff;
+}
+.ui-btn-primary:hover {
+    opacity: 0.9;
+    color: #fff;
+}
+.ui-btn-outline {
+    background: transparent;
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+.ui-btn-outline:hover {
+    opacity: 0.85;
+}
+
+/* ✅ Compat : tes classes existantes */
+.detail-btn,
+.grid-btn,
+.res-btn {
+    font-size: 0.78rem;
+    padding: 4px 10px;
+    border-radius: 50rem;
+    border-width: 1px;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.btn-success.detail-btn,
+.btn-success.grid-btn {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: #fff;
+}
+.btn-success.detail-btn:hover,
+.btn-success.grid-btn:hover {
+    opacity: 0.9;
+}
+
+.btn-outline-primary.detail-btn,
+.btn-outline-primary.grid-btn {
+    background: transparent;
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+.btn-outline-primary.detail-btn:hover,
+.btn-outline-primary.grid-btn:hover {
+    opacity: 0.85;
+}
+
+
+
+/* ======================
+   PAGES DÉTAILS
+   ====================== */
+
+.detail-wrap {
+    max-width: 700px;
+}
+
+.detail-card,
+.detail-img {
+    border-radius: 0;
+}
+.detail-card {
+    border: 0;
+    box-shadow: var(--shadow);
+    background: #fff;
+}
+.detail-body {
+    padding: 22px 24px;
+}
+
+.detail-sub {
+    font-size: 0.95rem;
+    color: var(--muted-color);
+}
+
+.detail-list {
+    display: grid;
+    gap: 8px;
+    margin: 14px 0 16px;
+}
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 12px;
+    background: var(--bg-light);
+    font-size: 0.95rem;
+}
+.detail-label {
+    color: var(--muted-color);
+    font-weight: 700;
+}
+.detail-value {
+    color: var(--text-color);
+    font-weight: 800;
+}
+
+.detail-desc {
+    margin: 12px 0 16px;
+    font-size: 0.95rem;
+    line-height: 1.55;
+    color: var(--text-color);
+}
+.detail-img {
+    width: 100%;
+    max-height: 380px;
+    object-fit: cover;
+    display: block;
+    margin: 10px 0 14px;
+}
+
+.detail-actions {
+    margin-top: 16px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.detail-badge {
+    padding: 2px 8px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    border-radius: 0;
+    border: 1px solid currentColor;
+}
+.detail-badge.is-open {
+    color: var(--secondary-color);
+}
+.detail-badge.is-closed {
+    color: #e11d48;
+}
+
+/* ======================
+   GRID (Offres / Destinations / Voyages)
+   ====================== */
+
+.grid-card {
+    border: 0;
+    border-radius: 0;
+    box-shadow: var(--shadow);
+    background: #fff;
+    transition: 0.2s ease;
+}
+.grid-card:hover {
+    transform: translateY(-2px);
+}
+
+.grid-media {
+    position: relative;
+    overflow: hidden;
+}
+.grid-img {
+    width: 100%;
+    height: 190px;
+    object-fit: cover;
+    display: block;
+    border-radius: 0;
+}
+.grid-noimg {
+    height: 190px;
+}
+
+.grid-title-overlay {
+    position: absolute;
+    top: 10px;
+    left: 12px;
+    right: 12px;
+    color: #fff;
+    font-weight: 800;
+    font-size: 0.95rem;
+    text-shadow: 0 2px 6px rgba(0,0,0,.45);
+}
+
+.grid-price-badge {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: var(--primary-color);
+    color: #fff;
+    padding: 6px 14px;
+    font-weight: 800;
+    font-size: 0.85rem;
+    line-height: 1;
+    border-radius: 0;
+    border: 0;
+}
+
+.grid-body {
+    padding: 14px;
+}
+.grid-actions {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+.grid-sale {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 0;
+    height: 0;
+    z-index: 3;
+    border-top: 90px solid #e11d48;
+    border-left: 90px solid transparent;
+}
+.grid-sale::after {
+    content: attr(data-sale);
+    position: absolute;
+    top: -68px;
+    right: 8px;
+    color: #fff;
+    font-weight: 800;
+    font-size: 0.95rem;
+    line-height: 1;
+    transform: rotate(45deg);
+    transform-origin: top right;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+/* ======================
+   RÉSERVATION
+   ====================== */
+
+.res-wrap {
+    align-items: stretch;
+}
+
+.res-card {
+    border: 0;
+    border-radius: 0;
+    box-shadow: var(--shadow);
+    background: #fff;
+    height: 100%;
+}
+
+.res-right {
+    max-width: 560px;
+}
+@media (min-width:992px) {
+    .res-right {
+        margin-left: auto;
+    }
+}
+
+.res-media {
+    position: relative;
+    display: block;
+}
+
+.res-img {
+    width: 100%;
+    min-height: 420px;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 0;
+}
+
+.res-noimg {
+    min-height: 420px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-light);
+    color: var(--muted-color);
+}
+
+.res-title-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 24px;
+    margin: 0;
+    color: var(--primary-color);
+    pointer-events: none;
+}
+
+.res-back-overlay {
+    position: absolute;
+    bottom: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+}
+
+.res-back-overlay .btn-outline-primary {
+    font-size: 0.78rem;
+    padding: 4px 10px;
+    border-radius: 50rem;
+    border-width: 1px;
+    font-weight: 600;
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: #fff;
+}
+.res-back-overlay .btn-outline-primary:hover {
+    opacity: 0.9;
+}
+
+.res-cta {
+    background: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    color: #fff;
+    font-weight: 800;
+    padding: 10px 16px;
+    border-radius: 50rem;
+}
+/* ✅ hover blanc demandé */
+.res-cta:hover {
+    background: #fff;
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.res-card .form-control {
+    border-radius: 0;
+    border: 1px solid var(--border-color);
+}
+.res-card .form-control:focus {
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 0.15rem rgba(0,127,140,.15);
+}
+
+/* =========================================================
+   ✅ RESPONSIVE (séparés)
+   ========================================================= */
+
+/* CAROUSEL */
+@media (max-width:991px) {
+    .carousel-image {
+        height: 420px;
+    }
+}
+@media (max-width:767px) {
+    .carousel-image {
+        height: 300px;
+    }
+    #offresCarousel .offer-media {
+        height: 240px;
+    }
+
+    #mainCarousel .row.g-0 {
+        position: relative;
+    }
+    #mainCarousel .col-md-9 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+    #mainCarousel .col-md-3 {
+        position: absolute;
+        inset: 0;
+        flex: 0 0 100%;
+        max-width: 100%;
+        background: transparent!important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+    }
+    #mainCarousel .voyage-link {
+        pointer-events: auto;
+        background: rgba(0,0,0,.35);
+        padding: 18px 20px;
+    }
+    #mainCarousel .carousel-caption {
+        position: static;
+        width: auto;
+        margin: 0;
+    }
+}
+
+/* DETAILS */
+@media (max-width:576px) {
+    .detail-body {
+        padding: 18px;
+    }
+    .detail-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .detail-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .detail-btn {
+        width: 100%;
+    }
+}
+
+/* GRID */
+@media (max-width:767px) {
+    .grid-img,
+    .grid-noimg {
+        height: 160px;
+    }
+    .grid-title-overlay {
+        font-size: 0.9rem;
+    }
+}
+
+/* RESERVATION */
+@media (max-width:991px) {
+    .res-img,
+    .res-noimg {
+        min-height: 320px;
+    }
+}

@@ -1,93 +1,55 @@
-<footer class="text-light pt-4 mt-5 bg-dark">
-    <div class="container">
-        <div class="row">
+<footer class="footer-voyage text-light">
+  <div class="container">
 
-            <!-- liens utiles -->
-            <div class="col-md-3 mb-4">
-                <ul class="list-unstyled">
-                    <li>
-                        <a href="index.php" class="text-light text-decoration-none">
-                            accueil
-                        </a>
-                    </li>
-                    <li>
-                        <a href="index.php?page=destinations" class="text-light text-decoration-none">
-                            destinations
-                        </a>
-                    </li>
-                    <li>
-                        <a href="index.php?page=voyages" class="text-light text-decoration-none">
-                            voyages
-                        </a>
-                    </li>
-                    <li>
-                        <a href="index.php?page=offres" class="text-light text-decoration-none">
-                            nos offres
-                        </a>
-                    </li>
-                </ul>
+    <div class="row gy-4">
 
-                <img src="icons/bfly.png" width="60" alt="logo butterfly voyage">
-            </div>
+      <!-- navigation -->
+      <div class="col-md-3">
+        <h5 class="footer-title">Navigation</h5>
 
-            <!-- carte -->
-            <div class="col-md-6 mb-4">
-                <div class="mini-map-container mt-3">
-                    <div
-                        id="footerMap"
-                        style="width:100%; height:180px; border-radius:12px; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,0.15);"
-                    ></div>
+        <ul class="list-unstyled footer-links">
+          <li><a href="index.php">Accueil</a></li>
+          <li><a href="index.php?page=destinations">Destinations</a></li>
+          <li><a href="index.php?page=voyages">Voyages</a></li>
+          <li><a href="index.php?page=offres">Nos offres</a></li>
+        </ul>
 
-                    <small class="text-center d-block mt-2 text-muted">
-                        cliquez pour ouvrir google maps
-                    </small>
-                </div>
-            </div>
+        <img src="icons/bfly.png" width="70" class="mt-3" alt="logo butterfly voyage">
+      </div>
 
-            <!-- reseaux et contact -->
-            <div class="col-md-3 text-center mb-4">
+      <!-- carte -->
+      <div class="col-md-6">
+        <h5 class="footer-title footer-title-center">Notre localisation</h5>
 
-                <h5>suivez-nous</h5>
-
-                <div class="mb-3">
-                    <a href="#" class="text-light me-4">
-                        <i class="fab fa-facebook fa-2x"></i>
-                    </a>
-                    <a href="#" class="text-light me-4">
-                        <i class="fab fa-instagram fa-2x"></i>
-                    </a>
-                    <a href="#" class="text-light me-4">
-                        <i class="fab fa-twitter fa-2x"></i>
-                    </a>
-                    <a href="#" class="text-light">
-                        <i class="fab fa-youtube fa-2x"></i>
-                    </a>
-                </div>
-
-                <h5>contact</h5>
-
-                <p>
-                    <i class="fas fa-map-marker-alt me-2"></i>
-                    40 bd haussmann, 75009 paris
-                </p>
-                <p>
-                    <i class="fas fa-phone me-2"></i>
-                    +33 1 23 45 67 89
-                </p>
-                <p>
-                    <i class="fas fa-envelope me-2"></i>
-                    contact@butterflyvoyage.com
-                </p>
-            </div>
-
+        <div class="mini-map-container">
+          <div id="footerMap" class="footer-map"></div>
+          <small>Cliquez pour ouvrir Google Maps</small>
         </div>
+      </div>
 
-        <!-- separation -->
-        <hr class="bg-light my-4">
+      <!-- contact -->
+      <div class="col-md-3 footer-contact">
+        <h5 class="footer-title">Contact</h5>
 
-        <!-- copyright -->
-        <div class="text-center pb-3">
-            © 2025 butterfly voyage - tous droits réservés
+        <p><i class="fas fa-map-marker-alt"></i> 40 bd Haussmann, Paris</p>
+        <p><i class="fas fa-phone"></i> +33 1 23 45 67 89</p>
+        <p><i class="fas fa-envelope"></i> contact@butterflyvoyage.com</p>
+
+        <div class="footer-social mt-3">
+          <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+          <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
         </div>
+      </div>
+
     </div>
+
+    <hr>
+
+    <div class="footer-bottom">
+      © 2025 Butterfly Voyage — Tous droits réservés
+    </div>
+
+  </div>
 </footer>

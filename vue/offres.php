@@ -1,133 +1,122 @@
 <?php
 $offres = $offres ?? [];
+
+/* === Afficher plus (par pas de 9) === */
+$step  = 9;
+$limit = max($step, (int)($_GET["limit"] ?? $step));
+
+$total = count($offres);
+$items = array_slice(array_values($offres), 0, $limit);
+
+/* Conserver les paramètres GET existants (search) */
+$params = $_GET;
+$params["limit"] = $limit + $step;
+$queryMore = http_build_query($params);
 ?>
 
 <div id="voyageBar">
-    <?php require_once __DIR__ . "/components/searchOffres.php"; ?>
+  <?php require_once __DIR__ . "/components/searchOffres.php"; ?>
 </div>
 
 <div class="container mt-4">
 
-    <h3 class="section-title text-center mt-5">Offres en cours</h3>
+  <h3 class="section-title text-center mt-5">Offres en cours</h3>
 
-    <?php if (empty($offres)): ?>
-        <div class="alert alert-info">aucune offre trouvée.</div>
-    <?php else: ?>
+  <?php if (empty($offres)): ?>
+    <div class="alert alert-info">aucune offre trouvée.</div>
+  <?php else: ?>
 
-        <div class="row g-3">
+    <div class="row g-3">
 
-            <?php foreach ($offres as $o): ?>
+      <?php foreach ($items as $o): ?>
+        <?php
+        $reduc = (int)($o["pourcentage_reduction"] ?? 0);
+        $prixBase = (float)($o["prix_base"] ?? 0);
+        $prixRemise = $prixBase;
 
-                <?php
-                $reduc = (int)($o["pourcentage_reduction"] ?? 0);
-                $prixBase = (float)($o["prix_base"] ?? 0);
-                $prixRemise = $prixBase;
+        if ($prixBase > 0 && $reduc > 0) $prixRemise = $prixBase * (1 - ($reduc / 100));
 
-                if ($prixBase > 0 && $reduc > 0) {
-                    $prixRemise = $prixBase * (1 - ($reduc / 100));
-                }
+        $idDest = (int)($o["id_destination"] ?? 0);
+        $image = (string)($o["image_url"] ?? "");
+        $titre = (string)($o["titre"] ?? "");
+        $lieu = trim((string)($o["pays"] ?? "") . " - " . (string)($o["ville"] ?? ""), " -");
 
-                $idDest = (int)($o["id_destination"] ?? 0);
-                $image = (string)($o["image_url"] ?? "");
-                $lieu = trim((string)($o["pays"] ?? "") . " - " . (string)($o["ville"] ?? ""), " -");
-                ?>
+        $hrefDetail = !empty($_SESSION["user"])
+          ? "index.php?page=destination_detail&id_destination=" . $idDest
+          : "index.php?page=login&redirect=destination_detail&id_destination=" . $idDest;
 
-                <div class="col-12 col-md-6 col-lg-4">
-                    <div class="card h-100">
+        $hrefReserver = !empty($_SESSION["user"])
+          ? "index.php?page=reservation&id_destination=" . $idDest
+          : "index.php?page=login&redirect=reservation&id_destination=" . $idDest;
 
-                        <?php if ($image !== ""): ?>
-                            <img
-                                src="<?= htmlspecialchars($image) ?>"
-                                class="card-img-top"
-                                alt="<?= htmlspecialchars($lieu) ?>"
-                                style="height:180px; object-fit:cover;"
-                            >
-                        <?php else: ?>
-                            <div class="d-flex align-items-center justify-content-center bg-light" style="height:180px;">
-                                <span class="text-muted">aucune image</span>
-                            </div>
-                        <?php endif; ?>
+        $prixAffiche = ($reduc > 0 ? $prixRemise : $prixBase);
+        ?>
 
-                        <div class="card-body">
+        <div class="col-12 col-md-6 col-lg-4">
+          <div class="card h-100 grid-card">
 
-                            <?php if ($lieu !== ""): ?>
-                                <div class="text-muted small mb-1"><?= htmlspecialchars($lieu) ?></div>
-                            <?php endif; ?>
+            <div class="grid-media">
 
-                            <h5 class="card-title"><?= htmlspecialchars((string)($o["titre"] ?? "")) ?></h5>
+              <!-- ✅ TRIANGLE PROMO -->
+              <?php if ($reduc > 0): ?>
+                <span class="grid-sale" data-sale="-<?= (int)$reduc ?>%"></span>
+              <?php endif; ?>
 
-                            <div class="mb-2">
-                                <?php if ($reduc > 0): ?>
-                                    <span class="badge bg-success">-<?= $reduc ?>%</span>
-                                <?php endif; ?>
-                                <small class="text-muted">
-                                    du <?= htmlspecialchars((string)($o["date_debut"] ?? "")) ?>
-                                    au <?= htmlspecialchars((string)($o["date_fin"] ?? "")) ?>
-                                </small>
-                            </div>
-
-                            <?php if ($prixBase > 0): ?>
-                                <?php if ($reduc > 0): ?>
-                                    <div>
-                                        <del class="text-muted"><?= number_format($prixBase, 2, ",", " ") ?> €</del>
-                                        <strong><?= number_format($prixRemise, 2, ",", " ") ?> €</strong>
-                                    </div>
-                                <?php else: ?>
-                                    <div><strong><?= number_format($prixBase, 2, ",", " ") ?> €</strong></div>
-                                <?php endif; ?>
-                            <?php endif; ?>
-
-                            <div class="mt-3 d-flex justify-content-center gap-2">
-
-    <?php if (!empty($_SESSION["user"])): ?>
-        <!-- UTILISATEUR CONNECTÉ -->
-        <a
-            class="btn btn-outline-primary btn-sm flex-fill text-center px-3"
-            style="max-width:160px"
-            href="index.php?page=destination_detail&id_destination=<?= (int)$idDest ?>"
-        >
-            voir destination
-        </a>
-
-        <a
-            class="btn btn-success btn-sm flex-fill text-center px-3"
-            style="max-width:160px"
-            href="index.php?page=destination_detail&id_destination=<?= (int)$idDest ?>"
-        >
-            réserver
-        </a>
-
-    <?php else: ?>
-        <!-- UTILISATEUR NON CONNECTÉ -->
-        <a
-            class="btn btn-outline-primary btn-sm flex-fill text-center px-3"
-            style="max-width:160px"
-            href="index.php?page=login&redirect=destination_detail&id_destination=<?= (int)$idDest ?>"
-        >
-            voir destination
-        </a>
-
-        <a
-            class="btn btn-success btn-sm flex-fill text-center px-3"
-            style="max-width:160px"
-            href="index.php?page=login&redirect=destination_detail&id_destination=<?= (int)$idDest ?>"
-        >
-            réserver
-        </a>
-    <?php endif; ?>
-
-</div>
-
-
-
-                        </div>
-                    </div>
+              <?php if ($image !== ""): ?>
+                <img src="<?= htmlspecialchars($image) ?>" class="grid-img" alt="<?= htmlspecialchars($lieu) ?>">
+              <?php else: ?>
+                <div class="d-flex align-items-center justify-content-center bg-light grid-noimg">
+                  <span class="text-muted">aucune image</span>
                 </div>
+              <?php endif; ?>
 
-            <?php endforeach; ?>
+              <!-- ✅ TITRE SUR IMAGE -->
+              <div class="grid-title-overlay">
+                <?= htmlspecialchars($titre !== "" ? $titre : $lieu) ?>
+              </div>
 
+              <!-- ✅ PRIX ANGLE -->
+              <?php if ($prixAffiche > 0): ?>
+                <span class="grid-price-badge">
+                  <?= number_format($prixAffiche, 0, ",", " ") ?> €
+                </span>
+              <?php endif; ?>
+
+            </div>
+
+            <!-- ✅ ACTIONS EN BAS -->
+            <div class="card-body grid-body">
+              <?php if ($idDest > 0): ?>
+                <div class="grid-actions">
+
+                  <a class="btn btn-outline-primary btn-sm grid-btn" href="<?= htmlspecialchars($hrefDetail) ?>">
+                    voir détail
+                  </a>
+
+                  <a class="btn btn-success btn-sm grid-btn" href="<?= htmlspecialchars($hrefReserver) ?>">
+                    réserver
+                  </a>
+
+                </div>
+              <?php endif; ?>
+            </div>
+
+          </div>
         </div>
 
+      <?php endforeach; ?>
+
+    </div>
+
+    <!-- ✅ Bouton afficher plus -->
+    <?php if ($limit < $total): ?>
+      <div class="d-flex justify-content-center mt-4">
+        <a class="btn btn-outline-primary btn-sm grid-btn" href="?<?= htmlspecialchars($queryMore) ?>">
+          afficher plus
+        </a>
+      </div>
     <?php endif; ?>
+
+  <?php endif; ?>
 
 </div>

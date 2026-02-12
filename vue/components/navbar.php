@@ -277,3 +277,10 @@ $prenomAffiche =
         </div>
     </div>
 </div>
+<section class="voyage-menu-section">
+    <div class="voyage-container">
+        <div class="voyage-menu-title" id="voyageTitle">
+            <h1>Pour un voyage inoubliable …</h1>
+        </div>
+    </div>
+</section>
