@@ -137,7 +137,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                                 }
 
                                 // nb_nuits : au minimum 1
-                                    // ✅ VOYAGE : prix par personne (pas par nuit)
+                                    //   VOYAGE : prix par personne (pas par nuit)
 $prix_total = round($prix_unitaire * $nb_personnes, 2);
 
 
@@ -212,11 +212,11 @@ $ts_retour = strtotime($date_retour);
 $nb_nuits = (int)(($ts_retour - $ts_depart) / 86400);
 if ($nb_nuits < 1) $nb_nuits = 1;
 
-// ✅ DESTINATION : prix par nuit ET par personne
+//   DESTINATION : prix par nuit ET par personne
 $prix_total = round($prix_unitaire * $nb_personnes * $nb_nuits, 2);
 
 
-                                // ✅ appelle une méthode à ajouter (voir plus bas)
+                                // appelle une méthode à ajouter (voir plus bas)
                                 $ok = $unControleur->reserver_destination([
                                     "id_client" => $idClient,
                                     "id_destination" => $id_destination,

@@ -36,7 +36,7 @@ $prenomAffiche =
             </button>
 
             <a href="index.php?page=home" class="navbar-brand logo-spacing d-none d-lg-flex">
-                <img src="icons/bfly-logo.png" alt="logo" class="logo-size">
+                <img src="icons/logoAcc.png" alt="logo" class="logo-size">
             </a>
 
         </div>

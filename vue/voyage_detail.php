@@ -106,7 +106,7 @@ $voyage = $voyage ?? null;
           <?php if (!$bloque): ?>
             <a
               class="btn btn-success btn-sm flex-fill text-center px-3 detail-btn"
-              href="index.php?page=reservation&id=<?= $idVoyage ?>"
+              href="index.php?page=reservation&id_voyage=<?= $idVoyage ?>"
             >
               réserver
             </a>

@@ -2,6 +2,8 @@
 
 $destinationToEdit = $destinationToEdit ?? ($destination ?? null);
 $continents = $continents ?? [];
+$errors = $errors ?? [];
+$success = $success ?? "";
 
 $isEdit = ($destinationToEdit !== null);
 
@@ -21,11 +23,26 @@ $isActif = ((int)($destinationToEdit["actif"] ?? 1) === 1);
 
 <h3 class="section-title text-center mt-5">Gestion des Destinations</h3>
 
+<?php if (!empty($errors)): ?>
+    <div class="alert alert-danger">
+        <ul class="mb-0">
+            <?php foreach ($errors as $erreur): ?>
+                <li><?= htmlspecialchars((string)$erreur) ?></li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+<?php endif; ?>
+
+<?php if ($success !== ""): ?>
+    <div class="alert alert-success">
+        <?= htmlspecialchars($success) ?>
+    </div>
+<?php endif; ?>
+
 <form action="" method="post" enctype="multipart/form-data" class="mb-4">
 
     <input type="hidden" name="id_destination" value="<?= htmlspecialchars((string)$idDestination) ?>">
 
-    <!-- ===== COLONNE UNIQUE CENTRÉE ===== -->
     <div class="row justify-content-center">
         <div class="col-12 col-md-10 col-lg-6 col-xl-5">
 
@@ -82,7 +99,6 @@ $isActif = ((int)($destinationToEdit["actif"] ?? 1) === 1);
                 value="<?= htmlspecialchars((string)$prixBase) ?>"
             >
 
-            <!-- ===== IMAGE ===== -->
             <label class="form-label mt-2">image (jpg/jpeg/png/gif/webp)</label>
             <input type="file" name="image" class="form-control mb-2" accept="image/*">
 
@@ -96,10 +112,9 @@ $isActif = ((int)($destinationToEdit["actif"] ?? 1) === 1);
                 >
                 <div class="form-text mb-3">laisse vide pour conserver l'image actuelle.</div>
             <?php else: ?>
-                <div class="form-text mb-3">(obligatoire à la création)</div>
+                <div class="form-text mb-3">image facultative.</div>
             <?php endif; ?>
 
-            <!-- ===== ACTIF ===== -->
             <div class="form-check form-switch mt-2">
                 <input
                     class="form-check-input"

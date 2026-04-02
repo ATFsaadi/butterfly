@@ -1,26 +1,50 @@
 <?php
 $destinations = $destinations ?? [];
 $offre = $offre ?? null;
+$errors = $errors ?? [];
+$success = $success ?? "";
 
-$isEdit = ($offre !== null);
+$isEdit = ($offre !== null && !empty($offre["id_offre"] ?? 0));
 
-$idOffre = (int)($offre["id_offre"] ?? 0);
-$idOffreDestination = (int)($offre["id_destination"] ?? 0);
+$idOffre = (int)($offre["id_offre"] ?? ($_POST["id_offre"] ?? 0));
+$idOffreDestination = (int)($offre["id_destination"] ?? ($_POST["id_destination"] ?? 0));
 
-$titre = (string)($offre["titre"] ?? "");
-$reduc = (int)($offre["pourcentage_reduction"] ?? 0);
-$dateDebut = (string)($offre["date_debut"] ?? "");
-$dateFin = (string)($offre["date_fin"] ?? "");
-$isActif = ((int)($offre["actif"] ?? 1) === 1);
+$titre = (string)($offre["titre"] ?? ($_POST["titre"] ?? ""));
+$reduc = (int)($offre["pourcentage_reduction"] ?? ($_POST["pourcentage_reduction"] ?? 0));
+$dateDebut = (string)($offre["date_debut"] ?? ($_POST["date_debut"] ?? ""));
+$dateFin = (string)($offre["date_fin"] ?? ($_POST["date_fin"] ?? ""));
+
+if ($offre !== null && array_key_exists("actif", $offre)) {
+    $isActif = ((int)$offre["actif"] === 1);
+} elseif ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $isActif = isset($_POST["actif"]);
+} else {
+    $isActif = true;
+}
 ?>
 
 <h3 class="section-title text-center mt-5">Gestion des Offres</h3>
+
+<?php if (!empty($errors)): ?>
+    <div class="alert alert-danger">
+        <ul class="mb-0">
+            <?php foreach ($errors as $erreur): ?>
+                <li><?= htmlspecialchars((string)$erreur) ?></li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+<?php endif; ?>
+
+<?php if ($success !== ""): ?>
+    <div class="alert alert-success">
+        <?= htmlspecialchars($success) ?>
+    </div>
+<?php endif; ?>
 
 <form action="" method="post" class="mb-4">
 
     <input type="hidden" name="id_offre" value="<?= htmlspecialchars((string)$idOffre) ?>">
 
-    <!-- ===== COLONNE UNIQUE CENTRÉE ===== -->
     <div class="row justify-content-center">
         <div class="col-12 col-md-10 col-lg-6 col-xl-5">
 
@@ -30,8 +54,16 @@ $isActif = ((int)($offre["actif"] ?? 1) === 1);
                 <?php foreach ($destinations as $d): ?>
                     <?php
                     $idDest = (int)($d["id_destination"] ?? 0);
-                    $labelDest = trim((string)($d["pays"] ?? "") . " - " . (string)($d["ville"] ?? ""), " -");
-                    $selected = ($isEdit && $idOffreDestination === $idDest) ? "selected" : "";
+                    $pays = (string)($d["pays"] ?? "");
+                    $ville = (string)($d["ville"] ?? "");
+                    $actifDest = (int)($d["actif"] ?? 1);
+
+                    $labelDest = trim($pays . " - " . $ville, " -");
+                    if ($actifDest !== 1) {
+                        $labelDest .= " (inactive)";
+                    }
+
+                    $selected = ($idOffreDestination === $idDest) ? "selected" : "";
                     ?>
                     <option value="<?= $idDest ?>" <?= $selected ?>>
                         <?= htmlspecialchars($labelDest) ?>
@@ -54,7 +86,7 @@ $isActif = ((int)($offre["actif"] ?? 1) === 1);
                 name="pourcentage_reduction"
                 placeholder="réduction (%)"
                 required
-                min="0"
+                min="1"
                 max="100"
                 class="form-control mb-2"
                 value="<?= htmlspecialchars((string)$reduc) ?>"
@@ -81,7 +113,6 @@ $isActif = ((int)($offre["actif"] ?? 1) === 1);
                 </div>
             </div>
 
-            <!-- ===== SWITCH ACTIF ===== -->
             <div class="form-check form-switch mt-2">
                 <input
                     class="form-check-input"

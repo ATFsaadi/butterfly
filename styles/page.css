@@ -54,7 +54,7 @@
     opacity: 0.85;
 }
 
-/* ✅ Compat : tes classes existantes */
+/*   Compat : tes classes existantes */
 .detail-btn,
 .grid-btn,
 .res-btn {
@@ -353,7 +353,7 @@
     padding: 10px 16px;
     border-radius: 50rem;
 }
-/* ✅ hover blanc demandé */
+/*   hover blanc demandé */
 .res-cta:hover {
     background: #fff;
     color: var(--primary-color);
@@ -370,7 +370,7 @@
 }
 
 /* =========================================================
-   ✅ RESPONSIVE (séparés)
+     RESPONSIVE (séparés)
    ========================================================= */
 
 /* CAROUSEL */

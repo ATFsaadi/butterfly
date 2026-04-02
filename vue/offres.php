@@ -57,7 +57,7 @@ $queryMore = http_build_query($params);
 
             <div class="grid-media">
 
-              <!-- ✅ TRIANGLE PROMO -->
+              <!--   TRIANGLE PROMO -->
               <?php if ($reduc > 0): ?>
                 <span class="grid-sale" data-sale="-<?= (int)$reduc ?>%"></span>
               <?php endif; ?>
@@ -70,12 +70,12 @@ $queryMore = http_build_query($params);
                 </div>
               <?php endif; ?>
 
-              <!-- ✅ TITRE SUR IMAGE -->
+              <!--   TITRE SUR IMAGE -->
               <div class="grid-title-overlay">
                 <?= htmlspecialchars($titre !== "" ? $titre : $lieu) ?>
               </div>
 
-              <!-- ✅ PRIX ANGLE -->
+              <!--   PRIX ANGLE -->
               <?php if ($prixAffiche > 0): ?>
                 <span class="grid-price-badge">
                   <?= number_format($prixAffiche, 0, ",", " ") ?> €
@@ -84,7 +84,7 @@ $queryMore = http_build_query($params);
 
             </div>
 
-            <!-- ✅ ACTIONS EN BAS -->
+            <!--   ACTIONS EN BAS -->
             <div class="card-body grid-body">
               <?php if ($idDest > 0): ?>
                 <div class="grid-actions">
@@ -108,7 +108,7 @@ $queryMore = http_build_query($params);
 
     </div>
 
-    <!-- ✅ Bouton afficher plus -->
+    <!--   Bouton afficher plus -->
     <?php if ($limit < $total): ?>
       <div class="d-flex justify-content-center mt-4">
         <a class="btn btn-outline-primary btn-sm grid-btn" href="?<?= htmlspecialchars($queryMore) ?>">

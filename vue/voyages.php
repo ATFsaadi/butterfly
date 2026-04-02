@@ -60,12 +60,12 @@ $queryMore = http_build_query($params);
                 </div>
               <?php endif; ?>
 
-              <!-- ✅ TITRE SUR IMAGE -->
+              <!--   TITRE SUR IMAGE -->
               <div class="grid-title-overlay">
                 <?= htmlspecialchars($titre) ?>
               </div>
 
-              <!-- ✅ PRIX ANGLE -->
+              <!--   PRIX ANGLE -->
               <?php if ($prix > 0): ?>
                 <span class="grid-price-badge">
                   <?= number_format($prix, 0, ",", " ") ?> €
@@ -74,7 +74,7 @@ $queryMore = http_build_query($params);
 
             </div>
 
-            <!-- ✅ ACTIONS EN BAS -->
+            <!--   ACTIONS EN BAS -->
             <div class="card-body grid-body">
 
               <div class="grid-actions">
@@ -119,7 +119,7 @@ $queryMore = http_build_query($params);
       <?php endforeach; ?>
     </div>
 
-    <!-- ✅ Bouton afficher plus -->
+    <!--   Bouton afficher plus -->
     <?php if ($limit < $total): ?>
       <div class="d-flex justify-content-center mt-4">
         <a class="btn btn-outline-primary btn-sm grid-btn" href="?<?= htmlspecialchars($queryMore) ?>">

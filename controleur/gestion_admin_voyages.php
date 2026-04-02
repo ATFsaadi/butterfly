@@ -14,26 +14,36 @@ if (isset($_GET["action"], $_GET["id_voyage"])) {
     $id_voyage = (int) $_GET["id_voyage"];
 
     if ($action === "sup") {
-        $unControleur->delete_voyage($id_voyage);
+        $voyageExistant = $unControleur->selectWhere_voyage($id_voyage);
+
+        if ($voyageExistant) {
+            $unControleur->delete_voyage($id_voyage);
+        }
+
         header("location: index.php?page=admin_voyages");
         exit();
     }
 
     if ($action === "edit") {
         $voyageToEdit = $unControleur->selectWhere_voyage($id_voyage);
+
+        if (!$voyageToEdit) {
+            header("location: index.php?page=admin_voyages");
+            exit();
+        }
     }
 }
 
 function handleVoyageImageUpload(array $file): ?string
 {
-    if (!isset($file) || ($file["error"] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
+    if (($file["error"] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
         return null;
     }
 
     $allowed = ["jpg", "jpeg", "png", "gif", "webp"];
-    $ext = strtolower(pathinfo($file["name"], PATHINFO_EXTENSION));
+    $ext = strtolower(pathinfo($file["name"] ?? "", PATHINFO_EXTENSION));
 
-    if (!in_array($ext, $allowed, true)) {
+    if ($ext === "" || !in_array($ext, $allowed, true)) {
         return null;
     }
 
@@ -43,10 +53,10 @@ function handleVoyageImageUpload(array $file): ?string
         mkdir($targetDir, 0755, true);
     }
 
-    $fileName = "voyage_" . time() . "_" . uniqid() . "." . $ext;
+    $fileName = "voyage_" . time() . "_" . bin2hex(random_bytes(6)) . "." . $ext;
     $targetFile = $targetDir . $fileName;
 
-    if (move_uploaded_file($file["tmp_name"], $targetFile)) {
+    if (is_uploaded_file($file["tmp_name"] ?? "") && move_uploaded_file($file["tmp_name"], $targetFile)) {
         return $targetFile;
     }
 
@@ -54,21 +64,37 @@ function handleVoyageImageUpload(array $file): ?string
 }
 
 if (isset($_POST["submit"])) {
-
     $isEdit = !empty($_POST["id_voyage"]);
 
+    $id_voyage = (int) ($_POST["id_voyage"] ?? 0);
     $id_destination = (int) ($_POST["id_destination"] ?? 0);
-    $titre = trim($_POST["titre"] ?? "");
-    $description = trim($_POST["description"] ?? "");
-    $date_depart = trim($_POST["date_depart"] ?? "");
-    $date_retour = trim($_POST["date_retour"] ?? "");
+    $titre = trim((string) ($_POST["titre"] ?? ""));
+    $description = trim((string) ($_POST["description"] ?? ""));
+    $date_depart = trim((string) ($_POST["date_depart"] ?? ""));
+    $date_retour = trim((string) ($_POST["date_retour"] ?? ""));
     $prix = (float) ($_POST["prix"] ?? 0);
     $nb_places = (int) ($_POST["nb_places"] ?? 0);
     $nb_places_restantes = (int) ($_POST["nb_places_restantes"] ?? 0);
-    $statut = trim($_POST["statut"] ?? "actif");
+    $statut = trim((string) ($_POST["statut"] ?? "actif"));
+
+    if ($isEdit) {
+        if ($voyageToEdit === null || (int) ($voyageToEdit["id_voyage"] ?? 0) !== $id_voyage) {
+            $voyageToEdit = $unControleur->selectWhere_voyage($id_voyage);
+        }
+
+        if (!$voyageToEdit) {
+            header("location: index.php?page=admin_voyages");
+            exit();
+        }
+    }
 
     if ($id_destination <= 0) {
         $errors[] = "la destination est obligatoire.";
+    } else {
+        $destination = $unControleur->selectWhere_destination($id_destination);
+        if (!$destination) {
+            $errors[] = "la destination sélectionnée est invalide.";
+        }
     }
 
     if ($titre === "") {
@@ -76,7 +102,7 @@ if (isset($_POST["submit"])) {
     }
 
     if ($date_depart === "") {
-        $errors[] = "la date depart est obligatoire.";
+        $errors[] = "la date départ est obligatoire.";
     }
 
     if ($date_retour === "") {
@@ -84,23 +110,23 @@ if (isset($_POST["submit"])) {
     }
 
     if ($date_depart !== "" && $date_retour !== "" && $date_retour < $date_depart) {
-        $errors[] = "la date retour doit être >= date depart.";
+        $errors[] = "la date retour doit être supérieure ou égale à la date départ.";
     }
 
     if ($prix <= 0) {
-        $errors[] = "le prix doit être > 0.";
+        $errors[] = "le prix doit être supérieur à 0.";
     }
 
     if ($nb_places <= 0) {
-        $errors[] = "le nombre de places doit être > 0.";
+        $errors[] = "le nombre de places doit être supérieur à 0.";
     }
 
     if ($nb_places_restantes < 0) {
-        $errors[] = "les places restantes doivent être >= 0.";
+        $errors[] = "les places restantes doivent être supérieures ou égales à 0.";
     }
 
     if ($nb_places > 0 && $nb_places_restantes > $nb_places) {
-        $errors[] = "les places restantes doivent être <= nb places.";
+        $errors[] = "les places restantes doivent être inférieures ou égales au nombre de places.";
     }
 
     $statutsOk = ["actif", "complet", "annule"];
@@ -108,64 +134,70 @@ if (isset($_POST["submit"])) {
         $errors[] = "statut invalide.";
     }
 
-    if ($isEdit) {
-        $idEdit = (int) $_POST["id_voyage"];
-
-        if ($voyageToEdit === null || (int) ($voyageToEdit["id_voyage"] ?? 0) !== $idEdit) {
-            $voyageToEdit = $unControleur->selectWhere_voyage($idEdit);
-        }
+    if ($statut === "actif" && $nb_places_restantes === 0) {
+        $statut = "complet";
     }
 
-    if (!empty($_FILES["image"]["name"])) {
-        $imgPath = handleVoyageImageUpload($_FILES["image"]);
-        if ($imgPath) {
-            $_POST["image_url"] = $imgPath;
-        } else {
+    $image_url = null;
+
+    if (!empty($_FILES["image"]["name"] ?? "")) {
+        $image_url = handleVoyageImageUpload($_FILES["image"]);
+
+        if ($image_url === null) {
             $errors[] = "image invalide ou upload échoué (jpg/jpeg/png/gif/webp).";
         }
     } else {
-        if ($isEdit) {
-            $_POST["image_url"] = $voyageToEdit["image_url"] ?? null;
-        } else {
-            $_POST["image_url"] = null;
-        }
+        $image_url = $isEdit ? ($voyageToEdit["image_url"] ?? null) : null;
     }
 
-    $_POST["id_destination"] = $id_destination;
-    $_POST["titre"] = $titre;
-    $_POST["description"] = ($description !== "") ? $description : null;
-    $_POST["date_depart"] = $date_depart;
-    $_POST["date_retour"] = $date_retour;
-    $_POST["prix"] = $prix;
-    $_POST["nb_places"] = $nb_places;
-    $_POST["nb_places_restantes"] = $nb_places_restantes;
-    $_POST["statut"] = $statut;
+    $tab = [
+        "id_destination" => $id_destination,
+        "titre" => $titre,
+        "description" => $description !== "" ? $description : null,
+        "date_depart" => $date_depart,
+        "date_retour" => $date_retour,
+        "prix" => $prix,
+        "nb_places" => $nb_places,
+        "nb_places_restantes" => $nb_places_restantes,
+        "image_url" => $image_url,
+        "statut" => $statut,
+    ];
+
+    if ($isEdit) {
+        $tab["id_voyage"] = $id_voyage;
+    }
 
     if (empty($errors)) {
         if ($isEdit) {
-            $unControleur->update_voyage($_POST);
-            header("location: index.php?page=admin_voyages");
-            exit();
+            $unControleur->update_voyage($tab);
         } else {
-            $unControleur->insert_voyage($_POST);
-            header("location: index.php?page=admin_voyages");
-            exit();
+            $unControleur->insert_voyage($tab);
         }
+
+        header("location: index.php?page=admin_voyages");
+        exit();
+    }
+
+    if ($isEdit) {
+        $voyageToEdit = $tab;
+        $voyageToEdit["id_voyage"] = $id_voyage;
+    } else {
+        $voyageToEdit = $tab;
     }
 }
 
 if (isset($_POST["Filtrer"])) {
-    $filtre = trim($_POST["filtre"] ?? "");
+    $filtre = trim((string) ($_POST["filtre"] ?? ""));
     $all = $unControleur->selectAll_voyages_admin();
 
     if ($filtre !== "") {
         $f = mb_strtolower($filtre);
 
         $lesVoyages = array_values(array_filter($all, function ($v) use ($f) {
-            return str_contains(mb_strtolower($v["titre"] ?? ""), $f)
-                || str_contains(mb_strtolower($v["pays"] ?? ""), $f)
-                || str_contains(mb_strtolower($v["ville"] ?? ""), $f)
-                || str_contains(mb_strtolower($v["statut"] ?? ""), $f);
+            return str_contains(mb_strtolower((string) ($v["titre"] ?? "")), $f)
+                || str_contains(mb_strtolower((string) ($v["pays"] ?? "")), $f)
+                || str_contains(mb_strtolower((string) ($v["ville"] ?? "")), $f)
+                || str_contains(mb_strtolower((string) ($v["statut"] ?? "")), $f);
         }));
     } else {
         $lesVoyages = $all;

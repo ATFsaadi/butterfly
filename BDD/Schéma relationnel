@@ -1,196 +1,198 @@
--- schéma relationnel (logique métier)
+========================================
+SCHÉMA RELATIONNEL — BFLY PPE
+========================================
 
-utilisateurs (1) ─────── (0..1) client
-                        |
-                        | (1) ─────── (0..n) reservations_destinations ─────── (1) destinations
-                        |
-                        | (1) ─────── (0..n) reservations_voyages ──────────── (1) voyages_organises ─── (1) destinations
+1) TABLES PRINCIPALES
+---------------------
 
-continents (1) ─────────────── (0..n) destinations ─────────────── (0..n) offres
+UTILISATEURS
+- id_utilisateur (PK)
+- email (UK)
+- mot_de_passe_hash
+- role
+- actif
+- date_creation
+- date_modification
 
-relations expliquées vite :
-- utilisateurs → client : 1 utilisateur = 0 ou 1 client (admin possible sans fiche client)
-- continents → destinations : 1 continent contient plusieurs destinations
-- destinations → voyages_organises : 1 destination peut avoir plusieurs voyages organisés
-- destinations → offres : 1 destination peut avoir plusieurs offres
-- client → reservations_* : 1 client peut faire plusieurs réservations
-- reservations_destinations lie client + destination (sur mesure)
-- reservations_voyages lie client + voyage_organise (pack, dates fixes)
+CLIENT
+- id_client (PK)
+- id_utilisateur (FK, UK)
+- nom
+- prenom
+- telephone
+- adresse
+- ville
+- pays
+- date_creation
+- date_modification
 
+CONTINENTS
+- id_continent (PK)
+- nom (UK)
 
--- texte de présentation orale (2–3 minutes)
+DESTINATIONS
+- id_destination (PK)
+- pays
+- ville
+- id_continent (FK, nullable)
+- description
+- prix_base
+- image_url
+- actif
+- date_creation
+- date_modification
+- contrainte unique : (pays, ville)
 
-« ma base de données s’appelle bfly_ppe. elle a été conçue pour un site d’agence de voyage
-qui propose des destinations, des voyages organisés, des offres promotionnelles et des réservations.
+VOYAGES_ORGANISES
+- id_voyage (PK)
+- id_destination (FK)
+- titre
+- description
+- date_depart
+- date_retour
+- prix
+- nb_places
+- nb_places_restantes
+- image_url
+- statut
+- date_creation
+- date_modification
 
-j’ai séparé la table utilisateurs, qui gère l’authentification et les rôles, de la table client,
-qui contient les informations personnelles. cela permet d’avoir des administrateurs sans fiche client
-et respecte les bonnes pratiques de sécurité et de modélisation.
+OFFRES
+- id_offre (PK)
+- id_destination (FK)
+- titre
+- pourcentage_reduction
+- date_debut
+- date_fin
+- actif
+- date_creation
+- date_modification
 
-les destinations sont organisées par continents afin de faciliter la navigation, les filtres et les statistiques.
-chaque destination peut proposer des voyages organisés avec des dates fixes, un prix, un nombre de places,
-des places restantes et un statut.
+RESERVATIONS_DESTINATIONS
+- id_reservation_destination (PK)
+- id_client (FK)
+- id_destination (FK)
+- date_depart
+- date_retour
+- nb_personnes
+- prix_total
+- statut
+- date_reservation
+- date_modification
 
-j’ai aussi ajouté une table offres pour gérer les promotions avec un pourcentage de réduction,
-une période de validité et un indicateur actif.
-
-enfin, j’ai créé deux types de réservations : une pour les voyages organisés et une autre pour les réservations sur mesure.
-ce choix permet de gérer correctement les différences métier entre les deux cas et d’éviter une table unique trop complexe.
-l’intégrité des données est garantie par des clés étrangères et des contraintes, ce qui rend la base cohérente et évolutive. »
-
-
--- pourquoi 2 tables de réservation ? (question de jury)
-
-« j’ai séparé les réservations en deux tables car elles ne représentent pas le même besoin métier.
-une réservation de voyage organisé concerne un voyage avec dates fixes, prix défini et places limitées.
-une réservation sur mesure concerne une destination avec dates libres et un prix calculé.
-regrouper les deux dans une seule table aurait créé des champs inutiles ou vides et compliqué la logique.
-la séparation rend la base plus claire, plus maintenable et plus réaliste. »
-
-
--- schéma uml (à dessiner à la main)
-
-but : tu dessines des "classes" (rectangles) + associations + cardinalités.
-
-conseil dessin :
-- fais 8 rectangles (une par table).
-- mets le nom en haut, puis les attributs principaux.
-- trace les relations avec les cardinalités.
-
-
--- classe utilisateurs
-
-- id_utilisateur : int (pk)
-- email : varchar(150) (uk)
-- mot_de_passe_hash : varchar(255)
-- role : enum('client','admin')
-- actif : boolean
-- date_creation : datetime
-
-association :
-utilisateurs 1 -------- 0..1 client
-(1 utilisateur peut avoir 0 ou 1 fiche client)
-
-
--- classe client
-
-- id_client : int (pk)
-- id_utilisateur : int (fk, uk)
-- nom : varchar(80)
-- prenom : varchar(80)
-- telephone : varchar(25)
-- adresse : varchar(255)
-- ville : varchar(100)
-- pays : varchar(100)
-- date_creation : datetime
-
-associations :
-client 1 -------- 0..n reservations_destinations
-client 1 -------- 0..n reservations_voyages
-
-
--- classe continents
-
-- id_continent : int (pk)
-- nom : varchar(50) (uk)
-
-association :
-continents 1 -------- 0..n destinations
-(1 continent contient plusieurs destinations)
+RESERVATIONS_VOYAGES
+- id_reservation_voyage (PK)
+- id_client (FK)
+- id_voyage (FK)
+- nb_personnes
+- prix_total
+- statut
+- date_reservation
+- date_modification
 
 
--- classe destinations
+2) RELATIONS
+------------
 
-- id_destination : int (pk)
-- pays : varchar(100)
-- ville : varchar(100)
-- id_continent : int (fk, nullable)
-- description : text
-- prix_base : decimal(10,2)
-- image_url : varchar(255)
-- actif : boolean
-- date_creation : datetime
+UTILISATEURS (1,1) -------- (0,1) CLIENT
+Un utilisateur peut avoir au maximum une fiche client.
+Un administrateur peut exister sans fiche client.
 
-associations :
-destinations 1 -------- 0..n voyages_organises
-destinations 1 -------- 0..n offres
-destinations 1 -------- 0..n reservations_destinations
+CONTINENTS (1,1) -------- (0,n) DESTINATIONS
+Un continent contient plusieurs destinations.
+Une destination appartient à 0 ou 1 continent.
 
-note :
-id_continent peut être null (on delete set null)
+DESTINATIONS (1,1) -------- (0,n) VOYAGES_ORGANISES
+Une destination peut proposer plusieurs voyages organisés.
 
+DESTINATIONS (1,1) -------- (0,n) OFFRES
+Une destination peut avoir plusieurs offres promotionnelles.
 
--- classe voyages_organises
+CLIENT (1,1) -------- (0,n) RESERVATIONS_DESTINATIONS
+Un client peut faire plusieurs réservations sur mesure.
 
-- id_voyage : int (pk)
-- id_destination : int (fk)
-- titre : varchar(150)
-- description : text
-- date_depart : date
-- date_retour : date
-- prix : decimal(10,2)
-- nb_places : int
-- nb_places_restantes : int
-- image_url : varchar(255)
-- statut : enum('actif','complet','annule')
-- date_creation : datetime
+CLIENT (1,1) -------- (0,n) RESERVATIONS_VOYAGES
+Un client peut faire plusieurs réservations de voyages organisés.
 
-associations :
-voyages_organises 1 -------- 0..n reservations_voyages
-destinations 1 -------- 0..n voyages_organises (rappel)
+DESTINATIONS (1,1) -------- (0,n) RESERVATIONS_DESTINATIONS
+Une destination peut être réservée plusieurs fois.
+
+VOYAGES_ORGANISES (1,1) -------- (0,n) RESERVATIONS_VOYAGES
+Un voyage organisé peut être réservé plusieurs fois.
 
 
--- classe offres
+3) REPRÉSENTATION TEXTE SIMPLE
+------------------------------
 
-- id_offre : int (pk)
-- id_destination : int (fk)
-- titre : varchar(150)
-- pourcentage_reduction : int
-- date_debut : date
-- date_fin : date
-- actif : boolean
-- date_creation : datetime
+utilisateurs (1) ------ (0..1) client
 
-association :
-destinations 1 -------- 0..n offres
+continents (1) ------ (0..n) destinations
 
+destinations (1) ------ (0..n) voyages_organises
+destinations (1) ------ (0..n) offres
+destinations (1) ------ (0..n) reservations_destinations
 
--- classe reservations_destinations
+client (1) ------ (0..n) reservations_destinations
+client (1) ------ (0..n) reservations_voyages
 
-- id_reservation_destination : int (pk)
-- id_client : int (fk)
-- id_destination : int (fk)
-- date_depart : date
-- date_retour : date
-- nb_personnes : int
-- prix_total : decimal(10,2)
-- statut : enum('en_attente','confirmee','annulee')
-- date_reservation : datetime
-
-associations :
-client 1 -------- 0..n reservations_destinations
-destinations 1 --- 0..n reservations_destinations
+voyages_organises (1) ------ (0..n) reservations_voyages
 
 
--- classe reservations_voyages
+4) CONTRAINTES MÉTIER IMPORTANTES
+---------------------------------
 
-- id_reservation_voyage : int (pk)
-- id_client : int (fk)
-- id_voyage : int (fk)
-- nb_personnes : int
-- prix_total : decimal(10,2)
-- statut : enum('en_attente','confirmee','annulee')
-- date_reservation : datetime
+- email unique dans utilisateurs
+- un seul client par utilisateur
+- une destination ne peut pas être en double pour le même couple (pays, ville)
+- prix_base > 0
+- prix voyage > 0
+- nb_places > 0
+- nb_places_restantes >= 0
+- nb_places_restantes <= nb_places
+- pourcentage_reduction > 0 et <= 100
+- date_fin >= date_debut pour les offres
+- date_retour >= date_depart pour les voyages
+- date_retour >= date_depart pour les réservations destinations
+- nb_personnes > 0
+- prix_total >= 0
 
-associations :
-client 1 -------- 0..n reservations_voyages
-voyages_organises 1 ---- 0..n reservations_voyages
+
+5) CHOIX DE MODÉLISATION
+------------------------
+
+- séparation UTILISATEURS / CLIENT :
+  l’authentification est séparée des informations personnelles.
+  Cela permet d’avoir des comptes administrateurs sans fiche client.
+
+- séparation RESERVATIONS_DESTINATIONS / RESERVATIONS_VOYAGES :
+  une réservation sur mesure et une réservation de voyage organisé
+  ne suivent pas exactement la même logique métier.
+
+- gestion logique de l’activité :
+  certaines tables utilisent un champ actif ou statut
+  pour éviter une suppression brutale des données.
 
 
--- détails qui font pro (à dire si besoin)
+6) TEXTE COURT POUR L’ORAL
+--------------------------
 
-- séparation utilisateurs / client = sécurité + modularité (admin sans profil client)
-- contraintes check : date_retour >= date_depart ; nb_places_restantes <= nb_places ; remise <= 100
-- clés étrangères garantissent l’intégrité référentielle
-- on delete cascade sur client/utilisateurs pour supprimer proprement
-- on delete restrict sur réservations → évite de supprimer une destination/voyage déjà réservé
+Ma base de données s’appelle bfly_ppe.
+Elle a été conçue pour une agence de voyage qui propose des destinations,
+des voyages organisés, des offres promotionnelles et des réservations.
+
+J’ai séparé la table utilisateurs de la table client.
+La table utilisateurs gère la connexion, l’email, le mot de passe et le rôle.
+La table client contient les informations personnelles.
+Cela permet d’avoir des administrateurs sans fiche client.
+
+Les destinations sont liées aux continents.
+Chaque destination peut avoir plusieurs offres et plusieurs voyages organisés.
+
+J’ai aussi séparé les réservations en deux tables :
+reservations_destinations pour les réservations sur mesure
+et reservations_voyages pour les voyages organisés.
+Ce choix rend la base plus claire, plus réaliste et plus facile à maintenir.
+
+Enfin, l’intégrité des données est assurée par des clés étrangères,
+des contraintes d’unicité et des vérifications sur les dates, les prix et les quantités.

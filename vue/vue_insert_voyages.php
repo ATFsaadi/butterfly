@@ -2,6 +2,8 @@
 
 $voyageToEdit = $voyageToEdit ?? ($voyage ?? null);
 $destinations = $destinations ?? [];
+$errors = $errors ?? [];
+$success = $success ?? "";
 
 $isEdit = ($voyageToEdit !== null);
 
@@ -22,11 +24,26 @@ $statut = (string)($voyageToEdit["statut"] ?? "actif");
 
 <h3 class="section-title text-center mt-5">Gestion des Voyages</h3>
 
+<?php if (!empty($errors)): ?>
+    <div class="alert alert-danger">
+        <ul class="mb-0">
+            <?php foreach ($errors as $erreur): ?>
+                <li><?= htmlspecialchars((string)$erreur) ?></li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+<?php endif; ?>
+
+<?php if ($success !== ""): ?>
+    <div class="alert alert-success">
+        <?= htmlspecialchars($success) ?>
+    </div>
+<?php endif; ?>
+
 <form action="" method="post" enctype="multipart/form-data" class="mb-4">
 
     <input type="hidden" name="id_voyage" value="<?= htmlspecialchars((string)$idVoyage) ?>">
 
-    <!-- ===== COLONNE UNIQUE CENTRÉE ===== -->
     <div class="row justify-content-center">
         <div class="col-12 col-md-10 col-lg-6 col-xl-5">
 
@@ -38,10 +55,16 @@ $statut = (string)($voyageToEdit["statut"] ?? "actif");
                     $dpays = (string)($d["pays"] ?? "");
                     $dville = (string)($d["ville"] ?? "");
                     $dcont = (string)($d["continent"] ?? "");
+                    $dactif = (int)($d["actif"] ?? 1);
+
                     $label = trim($dpays . " - " . $dville, " -");
                     if ($dcont !== "") {
                         $label .= " (" . $dcont . ")";
                     }
+                    if ($dactif !== 1) {
+                        $label .= " - inactive";
+                    }
+
                     $selected = ((string)$idDestination !== "" && (int)$idDestination === $did) ? "selected" : "";
                     ?>
                     <option value="<?= $did ?>" <?= $selected ?>>
@@ -124,7 +147,6 @@ $statut = (string)($voyageToEdit["statut"] ?? "actif");
                 </div>
             </div>
 
-            <!-- ===== IMAGE ===== -->
             <label class="form-label mt-2">image (jpg/jpeg/png/gif/webp)</label>
             <input type="file" name="image" class="form-control mb-2" accept="image/*">
 
@@ -138,10 +160,9 @@ $statut = (string)($voyageToEdit["statut"] ?? "actif");
                 >
                 <div class="form-text mb-3">laisse vide pour conserver l'image actuelle.</div>
             <?php else: ?>
-                <div class="form-text mb-3">(obligatoire à la création)</div>
+                <div class="form-text mb-3">image facultative.</div>
             <?php endif; ?>
 
-            <!-- ===== STATUT ===== -->
             <label class="form-label">statut du voyage</label>
             <select name="statut" class="form-control mb-3">
                 <?php

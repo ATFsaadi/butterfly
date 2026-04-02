@@ -36,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["maj_statut"])) {
                 "statut" => $statut,
             ]);
 
-            // ✅ si confirmation → vérifier si le voyage devient complet
+            //   si confirmation → vérifier si le voyage devient complet
             if ($statut === "confirmee") {
                 $idVoyage = $unControleur->select_id_voyage_by_reservation_voyage($id_reservation);
                 if ($idVoyage > 0) {

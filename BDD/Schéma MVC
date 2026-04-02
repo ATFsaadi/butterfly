@@ -1,103 +1,333 @@
 ========================================
-MVC — GESTION DES RÉSERVATIONS (2 tables)
+SCHÉMA MVC — PROJET BFLY
 ========================================
 
-TABLES BDD :
-- reservations_destinations  (sur mesure)  -> destination + dates libres
-- reservations_voyages       (organisé)    -> voyage + places + dates fixes
+1) PRINCIPE GÉNÉRAL
+-------------------
 
-----------------------------------------
-ROUTES (exemples)
-----------------------------------------
-Client :
-- index.php?page=reservations
-- index.php?page=reservation&type=destination&id_destination=3
-- index.php?page=reservation&type=voyage&id_voyage=5
+Le projet suit l’architecture MVC :
 
-Admin :
+- Modèle :
+  contient les requêtes SQL et la logique d’accès aux données
+
+- Vue :
+  contient l’affichage HTML / CSS / PHP
+
+- Contrôleur :
+  récupère les données du modèle, traite les actions utilisateur
+  puis charge la vue adaptée
+
+
+2) POINT D’ENTRÉE
+-----------------
+
+index.php
+
+Rôle :
+- démarre la session
+- gère le token CSRF
+- instancie le contrôleur principal
+- lit le paramètre $_GET["page"]
+- charge le contrôleur correspondant
+- choisit la vue à afficher
+- inclut vue/layout.php
+
+
+3) ROUTES UTILISÉES
+-------------------
+
+Pages publiques :
+- index.php?page=home
+- index.php?page=destinations
+- index.php?page=destination_detail&id=...
+- index.php?page=voyages
+- index.php?page=voyage_detail&id=...
+- index.php?page=offres
+
+Authentification :
+- index.php?page=login
+- index.php?page=register
+
+Pages client :
+- index.php?page=reservation
+- index.php?page=dashboard_client
+
+Pages admin :
+- index.php?page=admin_destinations
+- index.php?page=admin_offres
+- index.php?page=admin_voyages
 - index.php?page=admin_reservations
 
-----------------------------------------
-CONTROLEURS
-----------------------------------------
+
+4) MODÈLE
+---------
+
+Fichier principal :
+- modele/modele_class.php
+
+Rôle :
+- connexion PDO à la base bfly_ppe
+- exécution des requêtes SQL
+- récupération des lignes
+- gestion des insertions, mises à jour, suppressions logiques
+- gestion de certaines transactions
+
+Méthodes principales :
+- utilisateurs / client
+  * select_user_login(...)
+  * selectWhere_utilisateur_by_email(...)
+  * insert_utilisateur(...)
+  * insert_client(...)
+  * inscription_complete(...)
+  * selectWhere_client_by_user(...)
+
+- continents / destinations
+  * selectAll_continents()
+  * insert_destination(...)
+  * selectAll_destinations()
+  * selectAll_destinations_admin()
+  * selectLike_destination(...)
+  * selectWhere_destination(...)
+  * update_destination(...)
+  * delete_destination(...)
+  * set_destination_actif(...)
+  * reserver_destination(...)
+
+- offres
+  * insert_offre(...)
+  * selectAll_offres()
+  * selectAll_offres_actives()
+  * selectLike_offre(...)
+  * selectLike_offres_actives(...)
+  * selectWhere_offre(...)
+  * selectWhere_offre_active_by_destination(...)
+  * update_offre(...)
+  * delete_offre(...)
+  * set_offre_actif(...)
+
+- voyages
+  * insert_voyage(...)
+  * selectAll_voyages_admin()
+  * selectAll_voyages_actifs()
+  * selectWhere_voyage(...)
+  * update_voyage(...)
+  * delete_voyage(...)
+  * selectAll_voyages_actifs_by_destination(...)
+  * set_voyage_statut(...)
+
+- réservations
+  * insert_reservation_destination(...)
+  * insert_reservation_voyage(...)
+  * reserver_voyage(...)
+  * selectAll_reservations_destinations()
+  * selectAll_reservations_voyages()
+  * selectWhere_reservations_destinations_by_client(...)
+  * selectWhere_reservations_voyages_by_client(...)
+  * annuler_reservation_destination(...)
+  * annuler_reservation_voyage(...)
+
+
+5) CONTRÔLEUR PRINCIPAL
+-----------------------
+
+Fichier :
+- controleur/controleur_class.php
+
+Rôle :
+- sert d’intermédiaire entre index.php et modele_class.php
+- centralise les appels aux méthodes du modèle
+- gère la vérification de connexion
+- gère la vérification du rôle administrateur
+- récupère l’id client connecté
+
+
+6) CONTRÔLEURS MÉTIER
+---------------------
+
+controleur/gestion_home.php
+- charge les données de la page d’accueil
+- récupère souvent les offres actives et voyages actifs mis en avant
+
+controleur/gestion_login.php
+- traite la connexion utilisateur
+- vérifie email + mot de passe
+- crée la session
+
+controleur/gestion_register.php
+- traite l’inscription
+- crée utilisateur + client
+
+controleur/gestion_logout.php
+- déconnexion
+
+controleur/gestion_destinations.php
+- affiche les destinations actives
+- gère la recherche par filtre
+
+controleur/gestion_destination_detail.php
+- affiche une destination précise
+- récupère l’offre active de la destination
+- récupère les voyages actifs liés
+- peut traiter une réservation destination
+
+controleur/gestion_voyages.php
+- affiche les voyages actifs
+- gère la recherche
+
+controleur/gestion_voyage_detail.php
+- affiche un voyage précis
+- prépare l’accès à la réservation
+
+controleur/gestion_offres.php
+- affiche les offres actives
+- gère la recherche
 
 controleur/gestion_reservations.php
-- Objectif :
-  * Afficher toutes les réservations du client (les 2 types)
-  * Créer une réservation selon le type (destination ou voyage)
+- page de réservation / historique client
+- réservation destination
+- réservation voyage
+- affichage des réservations du client
 
-- Logique :
-  1) Vérifier session (client connecté)
-  2) Lire $_GET['type'] si création
-  3) Si POST :
-      - si type = destination -> insert dans reservations_destinations
-      - si type = voyage      -> insert dans reservations_voyages
-  4) Récupérer :
-      - reservations destinations du client
-      - reservations voyages du client
-  5) Charger la vue : vue/reservation.php
+controleur/gestion_dashboard_client.php
+- affiche l’espace client
+- récupère les informations utiles du client connecté
+
+controleur/gestion_admin_destinations.php
+- CRUD admin sur les destinations
+- ajout
+- modification
+- activation / désactivation
+
+controleur/gestion_admin_offres.php
+- CRUD admin sur les offres
+- ajout
+- modification
+- activation / désactivation
+
+controleur/gestion_admin_voyages.php
+- CRUD admin sur les voyages
+- ajout
+- modification
+- changement de statut
+- suppression
+
+controleur/gestion_admin_reservations.php
+- affichage admin des réservations
+- gestion des statuts / annulations selon la logique du projet
 
 
-controleur/admin/gestion_admin_reservations.php
-- Objectif :
-  * Voir toutes les réservations (les 2 tables)
-  * Modifier statut (en_attente / confirmee / annulee) (optionnel)
+7) VUES
+-------
 
-- Logique :
-  1) Vérifier role admin
-  2) Charger :
-      - toutes reservations_destinations
-      - toutes reservations_voyages
-  3) Charger la vue : vue/admin/admin_reservations.php
+Vue globale :
+- vue/layout.php
 
-----------------------------------------
-MODELE (recommandé)
-----------------------------------------
+Vues principales :
+- vue/home.php
+- vue/destinations.php
+- vue/destination_detail.php
+- vue/voyages.php
+- vue/voyage_detail.php
+- vue/offres.php
+- vue/reservation.php
+- vue/dashboard_client.php
 
-modele/ReservationModel.php
-- Méthodes "SUR MESURE" (reservations_destinations)
-  * createReservationDestination(id_client, id_destination, date_depart, date_retour, nb_personnes, prix_total)
-  * getReservationsDestinationsByClient(id_client)
-  * getAllReservationsDestinations()
-  * updateStatutReservationDestination(id_reservation_destination, statut)  (optionnel)
+Vues admin :
+- vue/admin_destinations.php
+- vue/admin_offres.php
+- vue/admin_voyages.php
+- vue/admin_reservations.php
 
-- Méthodes "VOYAGE ORGANISÉ" (reservations_voyages)
-  * createReservationVoyage(id_client, id_voyage, nb_personnes, prix_total)
-  * getReservationsVoyagesByClient(id_client)
-  * getAllReservationsVoyages()
-  * updateStatutReservationVoyage(id_reservation_voyage, statut)           (optionnel)
+Sous-vues / formulaires :
+- vue/vue_insert_destinations.php
+- vue/vue_select_destinations.php
+- vue/vue_insert_offre.php
+- vue/vue_select_offres.php
+- vue/vue_insert_voyages.php
+- vue/vue_select_voyages.php
 
-BONUS IMPORTANT (si tu le fais) :
-- Quand une reservation_voyage passe "confirmee" :
-  -> diminuer voyages_organises.nb_places_restantes
-  (sinon tu risques d'accepter plus de places que possible)
+Composants :
+- vue/components/navbar.php
+- vue/components/footer.php
+- vue/components/carouselOffres.php
+- vue/components/carouselVoyages.php
+- vue/components/searchDestinations.php
+- vue/components/searchOffres.php
+- vue/components/searchVoyages.php
 
-----------------------------------------
-VUES
-----------------------------------------
+Modales :
+- vue/modales/login.php
+- vue/modales/register.php
+- vue/modales/map.php
 
-vue/reservation.php
-- Affiche 2 sections :
-  1) "Mes réservations sur mesure" (reservations_destinations)
-  2) "Mes réservations voyages organisés" (reservations_voyages)
-- Formulaire de création selon type (destination ou voyage)
 
-vue/admin/admin_reservations.php
-- Affiche 2 tableaux :
-  1) Tableau réservations sur mesure
-  2) Tableau réservations voyages organisés
-- (Option) boutons statut : en_attente / confirmee / annulee
+8) CYCLE DE FONCTIONNEMENT
+--------------------------
 
-----------------------------------------
-CONVENTION "TYPE"
-----------------------------------------
-type = destination  => utilise reservations_destinations
-type = voyage       => utilise reservations_voyages
+1. l’utilisateur clique sur une page
+2. index.php lit le paramètre page
+3. le contrôleur adapté est inclus
+4. le contrôleur appelle le contrôleur principal
+5. le contrôleur principal appelle le modèle
+6. le modèle interroge la base de données
+7. les résultats reviennent au contrôleur
+8. le contrôleur prépare les variables
+9. index.php charge la vue correspondante dans layout.php
 
-Exemple :
-- reservation&type=destination&id_destination=3
-- reservation&type=voyage&id_voyage=5
 
-========================================
-FIN
-========================================
+9) EXEMPLE CONCRET
+------------------
+
+Exemple : affichage des destinations
+
+- URL :
+  index.php?page=destinations
+
+- index.php charge :
+  controleur/gestion_destinations.php
+
+- ce fichier appelle :
+  $unControleur->selectAll_destinations()
+  ou
+  $unControleur->selectLike_destination(...)
+
+- le contrôleur récupère les données depuis modele_class.php
+
+- la vue affichée est :
+  vue/destinations.php
+
+
+10) EXEMPLE CONCRET ADMIN
+-------------------------
+
+Exemple : gestion admin des offres
+
+- URL :
+  index.php?page=admin_offres
+
+- index.php vérifie d’abord que l’utilisateur est admin
+
+- ensuite il charge :
+  controleur/gestion_admin_offres.php
+
+- ce contrôleur utilise les méthodes du modèle pour :
+  * ajouter une offre
+  * modifier une offre
+  * activer / désactiver une offre
+  * afficher la liste des offres
+
+- la vue affichée est :
+  vue/admin_offres.php
+
+
+11) REMARQUE IMPORTANTE
+-----------------------
+
+Le projet utilise principalement :
+- un modèle central : modele_class.php
+- un contrôleur principal : controleur_class.php
+- plusieurs contrôleurs métiers
+- plusieurs vues spécialisées
+
+Le schéma MVC doit donc rester cohérent avec l’arborescence réelle du projet
+et avec les routes définies dans index.php.

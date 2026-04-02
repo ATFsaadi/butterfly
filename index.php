@@ -38,9 +38,10 @@ switch ($page) {
         break;
 
     case "register":
-        require_once __DIR__ . "/controleur/gestion_register.php";
-        $vue = "register.php";
-        break;
+    require_once __DIR__ . "/controleur/gestion_register.php";
+    require_once __DIR__ . "/controleur/gestion_home.php";
+    $vue = "home.php";
+    break;
 
     case "destinations":
         require_once __DIR__ . "/controleur/gestion_destinations.php";

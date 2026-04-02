@@ -1,3 +1,174 @@
+/* =========================
+   navbar du haut (nav)
+   ========================= */
+
+nav.custom-navbar{
+  padding: 0;
+  background-color: #fff;
+  z-index: 1050;
+}
+
+/* logo (navbar du haut) */
+nav.custom-navbar .logo-size{
+  width: 240px !important;
+  height: 120px;
+  margin-top: -10px;
+  margin-left: 0;
+}
+
+/* liste (navbar du haut) */
+nav.custom-navbar .navbar-nav{
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+/* items (navbar du haut) */
+nav.custom-navbar .navbar-nav .nav-item{
+  margin: 0;
+}
+
+/* liens (navbar du haut) — reprends le rendu de l'ancien */
+nav.custom-navbar .nav-link{
+  font-size: 15px;
+  color: var(--secondary-color);
+  font-weight: 400;
+  letter-spacing: 0.55px;
+
+  /*   anciens effets */
+  text-shadow: 0 0 0.6px currentColor;
+
+  transition: color 0.3s ease, background 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  position: relative;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* hover liens (navbar du haut) */
+nav.custom-navbar .nav-link:hover{
+  color: var(--primary-color);
+  background: transparent;
+}
+
+/* icones rondes (navbar du haut) — comme l'ancien */
+nav.custom-navbar .icon-circle{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 35px;
+  height: 35px;
+  background: #fff;
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  font-size: 20px;
+  color: var(--text-color);
+
+  /*   comme l'ancien */
+  transition: var(--transition);
+}
+
+/* svg icones (navbar du haut) */
+nav.custom-navbar .icon-circle svg{
+  fill: var(--secondary-color);
+  transition: fill 0.3s ease;
+}
+
+/* hover icone (navbar du haut) */
+nav.custom-navbar .icon-circle:hover{
+  transform: scale(1.1);
+  background: #f0f8ff;
+  border-color: var(--text-color);
+}
+
+/* hover svg (navbar du haut) */
+nav.custom-navbar .icon-circle:hover svg{
+  fill: var(--primary-color);
+}
+
+/* alignement icones navbar du haut */
+nav.custom-navbar .navbar-right .nav-item-fixed{
+  width: 95px;
+}
+
+nav.custom-navbar .navbar-right .nav-link,
+nav.custom-navbar .navbar-right form.nav-link,
+nav.custom-navbar .navbar-right form.nav-link button{
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+nav.custom-navbar .navbar-right .mt-1{
+  font-size: 12px;
+  line-height: 1.1;
+  min-height: 28px;
+  text-align: center;
+}
+
+
+/* =========================
+   menu bas sticky (div)
+   ========================= */
+
+div.custom-navbar{
+  height: 30px;
+  background-color: #fff !important;
+  display: flex;
+  align-items: center;
+  box-shadow: none;
+  z-index: 1050;
+}
+
+/* enlève padding bootstrap qui agrandit le fond */
+div.custom-navbar .container-fluid{
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* menu centré dans la hauteur */
+div.custom-navbar .navbar-nav{
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  margin: 0;
+  padding: 0;
+}
+
+/* liens du menu bas — reprends couleurs/rendu de l'ancien */
+div.custom-navbar .nav-link{
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  line-height: 30px;
+
+  font-size: 15px;
+  color: var(--secondary-color);
+  font-weight: 400;
+  letter-spacing: 0.55px;
+  text-shadow: 0 0 0.6px currentColor;
+  transition: color 0.3s ease, background 0.3s ease;
+
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+div.custom-navbar .nav-link:hover{
+  color: var(--primary-color);
+  background: transparent;
+}
+
+/* trait en bas du menu bas */
+div.custom-navbar #navbarNav{
+  border-bottom: 0.5px solid var(--primary-color);
+}
+
+
 /* titre */
 .voyage-menu-title{
   text-align:center;
@@ -7,18 +178,27 @@
 
 /* barre sticky */
 #voyageBar{
-  position:sticky;
-  top:55px;
-  left:0;
-  width:100%;
-  z-index:5;
-  background:#fff;
+  position: sticky;
+  top: 30px;
+  left: 0;
+
+  width: 100%;
+  max-width: 100%;     
+  height: 59.5px;          
+
+  margin: 0 auto;        
+
+  display: flex;         
+  align-items: center;
+
+  z-index: 50 !important;
+
 }
 
 /* champ */
 .voyage-field .form-label{
   margin:0;
-  font-size:12px;
+  font-size:16px;
   color:var(--secondary-color);
   font-weight:700;
   text-transform:lowercase;
@@ -38,12 +218,12 @@
   display:flex;
   align-items:center;
   gap:10px;
-  height:auto;          /* ✅ au lieu de 100px */
+  height:auto;          /*   au lieu de 100px */
 }
 
 .search-icon{
-  width:22px;
-  height:22px;
+  width:16px;
+  height:16px;
 }
 
 /* reset = lien qui ressemble à un bouton rond */
@@ -58,8 +238,8 @@
   justify-content:center;
   cursor:pointer;
   transition:.3s ease;
-  text-decoration:none; /* ✅ important pour un <a> */
-  margin-top:0;         /* ✅ on enlève le décalage */
+  text-decoration:none; /*   important pour un <a> */
+  margin-top:0;         /*   on enlève le décalage */
 }
 
 .voyage-reset-icon:hover{
@@ -71,7 +251,7 @@
   padding:12px 0;
   border:none;
  
-  background:linear-gradient(135deg,var(--primary-color),#F2A65B);
+  background:linear-gradient(135deg,var(--primary-color),);
   color:#fff;
   font-weight:bold;
   cursor:pointer;
@@ -97,7 +277,7 @@
   transition:var(--transition);
 }
 
-/* ✅ hover: utiliser background (pas background-color) */
+/*   hover: utiliser background (pas background-color) */
 .card .btn:hover,
 .carousel-caption .btn:hover{
   background:transparent;
@@ -107,33 +287,37 @@
 
 /* bouton rechercher */
 .voyage-search-btn{
-  background:linear-gradient(135deg,var(--primary-color),#f2a65b);
-  color:#fff;
-  font-weight:700;
-  border:none;
-  width:180px;
-  height:80px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:16px;
-  padding:0;
-  cursor:pointer;
-  transition:transform .2s ease, opacity .2s ease;
+  width: 180px;
+  height: 60px;
+
+  background: linear-gradient(135deg, var(--primary-color), #f2a65b);
+  color: #fff;
+  font-weight: 700;
+
+  border: none;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  flex-direction: row;
+  cursor: pointer;
+
+  transition: transform .2s ease, opacity .2s ease;   /*   important */
 }
 
 .voyage-search-btn:hover{
-  transform:translateY(-1px);
-  opacity:.92;
+  transform: translateY(-1px);
+  opacity: .92;
 }
+
 /* ======================
    CAROUSEL
    ====================== */
 
 .carousel {
     overflow: hidden;
-    box-shadow: var(--shadow);
     background: #fff;
 }
 .carousel a {
@@ -356,7 +540,7 @@
 
 .footer-map:hover{ transform:translateY(-2px); }
 
-/* Social (✅ centrage parfait) */
+/* Social (  centrage parfait) */
 .footer-social a{
   display:inline-flex;
   align-items:center;
@@ -376,8 +560,8 @@
 .footer-social a i{
   display:block;
   line-height:1;
-  margin:0;          /* ✅ évite tout décalage */
-  width:auto;        /* ✅ évite le width:18px du contact */
+  margin:0;          /*   évite tout décalage */
+  width:auto;        /*   évite le width:18px du contact */
 }
 
 .footer-social a:hover{

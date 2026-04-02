@@ -6,7 +6,7 @@ class Modele
 
     public function __construct()
     {
-        // connexion à la base de données
+        // connexion à la bdd
         $dsn = "mysql:host=localhost;dbname=bfly_ppe;charset=utf8mb4";
         $user = "root";
         $password = "";
@@ -24,7 +24,6 @@ class Modele
         }
     }
 
-    // exécute une requête et récupère une seule ligne
     private function fetchOne(string $sql, array $params = []): array|false
     {
         $stmt = $this->pdo->prepare($sql);
@@ -32,7 +31,6 @@ class Modele
         return $stmt->fetch();
     }
 
-    // exécute une requête et récupère plusieurs lignes
     private function fetchAll(string $sql, array $params = []): array
     {
         $stmt = $this->pdo->prepare($sql);
@@ -40,7 +38,7 @@ class Modele
         return $stmt->fetchAll();
     }
 
-    // exécute une requête (insert / update / delete) sans retour
+    // insert / update / delete
     private function execute(string $sql, array $params = []): void
     {
         $stmt = $this->pdo->prepare($sql);
@@ -49,7 +47,7 @@ class Modele
 
     /* utilisateurs / client */
 
-    // récupère un utilisateur actif à partir de son email (pour la connexion)
+    // récupère un utilisateur actif à partir de son email
     public function select_user_login(string $email): array|false
     {
         $sql = "select *
@@ -59,7 +57,7 @@ class Modele
         return $this->fetchOne($sql, [":email" => $email]);
     }
 
-    // récupère un utilisateur par email (actif ou non)
+    // récupère un utilisateur par email
     public function selectWhere_utilisateur_by_email(string $email): array|false
     {
         $sql = "select *
@@ -80,7 +78,7 @@ class Modele
         ]);
     }
 
-    // ajoute la fiche client liée à l'utilisateur (nom, prénom, adresse, etc.)
+    // ajoute la fiche client liée à l'utilisateur
     public function insert_client(array $tab): void
     {
         $sql = "insert into client (id_utilisateur, nom, prenom, telephone, adresse, ville, pays)
@@ -105,7 +103,7 @@ class Modele
         return $this->fetchOne($sql, [":id_utilisateur" => $id_utilisateur]);
     }
 
-    // inscription complète : crée l'utilisateur + le client dans une transaction
+    // inscription complète
     public function inscription_complete(array $userTab, array $clientTab): array|false
     {
         try {
@@ -132,7 +130,7 @@ class Modele
 
     /* continents / destinations */
 
-    // récupère tous les continents triés par nom
+    // récupère tous les continent
     public function selectAll_continents(): array
     {
         $sql = "select *
@@ -165,7 +163,7 @@ class Modele
         ]);
     }
 
-    // liste toutes les destinations actives (avec le nom du continent)
+    // liste toutes les destinations actives avec le nom du continent
     public function selectAll_destinations(): array
     {
         $sql = "select d.*, c.nom as continent
@@ -176,7 +174,7 @@ class Modele
         return $this->fetchAll($sql);
     }
 
-    // liste toutes les destinations (admin : actives + inactives)
+    // liste toutes les destinations
     public function selectAll_destinations_admin(): array
     {
         $sql = "select d.*, c.nom as continent
@@ -186,7 +184,7 @@ class Modele
         return $this->fetchAll($sql);
     }
 
-    // recherche une destination active avec un filtre (pays, ville ou continent)
+    // recherche une destination
     public function selectLike_destination(string $filtre): array
     {
         $sql = "select d.*, c.nom as continent
@@ -198,7 +196,7 @@ class Modele
         return $this->fetchAll($sql, [":filtre" => "%" . $filtre . "%"]);
     }
 
-    // récupère une destination précise par id (avec continent)
+    // récupère une destination avec continent
     public function selectWhere_destination(int $id_destination): array|false
     {
         $sql = "select d.*, c.nom as continent
@@ -208,7 +206,36 @@ class Modele
         return $this->fetchOne($sql, [":id_destination" => $id_destination]);
     }
 
-    // modifie une destination (y compris son statut actif)
+    // vérifie si une destination existe déjà avec le même pays et la même ville
+    public function selectWhere_destination_by_pays_ville(string $pays, string $ville): array|false
+    {
+        $sql = "select *
+                from destinations
+                where pays = :pays
+                  and ville = :ville";
+        return $this->fetchOne($sql, [
+            ":pays" => $pays,
+            ":ville" => $ville
+        ]);
+    }
+
+    // vérifie si une destination existe déjà avec le même pays et la même ville
+    // sauf pour l'id en cours de modification
+    public function selectWhere_destination_by_pays_ville_except_id(string $pays, string $ville, int $id_destination): array|false
+    {
+        $sql = "select *
+                from destinations
+                where pays = :pays
+                  and ville = :ville
+                  and id_destination <> :id_destination";
+        return $this->fetchOne($sql, [
+            ":pays" => $pays,
+            ":ville" => $ville,
+            ":id_destination" => $id_destination
+        ]);
+    }
+
+    // modifie une destination
     public function update_destination(array $tab): void
     {
         $sql = "update destinations
@@ -232,7 +259,7 @@ class Modele
         ]);
     }
 
-    // désactive une destination (suppression logique)
+    // désactive une destination
     public function delete_destination(int $id_destination): void
     {
         $sql = "update destinations
@@ -241,7 +268,7 @@ class Modele
         $this->execute($sql, [":id_destination" => $id_destination]);
     }
 
-    // active ou désactive une destination (0 ou 1)
+    // active ou désactive une destination
     public function set_destination_actif(int $id_destination, int $actif): void
     {
         $sql = "update destinations
@@ -253,7 +280,7 @@ class Modele
         ]);
     }
 
-    // réserve une destination : vérifie qu'elle est active puis insère la réservation
+    // réserve une destination
     public function reserver_destination(array $tab): bool
     {
         try {
@@ -296,7 +323,7 @@ class Modele
 
     /* offres */
 
-    // ajoute une offre promo pour une destination (actif=1)
+    // ajoute une offre promo pour une destination
     public function insert_offre(array $tab): void
     {
         $sql = "insert into offres (id_destination, titre, pourcentage_reduction, date_debut, date_fin, actif)
@@ -310,7 +337,7 @@ class Modele
         ]);
     }
 
-    // liste toutes les offres (avec destination + continent)
+    // liste toutes les offres
     public function selectAll_offres(): array
     {
         $sql = "select o.*, d.pays, d.ville, cont.nom as continent
@@ -321,7 +348,7 @@ class Modele
         return $this->fetchAll($sql);
     }
 
-    // recherche des offres avec un filtre (titre, pays, ville, continent)
+    // recherche des offres avec un filtre
     public function selectLike_offre(string $filtre): array
     {
         $sql = "select o.*, d.pays, d.ville, cont.nom as continent
@@ -345,7 +372,7 @@ class Modele
         return $this->fetchOne($sql, [":id_offre" => $id_offre]);
     }
 
-    // modifie une offre (infos + actif)
+    // modifie une offre
     public function update_offre(array $tab): void
     {
         $sql = "update offres
@@ -367,7 +394,7 @@ class Modele
         ]);
     }
 
-    // désactive une offre (suppression logique)
+    // désactive une offre
     public function delete_offre(int $id_offre): void
     {
         $sql = "update offres
@@ -376,7 +403,7 @@ class Modele
         $this->execute($sql, [":id_offre" => $id_offre]);
     }
 
-    // active ou désactive une offre (0 ou 1)
+    // active ou désactive une offre
     public function set_offre_actif(int $id_offre, int $actif): void
     {
         $sql = "update offres
@@ -388,7 +415,7 @@ class Modele
         ]);
     }
 
-    // liste les offres actives du moment (offre active + destination active + date ok)
+    // liste les offres actives du moment
     public function selectAll_offres_actives(): array
     {
         $sql = "select o.*, d.pays, d.ville, d.image_url, d.prix_base, cont.nom as continent
@@ -422,21 +449,24 @@ class Modele
         return $this->fetchAll($sql, [":filtre" => "%" . $filtre . "%"]);
     }
 
-    // récupère l'offre active actuelle d'une destination (max 1 offre)
+    // récupère l'offre active actuelle d'une destination
     public function selectWhere_offre_active_by_destination(int $id_destination): array|false
     {
-        $sql = "select *
-                from offres
-                where actif = 1
-                  and id_destination = :id_destination
-                  and curdate() between date_debut and date_fin
+        $sql = "select o.*
+                from offres o
+                join destinations d on d.id_destination = o.id_destination
+                where o.actif = 1
+                  and d.actif = 1
+                  and o.id_destination = :id_destination
+                  and curdate() between o.date_debut and o.date_fin
+                order by o.date_debut desc
                 limit 1";
         return $this->fetchOne($sql, [":id_destination" => $id_destination]);
     }
 
     /* voyages */
 
-    // ajoute un voyage organisé (avec places, dates, prix, statut)
+    // ajoute un voyage organisé
     public function insert_voyage(array $tab): void
     {
         $sql = "insert into voyages_organises
@@ -457,7 +487,7 @@ class Modele
         ]);
     }
 
-    // liste tous les voyages (admin)
+    // liste tous les voyages
     public function selectAll_voyages_admin(): array
     {
         $sql = "select v.*, d.pays, d.ville, cont.nom as continent
@@ -476,11 +506,12 @@ class Modele
                 join destinations d on d.id_destination = v.id_destination
                 left join continents cont on cont.id_continent = d.id_continent
                 where v.statut = 'actif'
+                  and d.actif = 1
                 order by v.date_depart asc";
         return $this->fetchAll($sql);
     }
 
-    // récupère un voyage précis par id (avec infos destination + continent)
+    // récupère un voyage précis
     public function selectWhere_voyage(int $id_voyage): array|false
     {
         $sql = "select v.*, d.pays, d.ville, d.description as destination_description, d.prix_base, d.image_url as destination_image_url, cont.nom as continent
@@ -491,7 +522,7 @@ class Modele
         return $this->fetchOne($sql, [":id_voyage" => $id_voyage]);
     }
 
-    // modifie un voyage (infos + places + statut)
+    // modifie un voyage
     public function update_voyage(array $tab): void
     {
         $sql = "update voyages_organises
@@ -521,7 +552,7 @@ class Modele
         ]);
     }
 
-    // supprime un voyage de la base (suppression réelle)
+    // supprime un voyage de la base
     public function delete_voyage(int $id_voyage): void
     {
         $sql = "delete from voyages_organises
@@ -529,7 +560,7 @@ class Modele
         $this->execute($sql, [":id_voyage" => $id_voyage]);
     }
 
-    // change le statut d'un voyage (ex: actif, complet, annulé)
+    // change le statut d'un voyage
     public function set_voyage_statut(int $id_voyage, string $statut): void
     {
         $sql = "update voyages_organises
@@ -550,13 +581,14 @@ class Modele
                 left join continents cont on cont.id_continent = d.id_continent
                 where v.id_destination = :id_destination
                   and v.statut = 'actif'
+                  and d.actif = 1
                 order by v.date_depart asc";
         return $this->fetchAll($sql, [":id_destination" => $id_destination]);
     }
 
     /* reservations */
 
-    // ajoute une réservation voyage (statut en_attente par défaut)
+    // ajoute une réservation voyage
     public function insert_reservation_voyage(array $tab): void
     {
         $sql = "insert into reservations_voyages
@@ -572,7 +604,7 @@ class Modele
         ]);
     }
 
-    // ajoute une réservation destination (statut en_attente par défaut)
+    // ajoute une réservation destination
     public function insert_reservation_destination(array $tab): void
     {
         $sql = "insert into reservations_destinations
@@ -590,7 +622,7 @@ class Modele
         ]);
     }
 
-    // liste toutes les réservations destinations (admin)
+    // liste toutes les réservations destinations pour admin
     public function selectAll_reservations_destinations(): array
     {
         $sql = "select rd.*,
@@ -605,7 +637,7 @@ class Modele
         return $this->fetchAll($sql);
     }
 
-    // liste toutes les réservations voyages (admin)
+    // liste toutes les réservations voyages admin
     public function selectAll_reservations_voyages(): array
     {
         $sql = "select rv.*,
@@ -652,7 +684,7 @@ class Modele
         return $this->fetchAll($sql, [":id_client" => $id_client]);
     }
 
-    // modifie le statut d'une réservation destination (ex: en_attente, validée, annulée)
+    // modifie le statut d'une réservation destination
     public function update_reservation_destination_statut(array $tab): void
     {
         $sql = "update reservations_destinations
@@ -664,7 +696,7 @@ class Modele
         ]);
     }
 
-    // modifie le statut d'une réservation voyage (ex: en_attente, validée, annulée)
+    // modifie le statut d'une réservation voyage
     public function update_reservation_voyage_statut(array $tab): void
     {
         $sql = "update reservations_voyages
@@ -676,7 +708,7 @@ class Modele
         ]);
     }
 
-    // fusionne toutes les réservations (destinations + voyages) en une seule liste (admin)
+    // fusionne toutes les réservations
     public function selectAll_reservations_union(): array
     {
         $sql = "
@@ -738,7 +770,7 @@ class Modele
         return $this->fetchAll($sql);
     }
 
-    // récupère toutes les réservations d'un client (destinations + voyages fusionnées)
+    // récupère toutes les réservations d'un client
     public function selectWhere_reservations_by_client_union(int $id_client): array
     {
         $sql = "select *
@@ -810,7 +842,7 @@ class Modele
         return $stmt->rowCount();
     }
 
-    // réserve un voyage : décrémente les places puis insère la réservation (transaction)
+    // réserve un voyage décrémente les places puis insère la réservation
     public function reserver_voyage(array $tab): bool
     {
         try {
