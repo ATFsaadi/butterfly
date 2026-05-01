@@ -1,0 +1,516 @@
+/* authentification */
+.auth-section {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    min-height: 100vh;
+    background: var(--bg-light);
+}
+
+.auth-container {
+    width: 100%;
+    max-width: 700px;
+}
+
+/* carte auth */
+.auth-card {
+    display: flex;
+    background: #fff;
+    border-radius: var(--border-radius);
+    /*box-shadow: var(--shadow);*/
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+/* formulaire auth */
+.auth-form {
+    flex: 1;
+    padding: 40px 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* titre auth */
+.auth-form h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: var(--primary-color);
+    font-size: 2rem;
+    font-family: "Lavishly Yours", cursive;
+    font-style: italic;
+}
+
+/* structure formulaire */
+.auth-form form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* champs auth */
+.auth-form input {
+    padding: 12px 15px;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+    font-size: 14px;
+    outline: none;
+    transition: var(--transition);
+    background: #fff;
+}
+
+/* placeholder */
+.auth-form input::placeholder {
+    color: #aaa;
+    font-style: italic;
+}
+
+/* focus champs */
+.auth-form input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 1px  #f2733827;
+}
+
+/* bouton auth */
+.auth-form button {
+    padding: 12px 0;
+    border: none;
+    border-radius: var(--btn-radius);
+    background: linear-gradient(135deg, var(--primary-color), #F2A65B);
+    color: #ffffff;
+    font-weight: bold;
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 1rem;
+    margin-top: 10px;
+}
+
+/* hover bouton */
+.auth-form button:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+/* options formulaire */
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    margin-top: 10px;
+}
+
+/* lien options */
+.form-options a {
+    text-decoration: none;
+    color: var(--primary-color);
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+/* hover lien options */
+.form-options a:hover {
+    color: var(--secondary-color);
+}
+
+/* separateur */
+.divider {
+    text-align: center;
+    margin: 20px 0;
+    font-size: 0.85rem;
+    color: var(--muted-color);
+    position: relative;
+}
+
+/* lignes separateur */
+.divider::before,
+.divider::after {
+    content: "";
+    height: 1px;
+    width: 40%;
+    background: var(--border-color);
+    position: absolute;
+    top: 50%;
+}
+
+.divider::before { left: 0; }
+.divider::after { right: 0; }
+
+/* boutons sociaux */
+.social-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+/* bouton social */
+.social-buttons button {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    border: 1px solid var(--border-color);
+    background: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+/* hover bouton social */
+.social-buttons button:hover {
+    transform: scale(1.1);
+    border-color: var(--primary-color);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* icones sociaux */
+.social-buttons i {
+    color: var(--secondary-color);
+    font-size: 1.1rem;
+    transition: color 0.3s ease;
+}
+
+/* hover icones sociaux */
+.social-buttons button:hover i {
+    color: var(--primary-color);
+}
+
+/* lien switch */
+.switch-link {
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--muted-color);
+    margin-top: 15px;
+}
+
+/* lien switch a */
+.switch-link a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+/* hover lien switch */
+.switch-link a:hover {
+    color: var(--secondary-color);
+}
+
+/* logo auth */
+.auth-logo {
+    flex: 1;
+    background-color: var(--primary-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    min-height: 300px;
+}
+
+/* image logo auth */
+.auth-logo img {
+    width: 120px;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+    transition: transform 0.3s ease;
+}
+
+/* hover image logo */
+.auth-logo img:hover {
+    transform: scale(1.05);
+}
+
+
+/* carousel */
+.carousel {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    border-radius: 0;
+}
+
+/* image carousel */
+.carousel-image {
+    width: 100%;
+    height: 900px;
+    object-fit: cover;
+}
+
+/* indicateurs carousel */
+.carousel-indicators {
+    bottom: 20px;
+}
+
+/* indicateur actif */
+.carousel-indicators .active {
+    background-color: var(--primary-color);
+}
+
+/* boutons carousel et cards */
+.carousel-caption .btn,
+.card .btn {
+    background: linear-gradient(135deg, var(--primary-color), #F2A65B);
+    color: var(--bg-light);
+    border: 1px solid var(--primary-color);
+    padding: 10px 25px;
+    font-size: 1rem;
+    border-radius: var(--btn-radius);
+    transition: var(--transition);
+}
+
+/* hover boutons carousel et cards */
+.carousel-caption .btn:hover,
+.card .btn:hover {
+    background-color: transparent;
+    color: var(--muted-color);
+    border-color: var(--primary-color);
+}
+
+/* sections */
+.selection-section,
+.offers-section {
+    padding: 40px 0;
+    background-color: var(--bg-light);
+}
+
+/* titres sections */
+.section-title {
+    font-size: 2.5rem;
+    color: var(--secondary-color);
+    margin-bottom: 10px;
+}
+
+/* sous-titres sections */
+.section-subtitle {
+    font-size: 1.2rem;
+    color: var(--muted-color);
+    margin-bottom: 40px;
+}
+
+/* carte */
+.card {
+    border: none;
+    border-radius: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+/* hover carte */
+.card:hover {
+    transform: translateY(-5px);
+    /*box-shadow: 0 15px 30px greenyellow;*/
+}
+
+/* image carte */
+.card-img-top {
+    width: 100%;
+    height: 650px;
+    object-fit: cover;
+}
+
+/* contenu carte */
+.card-body {
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+/* titre carte */
+.card-title {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+}
+
+/* texte carte */
+.card-text {
+    font-size: 1rem;
+    color: var(--muted-color);
+}
+
+/* grande carte */
+.big-card {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* image grande carte */
+.big-card .card-img-top {
+    height: 800px;
+}
+
+/* titre grande carte */
+.big-card .card-title {
+    font-size: 1.8rem;
+}
+
+/* texte grande carte */
+.big-card .card-text {
+    font-size: 1.1rem;
+}
+
+/* controles carousel offres */
+#offerCarousel .carousel-control-prev,
+#offerCarousel .carousel-control-next {
+    width: 60px;
+    height: 60px;
+}
+
+
+
+
+/* titre */
+.voyage-menu-title {
+    text-align: center;
+    margin: 30px;
+    padding-top: 20px;
+}
+
+/* barre sticky */
+#voyageBar {
+    position: sticky;
+    top: 55px;
+    left: 0;
+    width: 100%;
+    z-index: 5;
+    background-color: #fff;
+}
+
+#voyageBar .voyage-menu {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* menu */
+.voyage-menu {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+/* champ texte (remplace dropdown) */
+.voyage-field {
+    width: 320px;
+    height: 100px;
+    background: #fff;
+    border: 1px solid transparent;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 14px;
+}
+
+.voyage-field .form-label {
+    margin: 0;
+    font-size: 12px;
+    color: var(--secondary-color);
+    font-weight: 700;
+    text-transform: lowercase;
+}
+
+.voyage-field .form-control {
+    border: 0;
+    outline: none;
+    box-shadow: none;
+    padding: 0;
+    font-size: 16px;
+    background: transparent;
+}
+
+.voyage-field .form-control::placeholder {
+    color: #aaa;
+}
+
+/* actions */
+.voyage-search-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    height: 100px;
+}
+
+.voyage-search-btn {
+    background: linear-gradient(135deg, var(--primary-color), #f2a65b);
+    color: #fff;
+    font-weight: 700;
+    border: none;
+    width: 180px;
+    height: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 0;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.search-icon {
+    width: 22px;
+    height: 22px;
+}
+
+.voyage-reset-icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: 0.3s ease;
+    margin-top: 40px;
+}
+
+.voyage-reset-icon:hover {
+    transform: rotate(90deg);
+}
+
+/* responsive */
+@media (max-width: 991px) {
+    #voyageBar .voyage-menu {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+        padding: 10px 16px;
+    }
+
+    .voyage-field {
+        width: 100%;
+        height: auto;
+        padding: 12px 14px;
+    }
+
+    .voyage-search-group {
+        width: 100%;
+        height: auto;
+        justify-content: center;
+    }
+
+    .voyage-search-btn {
+        width: 100%;
+        height: 64px;
+        flex-direction: row;
+        gap: 10px;
+    }
+
+    .voyage-reset-icon {
+        margin-top: 0;
+    }
+}

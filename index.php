@@ -73,17 +73,33 @@ switch ($page) {
         require_once __DIR__ . "/controleur/gestion_reservations.php";
         $vue = "reservation.php";
         break;
+     case "admin_clients":
+    $unControleur->verifAdmin();
+    require_once __DIR__ . "/controleur/gestion_admin_clients.php";
+    $vue = "admin_clients.php";
+    break;
 
     case "dashboard_client":
-        $unControleur->verifConnexion();
-        require_once __DIR__ . "/controleur/gestion_dashboard_client.php";
-        $vue = "dashboard_client.php";
-        break;
+    $unControleur->verifConnexion();
+    require_once __DIR__ . "/controleur/gestion_dashboard_client.php";
+    $vue = "dashboard_client.php";
+    break;
+
+case "profile":
+    $unControleur->verifConnexion();
+    require_once __DIR__ . "/controleur/gestion_profile.php";
+    $vue = "profile.php";
+    break;
 
     case "admin_offres":
         $unControleur->verifAdmin();
         require_once __DIR__ . "/controleur/gestion_admin_offres.php";
         $vue = "admin_offres.php";
+        break;
+
+    case "recherche":
+        require_once __DIR__ . "/controleur/gestion_recherche.php";
+        $vue = "home.php";
         break;
 
     case "admin_destinations":
@@ -103,6 +119,17 @@ switch ($page) {
         require_once __DIR__ . "/controleur/gestion_admin_voyages.php";
         $vue = "admin_voyages.php";
         break;
+        case "admin_client_detail":
+    $unControleur->verifAdmin();
+    require_once __DIR__ . "/controleur/gestion_admin_client_detail.php";
+    $vue = "admin_client_detail.php";
+    break;
+
+    case "admin_dashboard":
+    $unControleur->verifAdmin();
+    require_once __DIR__ . "/controleur/gestion_admin_dashboard.php";
+    $vue = "admin_dashboard.php";
+    break;
 
     default:
         require_once __DIR__ . "/controleur/gestion_home.php";
