@@ -1,29 +1,37 @@
 <?php
 
-$q = trim((string)($_GET["q"] ?? ""));
+// récupération de la recherche
+
+$recherche = trim((string) ($_GET["q"] ?? ""));
+
+// variables de résultats
 
 $destinations = [];
 $voyages = [];
 $offres = [];
 
-if ($q !== "") {
+// recherche globale
 
-    $destinations = $unControleur->selectLike_destination($q) ?? [];
-    $offres = $unControleur->selectLike_offres_actives($q) ?? [];
+if ($recherche !== "") {
+    // recherche destinations et offres
+
+    $destinations = $unControleur->selectLike_destination($recherche) ?? [];
+    $offres = $unControleur->selectLike_offres_actives($recherche) ?? [];
+
+    // recherche voyages
 
     $allVoyages = $unControleur->selectAll_voyages_actifs() ?? [];
+    $filtreMin = mb_strtolower($recherche);
 
-    $f = mb_strtolower($q);
+    $voyages = array_values(array_filter($allVoyages, function ($voyage) use ($filtreMin) {
+        $titre = mb_strtolower((string) ($voyage["titre"] ?? ""));
+        $pays = mb_strtolower((string) ($voyage["pays"] ?? ""));
+        $ville = mb_strtolower((string) ($voyage["ville"] ?? ""));
+        $continent = mb_strtolower((string) ($voyage["continent"] ?? ""));
 
-    $voyages = array_values(array_filter($allVoyages, function ($v) use ($f) {
-        $titre = mb_strtolower((string)($v["titre"] ?? ""));
-        $pays = mb_strtolower((string)($v["pays"] ?? ""));
-        $ville = mb_strtolower((string)($v["ville"] ?? ""));
-        $continent = mb_strtolower((string)($v["continent"] ?? ""));
-
-        return mb_strpos($titre, $f) !== false
-            || mb_strpos($pays, $f) !== false
-            || mb_strpos($ville, $f) !== false
-            || mb_strpos($continent, $f) !== false;
+        return mb_strpos($titre, $filtreMin) !== false
+            || mb_strpos($pays, $filtreMin) !== false
+            || mb_strpos($ville, $filtreMin) !== false
+            || mb_strpos($continent, $filtreMin) !== false;
     }));
 }

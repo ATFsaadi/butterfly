@@ -1,61 +1,63 @@
 -- =========================================================
--- Base de données : bfly_ppe
--- Projet : Bfly - Situation professionnelle 1 / BTS SIO SLAM
--- Version finale propre pour import direct par le jury
--- Généré le : 01/05/2026
+-- Base de donnees : bfly
+-- Projet : Butterfly Voyage
 -- =========================================================
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
+SET NAMES utf8mb4;
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
+-- =========================================================
+-- Preparation de la base
+-- =========================================================
 
-DROP DATABASE IF EXISTS `bfly_ppe`;
-CREATE DATABASE IF NOT EXISTS `bfly_ppe`
+DROP DATABASE IF EXISTS `bfly`;
+
+CREATE DATABASE `bfly`
   DEFAULT CHARACTER SET utf8mb4
   COLLATE utf8mb4_unicode_ci;
-USE `bfly_ppe`;
+
+USE `bfly`;
 
 SET FOREIGN_KEY_CHECKS = 0;
-START TRANSACTION;
 
--- --------------------------------------------------------
+-- =========================================================
+-- Nettoyage des anciennes tables
+-- =========================================================
 
---
--- Structure de la table `categories`
---
+DROP TABLE IF EXISTS `reservations_voyages`;
+DROP TABLE IF EXISTS `reservations_destinations`;
+DROP TABLE IF EXISTS `offres`;
+DROP TABLE IF EXISTS `voyages_organises`;
+DROP TABLE IF EXISTS `destinations`;
+DROP TABLE IF EXISTS `continents`;
+DROP TABLE IF EXISTS `client`;
+DROP TABLE IF EXISTS `utilisateurs`;
 
-DROP TABLE IF EXISTS `categories`;
-CREATE TABLE IF NOT EXISTS `categories` (
-  `id_categorie` int UNSIGNED NOT NULL AUTO_INCREMENT,
-  `libelle` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+SET FOREIGN_KEY_CHECKS = 1;
+
+-- =========================================================
+-- Table : utilisateurs
+-- =========================================================
+
+CREATE TABLE `utilisateurs` (
+  `id_utilisateur` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `email` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `mot_de_passe_hash` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `role` enum('client','admin') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'client',
+  `actif` tinyint(1) NOT NULL DEFAULT 1,
   `date_creation` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `date_modification` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id_categorie`),
-  UNIQUE KEY `uk_categories_libelle` (`libelle`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  PRIMARY KEY (`id_utilisateur`),
+  UNIQUE KEY `uk_utilisateurs_email` (`email`),
+  KEY `idx_utilisateurs_role_actif` (`role`, `actif`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Déchargement des données de la table `categories`
---
+-- =========================================================
+-- Table : client
+-- =========================================================
 
-INSERT INTO `categories` (`id_categorie`, `libelle`, `date_creation`, `date_modification`) VALUES
-(1, 'particulier', '2026-04-13 16:25:01', '2026-04-19 15:59:01'),
-(2, 'entreprise', '2026-04-13 16:25:01', '2026-04-13 16:25:01'),
-(3, 'groupe', '2026-04-13 16:25:01', '2026-04-13 16:25:01'),
-(4, 'autre', '2026-04-13 16:25:01', '2026-04-13 16:25:01');
-
--- --------------------------------------------------------
-
---
--- Structure de la table `client`
---
-
-DROP TABLE IF EXISTS `client`;
-CREATE TABLE IF NOT EXISTS `client` (
+CREATE TABLE `client` (
   `id_client` int UNSIGNED NOT NULL AUTO_INCREMENT,
   `id_utilisateur` int UNSIGNED NOT NULL,
   `nom` varchar(80) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -67,65 +69,30 @@ CREATE TABLE IF NOT EXISTS `client` (
   `date_creation` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `date_modification` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id_client`),
-  UNIQUE KEY `uk_client_utilisateur` (`id_utilisateur`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  UNIQUE KEY `uk_client_utilisateur` (`id_utilisateur`),
+  CONSTRAINT `fk_client_utilisateur`
+    FOREIGN KEY (`id_utilisateur`)
+    REFERENCES `utilisateurs` (`id_utilisateur`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Déchargement des données de la table `client`
---
+-- =========================================================
+-- Table : continents
+-- =========================================================
 
-INSERT INTO `client` (`id_client`, `id_utilisateur`, `nom`, `prenom`, `telephone`, `adresse`, `ville`, `pays`, `date_creation`, `date_modification`) VALUES
-(1, 1, 'Benali', 'Amine', '+213550000001', 'Rue Didouche Mourad', 'Alger', 'Algérie', '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(2, 2, 'Kaci', 'Sara', '+213550000002', 'Boulevard Krim Belkacem', 'Tizi Ouzou', 'Algérie', '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(4, 4, 'Ouali', 'Mehdi', '+213550000004', 'Rue Emir Abdelkader', 'Constantine', 'Algérie', '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(6, 6, 'Haddad', 'Nassim', '+213550000006', 'Rue des Frères', 'Bejaïa', 'Algérie', '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(7, 7, 'Martin', 'Julien', '+33600000001', '10 Rue de Lyon', 'Paris', 'France', '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(8, 8, 'Dubois', 'Claire', '+33600000002', '20 Rue Nationale', 'Lille', 'France', '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(9, 9, 'Rossi', 'Luca', '+390600000003', 'Via Roma 22', 'Rome', 'Italie', '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(10, 10, 'Garcia', 'Sofia', '+34910000004', 'Calle Mayor 5', 'Madrid', 'Espagne', '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(11, 11, 'Mueller', 'Hans', '+49300000005', 'Alexanderplatz 1', 'Berlin', 'Allemagne', '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(12, 12, 'Johnson', 'Emma', '+442000000006', '221B Baker St', 'London', 'Royaume-Uni', '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(13, 13, 'Tanaka', 'Kei', '+81300000007', 'Shibuya', 'Tokyo', 'Japon', '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(14, 14, 'Silva', 'Diego', '+551100000008', 'Av. Paulista', 'São Paulo', 'Brésil', '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(16, 17, 'aylan', 'saadi', NULL, NULL, NULL, NULL, '2026-04-02 12:26:13', '2026-04-02 12:26:13'),
-(17, 18, 'nina', 'nina', NULL, NULL, NULL, NULL, '2026-04-09 11:17:21', '2026-04-09 11:17:21'),
-(20, 21, 'SAADI', 'Atef', NULL, NULL, NULL, NULL, '2026-04-10 14:14:52', '2026-04-10 14:14:52'),
-(21, 22, 'ilo', 'nin', NULL, NULL, NULL, NULL, '2026-04-19 15:41:14', '2026-04-19 15:41:14');
-
--- --------------------------------------------------------
-
---
--- Structure de la table `continents`
---
-
-DROP TABLE IF EXISTS `continents`;
-CREATE TABLE IF NOT EXISTS `continents` (
+CREATE TABLE `continents` (
   `id_continent` int UNSIGNED NOT NULL AUTO_INCREMENT,
   `nom` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id_continent`),
   UNIQUE KEY `uk_continents_nom` (`nom`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Déchargement des données de la table `continents`
---
+-- =========================================================
+-- Table : destinations
+-- =========================================================
 
-INSERT INTO `continents` (`id_continent`, `nom`) VALUES
-(2, 'Afrique'),
-(4, 'Amérique du Nord'),
-(5, 'Amérique du Sud'),
-(3, 'Asie'),
-(1, 'Europe'),
-(6, 'Océanie');
-
--- --------------------------------------------------------
-
---
--- Structure de la table `destinations`
---
-
-DROP TABLE IF EXISTS `destinations`;
-CREATE TABLE IF NOT EXISTS `destinations` (
+CREATE TABLE `destinations` (
   `id_destination` int UNSIGNED NOT NULL AUTO_INCREMENT,
   `pays` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `ville` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -133,213 +100,49 @@ CREATE TABLE IF NOT EXISTS `destinations` (
   `description` text COLLATE utf8mb4_unicode_ci,
   `prix_base` decimal(10,2) NOT NULL,
   `image_url` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `actif` tinyint(1) NOT NULL DEFAULT '1',
+  `actif` tinyint(1) NOT NULL DEFAULT 1,
   `date_creation` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `date_modification` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id_destination`),
-  UNIQUE KEY `uk_destination_pays_ville` (`pays`,`ville`),
+  UNIQUE KEY `uk_destination_pays_ville` (`pays`, `ville`),
   KEY `idx_destinations_continent` (`id_continent`),
   KEY `idx_destinations_actif` (`actif`),
-  KEY `idx_destinations_pays_ville` (`pays`,`ville`)
+  CONSTRAINT `fk_destination_continent`
+    FOREIGN KEY (`id_continent`)
+    REFERENCES `continents` (`id_continent`)
+    ON DELETE SET NULL
+    ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Déchargement des données de la table `destinations`
---
+-- =========================================================
+-- Table : offres
+-- =========================================================
 
-INSERT INTO `destinations` (`id_destination`, `pays`, `ville`, `id_continent`, `description`, `prix_base`, `image_url`, `actif`, `date_creation`, `date_modification`) VALUES
-(1, 'Algérie', 'Alger', 2, 'Capitale, Casbah, baie d\'Alger', 180.00, NULL, 1, '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(2, 'Algérie', 'Oran', 2, 'Front de mer, culture et gastronomie', 160.00, NULL, 1, '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(3, 'Algérie', 'Constantine', 2, 'Ville des ponts, patrimoine', 150.00, NULL, 1, '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(4, 'Algérie', 'Annaba', 2, 'Plages et histoire', 155.00, NULL, 0, '2026-03-31 11:37:29', '2026-04-10 09:48:28'),
-(5, 'Algérie', 'Tamanrasset', 2, 'Sahara, aventure', 220.00, NULL, 1, '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(6, 'Algérie', 'Bejaïa', 2, 'Côte, nature, randonnées', 145.00, NULL, 1, '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(7, 'France', 'Paris', 1, 'Musées, monuments', 320.00, NULL, 1, '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(8, 'France', 'Nice', 1, 'Riviera, mer', 290.00, NULL, 1, '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(9, 'Espagne', 'Barcelone', 1, 'Architecture, plage', 280.00, NULL, 1, '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(10, 'Italie', 'Rome', 1, 'Histoire, cuisine', 300.00, NULL, 1, '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(11, 'Portugal', 'Lisbonne', 1, 'Ville colorée', 260.00, NULL, 1, '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(12, 'Allemagne', 'Berlin', 1, 'Culture et nightlife', 270.00, NULL, 0, '2026-03-31 11:37:29', '2026-04-10 09:50:37'),
-(13, 'Royaume-Uni', 'Londres', 1, 'City trip', 340.00, NULL, 1, '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(14, 'Pays-Bas', 'Amsterdam', 1, 'Canaux, musées', 310.00, NULL, 1, '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(15, 'Grèce', 'Athènes', 1, 'Antiquité', 275.00, NULL, 1, '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(16, 'Suisse', 'Genève', 1, 'Lac, montagne', 360.00, NULL, 1, '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(17, 'Japon', 'Tokyo', 3, 'Modernité, temples', 520.00, NULL, 1, '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(18, 'Thaïlande', 'Bangkok', 3, 'Street food, marchés', 430.00, NULL, 1, '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(19, 'Émirats Arabes Unis', 'Dubaï', 3, 'Luxe et désert', 480.00, NULL, 1, '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(20, 'Turquie', 'Istanbul', 3, 'Entre deux mondes', 350.00, NULL, 1, '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(21, 'Indonésie', 'Bali', 3, 'Plages, détente', 450.00, NULL, 1, '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(22, 'Vietnam', 'Hanoï', 3, 'Culture et nature', 410.00, NULL, 1, '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(23, 'USA', 'New York', 4, 'City trip', 650.00, NULL, 1, '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(24, 'Canada', 'Montréal', 4, 'Culture francophone', 590.00, NULL, 1, '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(25, 'Mexique', 'Cancún', 4, 'Mer et soleil', 520.00, NULL, 1, '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(26, 'USA', 'Miami', 4, 'Plage et ambiance', 610.00, NULL, 1, '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(27, 'Brésil', 'Rio de Janeiro', 5, 'Plages, carnaval', 680.00, NULL, 1, '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(28, 'Argentine', 'Buenos Aires', 5, 'Tango, culture', 640.00, NULL, 1, '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(29, 'Australie', 'Sydney', 6, 'Opéra, plages', 820.00, NULL, 1, '2026-03-31 11:37:29', '2026-03-31 11:37:29');
-
--- --------------------------------------------------------
-
---
--- Structure de la table `offres`
---
-
-DROP TABLE IF EXISTS `offres`;
-CREATE TABLE IF NOT EXISTS `offres` (
+CREATE TABLE `offres` (
   `id_offre` int UNSIGNED NOT NULL AUTO_INCREMENT,
   `id_destination` int UNSIGNED NOT NULL,
   `titre` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL,
   `pourcentage_reduction` int UNSIGNED NOT NULL,
   `date_debut` date NOT NULL,
   `date_fin` date NOT NULL,
-  `actif` tinyint(1) NOT NULL DEFAULT '1',
+  `actif` tinyint(1) NOT NULL DEFAULT 1,
   `date_creation` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `date_modification` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id_offre`),
-  KEY `idx_offre_destination` (`id_destination`),
-  KEY `idx_offres_actif_dates` (`actif`,`date_debut`,`date_fin`)
+  KEY `idx_offres_destination` (`id_destination`),
+  KEY `idx_offres_actif_dates` (`actif`, `date_debut`, `date_fin`),
+  CONSTRAINT `fk_offre_destination`
+    FOREIGN KEY (`id_destination`)
+    REFERENCES `destinations` (`id_destination`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Déchargement des données de la table `offres`
---
+-- =========================================================
+-- Table : voyages_organises
+-- =========================================================
 
-INSERT INTO `offres` (`id_offre`, `id_destination`, `titre`, `pourcentage_reduction`, `date_debut`, `date_fin`, `actif`, `date_creation`, `date_modification`) VALUES
-(1, 1, 'Promo Alger - 15%', 15, '2026-04-01', '2026-05-15', 1, '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(2, 6, 'Promo Bejaïa - 15%', 15, '2026-04-01', '2026-05-15', 1, '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(3, 2, 'Promo Oran - 15%', 15, '2026-04-01', '2026-05-15', 1, '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(4, 9, 'Promo Barcelone - 15%', 15, '2026-04-01', '2026-05-15', 1, '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(5, 8, 'Promo Nice - 15%', 15, '2026-04-01', '2026-05-15', 1, '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(6, 7, 'Promo Paris - 15%', 15, '2026-04-01', '2026-05-15', 1, '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(7, 10, 'Promo Rome - 15%', 15, '2026-04-01', '2026-05-15', 1, '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(8, 14, 'Promo Amsterdam - 15%', 15, '2026-04-01', '2026-05-15', 1, '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(9, 11, 'Promo Lisbonne - 15%', 15, '2026-04-01', '2026-05-15', 1, '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(17, 27, 'Offre Flash Rio de Janeiro - 20%', 20, '2026-04-10', '2026-06-01', 0, '2026-03-31 11:37:37', '2026-04-10 09:49:32'),
-(18, 19, 'Offre Flash Dubaï - 20%', 20, '2026-04-10', '2026-06-01', 1, '2026-03-31 11:37:37', '2026-03-31 11:37:37'),
-(19, 21, 'Offre Flash Bali - 20%', 20, '2026-04-10', '2026-06-01', 1, '2026-03-31 11:37:37', '2026-03-31 11:37:37'),
-(20, 17, 'Offre Flash Tokyo - 20%', 20, '2026-04-10', '2026-06-01', 1, '2026-03-31 11:37:37', '2026-03-31 11:37:37'),
-(22, 25, 'Offre Flash Cancún - 20%', 20, '2026-04-10', '2026-06-01', 1, '2026-03-31 11:37:37', '2026-03-31 11:37:37'),
-(23, 20, 'Offre Flash Istanbul - 20%', 20, '2026-04-10', '2026-06-01', 1, '2026-03-31 11:37:37', '2026-03-31 11:37:37'),
-(24, 26, 'Offre Flash Miami - 20%', 20, '2026-04-10', '2026-06-01', 1, '2026-03-31 11:37:37', '2026-03-31 11:37:37'),
-(25, 23, 'Offre Flash New York - 20%', 20, '2026-04-10', '2026-06-01', 1, '2026-03-31 11:37:37', '2026-03-31 11:37:37'),
-(26, 2, 'Offre Oran Découverte - 14%', 14, '2026-04-19', '2026-04-28', 1, '2026-04-19 16:03:35', '2026-04-19 16:03:35'),
-(27, 4, 'Offre Annaba Plage - 30%', 30, '2026-04-19', '2026-04-19', 1, '2026-04-19 16:05:58', '2026-04-19 16:05:58'),
-(28, 4, 'Offre Annaba Premium - 50%', 50, '2026-04-19', '2026-04-30', 1, '2026-04-19 16:07:08', '2026-04-19 16:07:08'),
-(29, 5, 'Offre Tamanrasset Aventure - 30%', 30, '2026-04-19', '2026-04-24', 1, '2026-04-19 16:08:21', '2026-04-19 16:08:21');
-
--- --------------------------------------------------------
-
---
--- Structure de la table `reservations_destinations`
---
-
-DROP TABLE IF EXISTS `reservations_destinations`;
-CREATE TABLE IF NOT EXISTS `reservations_destinations` (
-  `id_reservation_destination` int UNSIGNED NOT NULL AUTO_INCREMENT,
-  `id_client` int UNSIGNED NOT NULL,
-  `id_destination` int UNSIGNED NOT NULL,
-  `date_depart` date NOT NULL,
-  `date_retour` date NOT NULL,
-  `nb_personnes` int UNSIGNED NOT NULL DEFAULT '1',
-  `prix_total` decimal(10,2) NOT NULL,
-  `statut` enum('en_attente','confirmee','annulee') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'en_attente',
-  `date_reservation` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `date_modification` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id_reservation_destination`),
-  KEY `idx_resa_dest_client` (`id_client`),
-  KEY `idx_resa_dest_destination` (`id_destination`),
-  KEY `idx_resa_dest_statut` (`statut`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Déchargement des données de la table `reservations_destinations`
---
-
-INSERT INTO `reservations_destinations` (`id_reservation_destination`, `id_client`, `id_destination`, `date_depart`, `date_retour`, `nb_personnes`, `prix_total`, `statut`, `date_reservation`, `date_modification`) VALUES
-(4, 20, 6, '2026-04-24', '2026-04-30', 1, 739.50, 'en_attente', '2026-04-10 14:54:12', '2026-04-11 15:25:35'),
-(5, 20, 6, '2026-04-11', '2026-05-02', 1, 2588.25, 'en_attente', '2026-04-11 09:59:41', '2026-04-11 15:25:42'),
-(6, 20, 6, '2026-04-17', '2026-04-22', 2, 1232.50, 'confirmee', '2026-04-17 08:52:33', '2026-04-17 08:52:47');
-
--- --------------------------------------------------------
-
---
--- Structure de la table `reservations_voyages`
---
-
-DROP TABLE IF EXISTS `reservations_voyages`;
-CREATE TABLE IF NOT EXISTS `reservations_voyages` (
-  `id_reservation_voyage` int UNSIGNED NOT NULL AUTO_INCREMENT,
-  `id_client` int UNSIGNED NOT NULL,
-  `id_voyage` int UNSIGNED NOT NULL,
-  `nb_personnes` int UNSIGNED NOT NULL DEFAULT '1',
-  `prix_total` decimal(10,2) NOT NULL,
-  `statut` enum('en_attente','confirmee','annulee') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'en_attente',
-  `date_reservation` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `date_modification` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id_reservation_voyage`),
-  KEY `idx_resa_voy_client` (`id_client`),
-  KEY `idx_resa_voy_voyage` (`id_voyage`),
-  KEY `idx_resa_voy_statut` (`statut`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Déchargement des données de la table `reservations_voyages`
---
-
-INSERT INTO `reservations_voyages` (`id_reservation_voyage`, `id_client`, `id_voyage`, `nb_personnes`, `prix_total`, `statut`, `date_reservation`, `date_modification`) VALUES
-(6, 20, 1, 1, 275.40, 'annulee', '2026-04-10 14:53:40', '2026-04-11 10:02:24'),
-(7, 20, 2, 1, 244.80, 'confirmee', '2026-04-11 10:00:00', '2026-04-11 10:02:30');
-
--- --------------------------------------------------------
-
---
--- Structure de la table `utilisateurs`
---
-
-DROP TABLE IF EXISTS `utilisateurs`;
-CREATE TABLE IF NOT EXISTS `utilisateurs` (
-  `id_utilisateur` int UNSIGNED NOT NULL AUTO_INCREMENT,
-  `email` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `mot_de_passe_hash` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `role` enum('client','admin') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'client',
-  `actif` tinyint(1) NOT NULL DEFAULT '1',
-  `date_creation` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `date_modification` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id_utilisateur`),
-  UNIQUE KEY `uk_utilisateurs_email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Déchargement des données de la table `utilisateurs`
---
-
-INSERT INTO `utilisateurs` (`id_utilisateur`, `email`, `mot_de_passe_hash`, `role`, `actif`, `date_creation`, `date_modification`) VALUES
-(1, 'amine.benali@bfly.com', '$2y$12$6mfYL/.r.AF5iLPmC4VR0ObktMUkrp6TUo04o7n0zlYAY0kabuJSu', 'client', 0, '2026-03-31 11:37:29', '2026-04-15 10:54:55'),
-(2, 'sara.kaci@bfly.com', '$2y$12$6mfYL/.r.AF5iLPmC4VR0ObktMUkrp6TUo04o7n0zlYAY0kabuJSu', 'client', 1, '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(4, 'mehdi.ouali@bfly.com', '$2y$12$6mfYL/.r.AF5iLPmC4VR0ObktMUkrp6TUo04o7n0zlYAY0kabuJSu', 'client', 1, '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(6, 'nassim.haddad@bfly.com', '$2y$12$6mfYL/.r.AF5iLPmC4VR0ObktMUkrp6TUo04o7n0zlYAY0kabuJSu', 'client', 1, '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(7, 'julien.martin@bfly.com', '$2y$12$6mfYL/.r.AF5iLPmC4VR0ObktMUkrp6TUo04o7n0zlYAY0kabuJSu', 'client', 1, '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(8, 'claire.dubois@bfly.com', '$2y$12$6mfYL/.r.AF5iLPmC4VR0ObktMUkrp6TUo04o7n0zlYAY0kabuJSu', 'client', 1, '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(9, 'luca.rossi@bfly.com', '$2y$12$6mfYL/.r.AF5iLPmC4VR0ObktMUkrp6TUo04o7n0zlYAY0kabuJSu', 'client', 1, '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(10, 'sofia.garcia@bfly.com', '$2y$12$6mfYL/.r.AF5iLPmC4VR0ObktMUkrp6TUo04o7n0zlYAY0kabuJSu', 'client', 1, '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(11, 'hans.mueller@bfly.com', '$2y$12$6mfYL/.r.AF5iLPmC4VR0ObktMUkrp6TUo04o7n0zlYAY0kabuJSu', 'client', 1, '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(12, 'emma.johnson@bfly.com', '$2y$12$6mfYL/.r.AF5iLPmC4VR0ObktMUkrp6TUo04o7n0zlYAY0kabuJSu', 'client', 0, '2026-03-31 11:37:29', '2026-04-15 10:54:58'),
-(13, 'kei.tanaka@bfly.com', '$2y$12$6mfYL/.r.AF5iLPmC4VR0ObktMUkrp6TUo04o7n0zlYAY0kabuJSu', 'client', 1, '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(14, 'diego.silva@bfly.com', '$2y$12$6mfYL/.r.AF5iLPmC4VR0ObktMUkrp6TUo04o7n0zlYAY0kabuJSu', 'client', 1, '2026-03-31 11:37:29', '2026-03-31 11:37:29'),
-(15, 'admin@bfly.com', '$2y$12$HeiswY/EhJ.TRFlj4euDaee..BuxxD4ZkgCQQ4fCmuwYbK2eclSSK', 'admin', 1, '2026-03-31 11:37:29', '2026-04-10 10:10:09'),
-(17, 'aylan@gmail.com', '$2y$10$556AzencrYUZHKfb9wKMXeFFPTnrjt7E1Hsqh3pzgwGVZ4abBvadm', 'admin', 1, '2026-04-02 12:26:13', '2026-04-19 15:59:40'),
-(18, 'nina@gmail.com', '$2y$10$gIcEe8EBHU0P2qdjRe.1I.dYdmyPdXPwisyUBw8n.hdF03M2kwax2', 'admin', 1, '2026-04-09 11:17:21', '2026-04-09 11:18:03'),
-(21, 'atef_saadi@outlook.fr', '$2y$10$WzgcujudeewZfXrp/haweODPKsSatp7VMfyzAk9oGJitSTqi4ij8K', 'client', 1, '2026-04-10 14:14:52', '2026-04-10 23:12:02'),
-(22, 'elo@gmail.com', '$2y$10$qGJ3dLihq8JaWY6/HCCZIu1F5R.JQI5S25vEDr112keICp/Padzwe', 'client', 1, '2026-04-19 15:41:14', '2026-04-19 15:41:14');
-
--- --------------------------------------------------------
-
---
--- Structure de la table `voyages_organises`
---
-
-DROP TABLE IF EXISTS `voyages_organises`;
-CREATE TABLE IF NOT EXISTS `voyages_organises` (
+CREATE TABLE `voyages_organises` (
   `id_voyage` int UNSIGNED NOT NULL AUTO_INCREMENT,
   `id_destination` int UNSIGNED NOT NULL,
   `titre` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -353,127 +156,216 @@ CREATE TABLE IF NOT EXISTS `voyages_organises` (
   `statut` enum('actif','complet','annule') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'actif',
   `date_creation` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `date_modification` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `id_categorie` int UNSIGNED DEFAULT NULL,
   PRIMARY KEY (`id_voyage`),
-  KEY `idx_voyage_destination` (`id_destination`),
-  KEY `idx_voyages_statut_date` (`statut`,`date_depart`),
-  KEY `idx_voyage_categorie` (`id_categorie`)
+  KEY `idx_voyages_destination` (`id_destination`),
+  KEY `idx_voyages_statut_date` (`statut`, `date_depart`),
+  CONSTRAINT `fk_voyage_destination`
+    FOREIGN KEY (`id_destination`)
+    REFERENCES `destinations` (`id_destination`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Déchargement des données de la table `voyages_organises`
---
+-- =========================================================
+-- Table : reservations_destinations
+-- =========================================================
 
-INSERT INTO `voyages_organises` (`id_voyage`, `id_destination`, `titre`, `description`, `date_depart`, `date_retour`, `prix`, `nb_places`, `nb_places_restantes`, `image_url`, `statut`, `date_creation`, `date_modification`, `id_categorie`) VALUES
-(1, 1, 'Séjour à Alger', 'Voyage organisé vers Alger (Algérie)', '2026-06-10', '2026-06-17', 324.00, 30, 21, 'images/voyages/voyage_1776606184_e5ee1bb0d3ea.jpeg', 'actif', '2026-03-31 11:37:29', '2026-04-19 15:43:04', NULL),
-(2, 2, 'Séjour à Oran', 'Voyage organisé vers Oran (Algérie)', '2026-06-10', '2026-06-17', 288.00, 30, 27, NULL, 'actif', '2026-03-31 11:37:29', '2026-04-11 10:00:00', NULL),
-(3, 5, 'Séjour à Tamanrasset', 'Voyage organisé vers Tamanrasset (Algérie)', '2026-06-10', '2026-06-17', 396.00, 30, 30, NULL, 'actif', '2026-03-31 11:37:29', '2026-03-31 11:37:29', NULL),
-(4, 7, 'City Break Paris', 'Court séjour découverte à Paris', '2026-07-05', '2026-07-10', 512.00, 25, 25, NULL, 'actif', '2026-03-31 11:37:29', '2026-03-31 11:37:29', NULL),
-(5, 9, 'City Break Barcelone', 'Court séjour découverte à Barcelone', '2026-07-05', '2026-07-10', 448.00, 25, 25, NULL, 'actif', '2026-03-31 11:37:29', '2026-03-31 11:37:29', NULL),
-(6, 10, 'City Break Rome', 'Court séjour découverte à Rome', '2026-07-05', '2026-07-10', 480.00, 25, 25, NULL, 'actif', '2026-03-31 11:37:29', '2026-03-31 11:37:29', NULL),
-(7, 13, 'City Break Londres', 'Court séjour découverte à Londres', '2026-07-05', '2026-07-10', 544.00, 25, 25, NULL, 'actif', '2026-03-31 11:37:29', '2026-04-13 17:20:21', 1),
-(8, 14, 'City Break Amsterdam', 'Court séjour découverte à Amsterdam', '2026-07-05', '2026-07-10', 496.00, 25, 25, NULL, 'actif', '2026-03-31 11:37:29', '2026-03-31 11:37:29', NULL),
-(13, 19, 'Évasion Dubaï', 'Séjour détente et visites à Dubaï', '2026-08-12', '2026-08-20', 816.00, 20, 20, 'images/voyages/voyage_1776606810_116e0cb6d1be.jpeg', 'actif', '2026-03-31 11:37:29', '2026-04-19 15:53:30', NULL),
-(14, 21, 'Évasion Bali', 'Séjour détente et visites à Bali', '2026-08-12', '2026-08-20', 765.00, 20, 20, 'images/voyages/voyage_1776606824_6b0701645945.jpg', 'actif', '2026-03-31 11:37:29', '2026-04-19 15:53:44', NULL),
-(15, 23, 'Évasion New York', 'Séjour détente et visites à New York', '2026-08-12', '2026-08-20', 1105.00, 20, 20, 'images/voyages/voyage_1776606914_b79df5ad3c0a.webp', 'actif', '2026-03-31 11:37:29', '2026-04-19 15:55:14', NULL),
-(16, 27, 'Évasion Rio de Janeiro', 'Séjour détente et visites à Rio de Janeiro', '2026-08-12', '2026-08-20', 1156.00, 20, 20, NULL, 'actif', '2026-03-31 11:37:29', '2026-03-31 11:37:29', NULL);
+CREATE TABLE `reservations_destinations` (
+  `id_reservation_destination` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id_client` int UNSIGNED NOT NULL,
+  `id_destination` int UNSIGNED NOT NULL,
+  `date_depart` date NOT NULL,
+  `date_retour` date NOT NULL,
+  `nb_personnes` int UNSIGNED NOT NULL DEFAULT 1,
+  `prix_total` decimal(10,2) NOT NULL,
+  `statut` enum('en_attente','confirmee','annulee') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'en_attente',
+  `date_reservation` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `date_modification` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id_reservation_destination`),
+  KEY `idx_resa_dest_client` (`id_client`),
+  KEY `idx_resa_dest_destination` (`id_destination`),
+  KEY `idx_resa_dest_statut` (`statut`),
+  CONSTRAINT `fk_resa_dest_client`
+    FOREIGN KEY (`id_client`)
+    REFERENCES `client` (`id_client`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_resa_dest_destination`
+    FOREIGN KEY (`id_destination`)
+    REFERENCES `destinations` (`id_destination`)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Déclencheurs `voyages_organises`
---
-DROP TRIGGER IF EXISTS `trg_voyage_depart_insert`;
-DELIMITER $$
-CREATE TRIGGER `trg_voyage_depart_insert` BEFORE INSERT ON `voyages_organises` FOR EACH ROW BEGIN
-    IF NEW.date_depart < DATE_ADD(CURDATE(), INTERVAL 3 DAY) THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'La date de départ doit être au moins 3 jours après la date du jour';
-    END IF;
-END
-$$
-DELIMITER ;
-DROP TRIGGER IF EXISTS `trg_voyage_depart_update`;
-DELIMITER $$
-CREATE TRIGGER `trg_voyage_depart_update` BEFORE UPDATE ON `voyages_organises` FOR EACH ROW BEGIN
-    IF NEW.date_depart < DATE_ADD(CURDATE(), INTERVAL 3 DAY) THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'La date de départ doit être au moins 3 jours après la date du jour';
-    END IF;
-END
-$$
-DELIMITER ;
-DROP TRIGGER IF EXISTS `trg_voyage_duree_insert`;
-DELIMITER $$
-CREATE TRIGGER `trg_voyage_duree_insert` BEFORE INSERT ON `voyages_organises` FOR EACH ROW BEGIN
-    IF DATEDIFF(NEW.date_retour, NEW.date_depart) > 30 THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'La durée du voyage ne doit pas dépasser 30 jours';
-    END IF;
-END
-$$
-DELIMITER ;
-DROP TRIGGER IF EXISTS `trg_voyage_duree_update`;
-DELIMITER $$
-CREATE TRIGGER `trg_voyage_duree_update` BEFORE UPDATE ON `voyages_organises` FOR EACH ROW BEGIN
-    IF DATEDIFF(NEW.date_retour, NEW.date_depart) > 30 THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'La durée du voyage ne doit pas dépasser 30 jours';
-    END IF;
-END
-$$
-DELIMITER ;
+-- =========================================================
+-- Table : reservations_voyages
+-- =========================================================
 
---
--- Contraintes pour les tables déchargées
---
+CREATE TABLE `reservations_voyages` (
+  `id_reservation_voyage` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id_client` int UNSIGNED NOT NULL,
+  `id_voyage` int UNSIGNED NOT NULL,
+  `nb_personnes` int UNSIGNED NOT NULL DEFAULT 1,
+  `prix_total` decimal(10,2) NOT NULL,
+  `statut` enum('en_attente','confirmee','annulee') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'en_attente',
+  `date_reservation` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `date_modification` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id_reservation_voyage`),
+  KEY `idx_resa_voy_client` (`id_client`),
+  KEY `idx_resa_voy_voyage` (`id_voyage`),
+  KEY `idx_resa_voy_statut` (`statut`),
+  CONSTRAINT `fk_resa_voy_client`
+    FOREIGN KEY (`id_client`)
+    REFERENCES `client` (`id_client`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_resa_voy_voyage`
+    FOREIGN KEY (`id_voyage`)
+    REFERENCES `voyages_organises` (`id_voyage`)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Contraintes pour la table `client`
---
-ALTER TABLE `client`
-  ADD CONSTRAINT `fk_client_utilisateur` FOREIGN KEY (`id_utilisateur`) REFERENCES `utilisateurs` (`id_utilisateur`) ON DELETE CASCADE ON UPDATE CASCADE;
+-- =========================================================
+-- Donnees conservees : continents uniquement
+-- =========================================================
 
---
--- Contraintes pour la table `destinations`
---
-ALTER TABLE `destinations`
-  ADD CONSTRAINT `fk_destination_continent` FOREIGN KEY (`id_continent`) REFERENCES `continents` (`id_continent`) ON DELETE SET NULL ON UPDATE CASCADE;
+INSERT INTO `continents` (`id_continent`, `nom`) VALUES
+(1, 'Europe'),
+(2, 'Afrique'),
+(3, 'Asie'),
+(4, 'Amerique du Nord'),
+(5, 'Amerique du Sud'),
+(6, 'Oceanie');
 
---
--- Contraintes pour la table `offres`
---
-ALTER TABLE `offres`
-  ADD CONSTRAINT `fk_offre_destination` FOREIGN KEY (`id_destination`) REFERENCES `destinations` (`id_destination`) ON DELETE CASCADE ON UPDATE CASCADE;
+USE `bfly`;
 
---
--- Contraintes pour la table `reservations_destinations`
---
-ALTER TABLE `reservations_destinations`
-  ADD CONSTRAINT `fk_resa_dest_client` FOREIGN KEY (`id_client`) REFERENCES `client` (`id_client`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_resa_dest_destination` FOREIGN KEY (`id_destination`) REFERENCES `destinations` (`id_destination`) ON DELETE RESTRICT ON UPDATE CASCADE;
+SET FOREIGN_KEY_CHECKS = 0;
 
---
--- Contraintes pour la table `reservations_voyages`
---
-ALTER TABLE `reservations_voyages`
-  ADD CONSTRAINT `fk_resa_voy_client` FOREIGN KEY (`id_client`) REFERENCES `client` (`id_client`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_resa_voy_voyage` FOREIGN KEY (`id_voyage`) REFERENCES `voyages_organises` (`id_voyage`) ON DELETE RESTRICT ON UPDATE CASCADE;
+-- Utilisateurs
 
---
--- Contraintes pour la table `voyages_organises`
---
-ALTER TABLE `voyages_organises`
-  ADD CONSTRAINT `fk_voyage_categorie` FOREIGN KEY (`id_categorie`) REFERENCES `categories` (`id_categorie`) ON DELETE SET NULL ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_voyage_destination` FOREIGN KEY (`id_destination`) REFERENCES `destinations` (`id_destination`) ON DELETE CASCADE ON UPDATE CASCADE;
+INSERT INTO `utilisateurs`
+(`id_utilisateur`, `email`, `mot_de_passe_hash`, `role`, `actif`) VALUES
+(3, 'camille.martin@bfly.com', '$2y$12$6mfYL/.r.AF5iLPmC4VR0ObktMUkrp6TUo04o7n0zlYAY0kabuJSu', 'client', 1),
+(4, 'yanis.meziane@bfly.com', '$2y$12$6mfYL/.r.AF5iLPmC4VR0ObktMUkrp6TUo04o7n0zlYAY0kabuJSu', 'client', 1),
+(5, 'sophie.bernard@bfly.com', '$2y$12$6mfYL/.r.AF5iLPmC4VR0ObktMUkrp6TUo04o7n0zlYAY0kabuJSu', 'client', 1),
+(6, 'amine.kaci@bfly.com', '$2y$12$6mfYL/.r.AF5iLPmC4VR0ObktMUkrp6TUo04o7n0zlYAY0kabuJSu', 'client', 1),
+(7, 'lea.dubois@bfly.com', '$2y$12$6mfYL/.r.AF5iLPmC4VR0ObktMUkrp6TUo04o7n0zlYAY0kabuJSu', 'client', 1),
+(8, 'nassim.benali@bfly.com', '$2y$12$6mfYL/.r.AF5iLPmC4VR0ObktMUkrp6TUo04o7n0zlYAY0kabuJSu', 'client', 1),
+(9, 'julien.moreau@bfly.com', '$2y$12$6mfYL/.r.AF5iLPmC4VR0ObktMUkrp6TUo04o7n0zlYAY0kabuJSu', 'client', 1),
+(10, 'sara.aitali@bfly.com', '$2y$12$6mfYL/.r.AF5iLPmC4VR0ObktMUkrp6TUo04o7n0zlYAY0kabuJSu', 'client', 1),
+(11, 'claire.laurent@bfly.com', '$2y$12$6mfYL/.r.AF5iLPmC4VR0ObktMUkrp6TUo04o7n0zlYAY0kabuJSu', 'client', 1),
+(12, 'mehdi.saadi@bfly.com', '$2y$12$6mfYL/.r.AF5iLPmC4VR0ObktMUkrp6TUo04o7n0zlYAY0kabuJSu', 'client', 1),
+(13, 'emma.robert@bfly.com', '$2y$12$6mfYL/.r.AF5iLPmC4VR0ObktMUkrp6TUo04o7n0zlYAY0kabuJSu', 'client', 1),
+(14, 'karim.haddad@bfly.com', '$2y$12$6mfYL/.r.AF5iLPmC4VR0ObktMUkrp6TUo04o7n0zlYAY0kabuJSu', 'client', 1),
+(15, 'lucas.petit@bfly.com', '$2y$12$6mfYL/.r.AF5iLPmC4VR0ObktMUkrp6TUo04o7n0zlYAY0kabuJSu', 'client', 1),
+(16, 'ines.bouchareb@bfly.com', '$2y$12$6mfYL/.r.AF5iLPmC4VR0ObktMUkrp6TUo04o7n0zlYAY0kabuJSu', 'client', 1),
+(17, 'manon.roux@bfly.com', '$2y$12$6mfYL/.r.AF5iLPmC4VR0ObktMUkrp6TUo04o7n0zlYAY0kabuJSu', 'client', 1),
+(18, 'ilyes.cherif@bfly.com', '$2y$12$6mfYL/.r.AF5iLPmC4VR0ObktMUkrp6TUo04o7n0zlYAY0kabuJSu', 'client', 1),
+(19, 'chloe.garcia@bfly.com', '$2y$12$6mfYL/.r.AF5iLPmC4VR0ObktMUkrp6TUo04o7n0zlYAY0kabuJSu', 'client', 1),
+(20, 'samir.belhadj@bfly.com', '$2y$12$6mfYL/.r.AF5iLPmC4VR0ObktMUkrp6TUo04o7n0zlYAY0kabuJSu', 'client', 1),
+(21, 'antoine.fabre@bfly.com', '$2y$12$6mfYL/.r.AF5iLPmC4VR0ObktMUkrp6TUo04o7n0zlYAY0kabuJSu', 'client', 1),
+(22, 'lina.merabet@bfly.com', '$2y$12$6mfYL/.r.AF5iLPmC4VR0ObktMUkrp6TUo04o7n0zlYAY0kabuJSu', 'client', 1),
+(23, 'nicolas.andre@bfly.com', '$2y$12$6mfYL/.r.AF5iLPmC4VR0ObktMUkrp6TUo04o7n0zlYAY0kabuJSu', 'client', 1),
+(24, 'amina.larbi@bfly.com', '$2y$12$6mfYL/.r.AF5iLPmC4VR0ObktMUkrp6TUo04o7n0zlYAY0kabuJSu', 'client', 1),
+(25, 'elodie.mercier@bfly.com', '$2y$12$6mfYL/.r.AF5iLPmC4VR0ObktMUkrp6TUo04o7n0zlYAY0kabuJSu', 'client', 1);
+
+-- Clients
+
+INSERT INTO `client`
+(`id_client`, `id_utilisateur`, `nom`, `prenom`, `telephone`, `adresse`, `ville`, `pays`) VALUES
+(1, 3, 'Martin', 'Camille', '+33610000001', '12 rue Victor Hugo', 'Paris', 'France'),
+(2, 4, 'Meziane', 'Yanis', '+213550000001', 'Rue Didouche Mourad', 'Alger', 'Algerie'),
+(3, 5, 'Bernard', 'Sophie', '+33610000002', '8 avenue Jean Jaures', 'Lyon', 'France'),
+(4, 6, 'Kaci', 'Amine', '+213550000002', 'Boulevard Krim Belkacem', 'Tizi Ouzou', 'Algerie'),
+(5, 7, 'Dubois', 'Lea', '+33610000003', '25 rue Nationale', 'Lille', 'France'),
+(6, 8, 'Benali', 'Nassim', '+213550000003', 'Rue Larbi Ben Mhidi', 'Oran', 'Algerie'),
+(7, 9, 'Moreau', 'Julien', '+33610000004', '4 place Bellecour', 'Lyon', 'France'),
+(8, 10, 'Aitali', 'Sara', '+213550000004', 'Cite des Palmiers', 'Bejaia', 'Algerie'),
+(9, 11, 'Laurent', 'Claire', '+33610000005', '17 rue de la Republique', 'Marseille', 'France'),
+(10, 12, 'Saadi', 'Mehdi', '+213550000005', 'Rue Emir Abdelkader', 'Alger', 'Algerie'),
+(11, 13, 'Robert', 'Emma', '+33610000006', '6 rue Alsace Lorraine', 'Toulouse', 'France'),
+(12, 14, 'Haddad', 'Karim', '+21622000001', 'Avenue Habib Bourguiba', 'Tunis', 'Tunisie'),
+(13, 15, 'Petit', 'Lucas', '+33610000007', '11 rue Massena', 'Nice', 'France'),
+(14, 16, 'Bouchareb', 'Ines', '+213550000006', 'Rue Mohamed Khemisti', 'Constantine', 'Algerie'),
+(15, 17, 'Roux', 'Manon', '+33610000008', '3 rue Sainte-Catherine', 'Bordeaux', 'France'),
+(16, 18, 'Cherif', 'Ilyes', '+213550000007', 'Rue des Freres Bouadou', 'Blida', 'Algerie'),
+(17, 19, 'Garcia', 'Chloe', '+34600000001', 'Carrer de Mallorca', 'Barcelone', 'Espagne'),
+(18, 20, 'Belhadj', 'Samir', '+213550000008', 'Rue Ahmed Zabana', 'Annaba', 'Algerie'),
+(19, 21, 'Fabre', 'Antoine', '+33610000009', '19 rue de Metz', 'Nancy', 'France'),
+(20, 22, 'Merabet', 'Lina', '+213550000009', 'Cite El Mokrani', 'Setif', 'Algerie'),
+(21, 23, 'Andre', 'Nicolas', '+33610000010', '2 rue Colbert', 'Nantes', 'France'),
+(22, 24, 'Larbi', 'Amina', '+212600000001', 'Boulevard Mohammed V', 'Casablanca', 'Maroc'),
+(23, 25, 'Mercier', 'Elodie', '+33610000011', '10 rue des Arts', 'Strasbourg', 'France');
+
+-- Destinations
+
+INSERT INTO `destinations`
+(`id_destination`, `pays`, `ville`, `id_continent`, `description`, `prix_base`, `image_url`, `actif`) VALUES
+(1, 'France', 'Paris', 1, 'Decouverte de Paris, monuments, musees et gastronomie.', 350.00, NULL, 1),
+(2, 'Algerie', 'Alger', 2, 'Sejour a Alger entre patrimoine, Casbah et bord de mer.', 220.00, NULL, 1),
+(3, 'Tunisie', 'Tunis', 2, 'Voyage a Tunis avec visite de Carthage et Sidi Bou Said.', 210.00, NULL, 1),
+(4, 'Hongrie', 'Budapest', 1, 'Sejour culturel a Budapest entre thermes et Danube.', 320.00, NULL, 1),
+(5, 'Italie', 'Rome', 1, 'Decouverte de Rome, Colisee, Vatican et cuisine italienne.', 370.00, NULL, 1),
+(6, 'Espagne', 'Majorque', 1, 'Sejour detente a Majorque entre plages et villages mediterraneens.', 420.00, NULL, 1),
+(7, 'Grece', 'Athenes', 1, 'Voyage historique a Athenes et decouverte de la culture grecque.', 390.00, NULL, 1),
+(8, 'Republique Tcheque', 'Prague', 1, 'City trip a Prague, vieille ville et chateau.', 340.00, NULL, 1),
+(9, 'Autriche', 'Vienne', 1, 'Sejour elegant a Vienne, palais, musique et cafes.', 410.00, NULL, 1),
+(10, 'Japon', 'Tokyo', 3, 'Voyage a Tokyo entre modernite, temples et gastronomie japonaise.', 850.00, NULL, 1),
+(11, 'Malaisie', 'Kuala Lumpur', 3, 'Decouverte de Kuala Lumpur, temples, tours et cuisine asiatique.', 690.00, NULL, 1),
+(12, 'Thailande', 'Bangkok', 3, 'Sejour a Bangkok entre temples, marches et ambiance tropicale.', 650.00, NULL, 1),
+(13, 'USA', 'New York', 4, 'City trip a New York, gratte-ciel, spectacles et shopping.', 920.00, NULL, 1),
+(14, 'Mexique', 'Cancun', 4, 'Sejour soleil a Cancun entre plages et culture maya.', 780.00, NULL, 1),
+(15, 'Cuba', 'La Havane', 4, 'Voyage a La Havane, culture cubaine, musique et architecture coloree.', 760.00, NULL, 1);
+
+-- Voyages
+
+INSERT INTO `voyages_organises`
+(`id_voyage`, `id_destination`, `titre`, `description`, `date_depart`, `date_retour`, `prix`, `nb_places`, `nb_places_restantes`, `image_url`, `statut`) VALUES
+(1, 1, 'City Break Paris', 'Voyage organise pour decouvrir les incontournables de Paris.', '2026-06-15', '2026-06-20', 590.00, 30, 30, NULL, 'actif'),
+(2, 2, 'Sejour Alger Authentique', 'Circuit organise a Alger avec visites guidees.', '2026-06-22', '2026-06-29', 430.00, 30, 30, NULL, 'actif'),
+(3, 3, 'Decouverte de Tunis', 'Sejour culturel a Tunis, Carthage et Sidi Bou Said.', '2026-07-01', '2026-07-07', 410.00, 25, 25, NULL, 'actif'),
+(4, 4, 'Budapest Detente', 'Voyage a Budapest avec decouverte des thermes et du centre historique.', '2026-07-10', '2026-07-16', 620.00, 25, 25, NULL, 'actif'),
+(5, 5, 'Rome Historique', 'Circuit organise a Rome entre monuments antiques et gastronomie.', '2026-07-20', '2026-07-26', 690.00, 30, 30, NULL, 'actif'),
+(6, 6, 'Majorque Soleil', 'Sejour detente a Majorque avec plages et excursions.', '2026-08-01', '2026-08-08', 780.00, 20, 20, NULL, 'actif'),
+(7, 7, 'Athenes Antique', 'Voyage organise a Athenes avec visite de l Acropole.', '2026-08-10', '2026-08-16', 720.00, 25, 25, NULL, 'actif'),
+(8, 8, 'Prague Romantique', 'City trip a Prague avec visite de la vieille ville.', '2026-08-20', '2026-08-25', 640.00, 25, 25, NULL, 'actif'),
+(9, 9, 'Vienne Imperiale', 'Sejour a Vienne entre palais, musees et concerts.', '2026-09-01', '2026-09-07', 760.00, 25, 25, NULL, 'actif'),
+(10, 10, 'Tokyo Experience', 'Voyage organise a Tokyo entre quartiers modernes et traditions.', '2026-09-12', '2026-09-22', 1450.00, 20, 20, NULL, 'actif'),
+(11, 11, 'Kuala Lumpur Decouverte', 'Sejour en Malaisie avec visites culturelles et urbaines.', '2026-10-01', '2026-10-10', 1180.00, 20, 20, NULL, 'actif'),
+(12, 12, 'Bangkok Tropical', 'Voyage a Bangkok entre temples, marches et excursions.', '2026-10-15', '2026-10-24', 1120.00, 20, 20, NULL, 'actif'),
+(13, 13, 'New York City Trip', 'Sejour organise a New York avec visites libres et guidees.', '2026-11-01', '2026-11-08', 1590.00, 25, 25, NULL, 'actif'),
+(14, 14, 'Cancun Soleil', 'Sejour au Mexique entre plage, detente et excursion maya.', '2026-11-15', '2026-11-24', 1380.00, 20, 20, NULL, 'actif'),
+(15, 15, 'La Havane Culture', 'Voyage organise a Cuba avec decouverte de La Havane.', '2026-12-01', '2026-12-10', 1320.00, 20, 20, NULL, 'actif');
+
+-- Reservations destinations
+
+INSERT INTO `reservations_destinations`
+(`id_reservation_destination`, `id_client`, `id_destination`, `date_depart`, `date_retour`, `nb_personnes`, `prix_total`, `statut`) VALUES
+(1, 1, 1, '2026-06-10', '2026-06-15', 2, 3500.00, 'confirmee'),
+(2, 2, 2, '2026-06-18', '2026-06-24', 1, 1320.00, 'en_attente'),
+(3, 3, 5, '2026-07-05', '2026-07-12', 2, 5180.00, 'confirmee'),
+(4, 4, 3, '2026-07-10', '2026-07-17', 3, 4410.00, 'en_attente'),
+(5, 5, 6, '2026-08-02', '2026-08-09', 2, 5880.00, 'confirmee'),
+(6, 6, 7, '2026-08-15', '2026-08-21', 1, 2340.00, 'annulee'),
+(7, 7, 8, '2026-09-01', '2026-09-06', 2, 3400.00, 'confirmee'),
+(8, 8, 10, '2026-09-18', '2026-09-28', 1, 8500.00, 'en_attente'),
+(9, 9, 13, '2026-10-05', '2026-10-12', 2, 12880.00, 'confirmee'),
+(10, 10, 14, '2026-11-03', '2026-11-10', 2, 10920.00, 'en_attente');
+
+-- Reservations voyages
+
+INSERT INTO `reservations_voyages`
+(`id_reservation_voyage`, `id_client`, `id_voyage`, `nb_personnes`, `prix_total`, `statut`) VALUES
+(1, 11, 1, 2, 1180.00, 'confirmee'),
+(2, 12, 2, 1, 430.00, 'en_attente'),
+(3, 13, 3, 2, 820.00, 'confirmee'),
+(4, 14, 4, 1, 620.00, 'en_attente'),
+(5, 15, 5, 3, 2070.00, 'confirmee'),
+(6, 16, 6, 2, 1560.00, 'annulee'),
+(7, 17, 7, 1, 720.00, 'confirmee'),
+(8, 18, 10, 2, 2900.00, 'en_attente'),
+(9, 19, 13, 1, 1590.00, 'confirmee'),
+(10, 20, 15, 2, 2640.00, 'en_attente');
+
 SET FOREIGN_KEY_CHECKS = 1;
-COMMIT;
-
-
--- =========================================================
--- Comptes de démonstration
--- Admin : admin@bfly.com / 123
--- Utilisateurs clients de démonstration : mot de passe client123
--- =========================================================
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

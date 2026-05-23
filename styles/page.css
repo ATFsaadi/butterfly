@@ -1,6 +1,5 @@
-
 /* ======================
-   BASE (communs)
+   base commune
    ====================== */
 
 .section-title {
@@ -8,6 +7,7 @@
     color: var(--text-color);
     margin: 0 0 0.3rem;
 }
+
 .section-subtitle {
     color: var(--muted-color);
     font-size: 1.05rem;
@@ -19,6 +19,7 @@
     box-shadow: var(--shadow);
     background: #fff;
 }
+
 .ui-cover {
     width: 100%;
     object-fit: cover;
@@ -26,35 +27,11 @@
     border-radius: 0;
 }
 
-/* Boutons style projet */
-.ui-btn {
-    font-size: 0.78rem;
-    padding: 4px 10px;
-    border-radius: 50rem;
-    border-width: 1px;
-    font-weight: 600;
-    line-height: 1.2;
-    transition: 0.15s ease;
-}
-.ui-btn-primary {
-    background: var(--primary-color);
-    border-color: var(--primary-color);
-    color: #fff;
-}
-.ui-btn-primary:hover {
-    opacity: 0.9;
-    color: #fff;
-}
-.ui-btn-outline {
-    background: transparent;
-    color: var(--primary-color);
-    border-color: var(--primary-color);
-}
-.ui-btn-outline:hover {
-    opacity: 0.85;
-}
+/* ======================
+   boutons projet
+   ====================== */
 
-/*   Compat : tes classes existantes */
+.ui-btn,
 .detail-btn,
 .grid-btn,
 .res-btn {
@@ -64,49 +41,173 @@
     border-width: 1px;
     font-weight: 600;
     line-height: 1.2;
+    transition: 0.15s ease;
 }
 
+.ui-btn-primary,
 .btn-success.detail-btn,
 .btn-success.grid-btn {
     background: var(--primary-color);
     border-color: var(--primary-color);
     color: #fff;
 }
+
+.ui-btn-primary:hover,
 .btn-success.detail-btn:hover,
 .btn-success.grid-btn:hover {
     opacity: 0.9;
+    color: #fff;
 }
 
+.ui-btn-outline,
 .btn-outline-primary.detail-btn,
 .btn-outline-primary.grid-btn {
     background: transparent;
     color: var(--primary-color);
     border-color: var(--primary-color);
 }
+
+.ui-btn-outline:hover,
 .btn-outline-primary.detail-btn:hover,
 .btn-outline-primary.grid-btn:hover {
     opacity: 0.85;
 }
 
+/* ======================
+   modales auth
+   ====================== */
 
+.auth-card {
+    display: flex;
+    min-height: 480px;
+    background: #fff;
+}
+
+.auth-form {
+    width: 60%;
+    padding: 45px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.auth-form h2 {
+    font-size: 34px;
+    font-weight: 700;
+    margin-bottom: 25px;
+    color: var(--secondary-color);
+}
+
+.auth-form form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.auth-form input {
+    width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-size: 15px;
+    outline: none;
+    transition: 0.2s ease;
+}
+
+.auth-form input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(242, 166, 91, 0.18);
+}
+
+.auth-form .btn-primary {
+    border: none;
+    border-radius: 12px;
+    padding: 12px;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--primary-color), #f2a65b);
+}
+
+.auth-form .btn-primary:hover {
+    opacity: 0.95;
+}
+
+.auth-link,
+.switch-link a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.auth-link:hover,
+.switch-link a:hover {
+    text-decoration: underline;
+}
+
+.switch-link {
+    margin-bottom: 0;
+    color: #666;
+}
+
+.divider {
+    color: #999;
+    font-size: 13px;
+    font-weight: 700;
+    position: relative;
+}
+
+.divider::before,
+.divider::after {
+    content: "";
+    display: inline-block;
+    width: 70px;
+    height: 1px;
+    background: #ddd;
+    vertical-align: middle;
+    margin: 0 10px;
+}
+
+.social-buttons .btn {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.social-buttons .btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.auth-logo {
+    width: 40%;
+    background: linear-gradient(135deg, var(--primary-color), #f8c291);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.auth-logo img {
+    max-width: 160px;
+    height: auto;
+}
 
 /* ======================
-   PAGES DÉTAILS
+   pages détails
    ====================== */
 
 .detail-wrap {
     max-width: 700px;
 }
 
-.detail-card,
-.detail-img {
-    border-radius: 0;
-}
 .detail-card {
     border: 0;
+    border-radius: 0;
     box-shadow: var(--shadow);
     background: #fff;
 }
+
 .detail-body {
     padding: 22px 24px;
 }
@@ -121,6 +222,7 @@
     gap: 8px;
     margin: 14px 0 16px;
 }
+
 .detail-row {
     display: flex;
     justify-content: space-between;
@@ -129,10 +231,12 @@
     background: var(--bg-light);
     font-size: 0.95rem;
 }
+
 .detail-label {
     color: var(--muted-color);
     font-weight: 700;
 }
+
 .detail-value {
     color: var(--text-color);
     font-weight: 800;
@@ -144,12 +248,14 @@
     line-height: 1.55;
     color: var(--text-color);
 }
+
 .detail-img {
     width: 100%;
     max-height: 380px;
     object-fit: cover;
     display: block;
     margin: 10px 0 14px;
+    border-radius: 0;
 }
 
 .detail-actions {
@@ -166,15 +272,17 @@
     border-radius: 0;
     border: 1px solid currentColor;
 }
+
 .detail-badge.is-open {
     color: var(--secondary-color);
 }
+
 .detail-badge.is-closed {
     color: #e11d48;
 }
 
 /* ======================
-   GRID (Offres / Destinations / Voyages)
+   grille offres destinations voyages
    ====================== */
 
 .grid-card {
@@ -184,6 +292,7 @@
     background: #fff;
     transition: 0.2s ease;
 }
+
 .grid-card:hover {
     transform: translateY(-2px);
 }
@@ -192,6 +301,7 @@
     position: relative;
     overflow: hidden;
 }
+
 .grid-img {
     width: 100%;
     height: 190px;
@@ -199,6 +309,7 @@
     display: block;
     border-radius: 0;
 }
+
 .grid-noimg {
     height: 190px;
 }
@@ -211,16 +322,16 @@
     color: #fff;
     font-weight: 800;
     font-size: 0.95rem;
-    text-shadow: 0 2px 6px rgba(0,0,0,.45);
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
 }
 
 .grid-price-badge {
     position: absolute;
-    bottom: 0;
     right: 0;
+    bottom: 0;
+    padding: 6px 14px;
     background: var(--primary-color);
     color: #fff;
-    padding: 6px 14px;
     font-weight: 800;
     font-size: 0.85rem;
     line-height: 1;
@@ -231,11 +342,14 @@
 .grid-body {
     padding: 14px;
 }
+
 .grid-actions {
     display: flex;
     justify-content: center;
     gap: 8px;
 }
+
+/* triangle promotion */
 
 .grid-sale {
     position: absolute;
@@ -247,6 +361,7 @@
     border-top: 90px solid #e11d48;
     border-left: 90px solid transparent;
 }
+
 .grid-sale::after {
     content: attr(data-sale);
     position: absolute;
@@ -263,7 +378,7 @@
 }
 
 /* ======================
-   RÉSERVATION
+   réservation
    ====================== */
 
 .res-wrap {
@@ -271,20 +386,15 @@
 }
 
 .res-card {
+    height: 100%;
     border: 0;
     border-radius: 0;
     box-shadow: var(--shadow);
     background: #fff;
-    height: 100%;
 }
 
 .res-right {
     max-width: 560px;
-}
-@media (min-width:992px) {
-    .res-right {
-        margin-left: auto;
-    }
 }
 
 .res-media {
@@ -341,6 +451,7 @@
     border-color: var(--primary-color);
     color: #fff;
 }
+
 .res-back-overlay .btn-outline-primary:hover {
     opacity: 0.9;
 }
@@ -353,7 +464,7 @@
     padding: 10px 16px;
     border-radius: 50rem;
 }
-/*   hover blanc demandé */
+
 .res-cta:hover {
     background: #fff;
     color: var(--primary-color);
@@ -364,25 +475,53 @@
     border-radius: 0;
     border: 1px solid var(--border-color);
 }
+
 .res-card .form-control:focus {
     border-color: var(--secondary-color);
-    box-shadow: 0 0 0 0.15rem rgba(0,127,140,.15);
+    box-shadow: 0 0 0 0.15rem rgba(0, 127, 140, 0.15);
 }
 
-/* =========================================================
-     RESPONSIVE (séparés)
-   ========================================================= */
+/* ======================
+   responsive auth
+   ====================== */
 
-/* CAROUSEL */
-@media (max-width:991px) {
+@media (max-width: 768px) {
+    .auth-card {
+        flex-direction: column;
+        min-height: auto;
+    }
+
+    .auth-form {
+        width: 100%;
+        padding: 35px 25px;
+    }
+
+    .auth-logo {
+        width: 100%;
+        padding: 25px;
+    }
+
+    .divider::before,
+    .divider::after {
+        width: 45px;
+    }
+}
+
+/* ======================
+   responsive carousel
+   ====================== */
+
+@media (max-width: 991px) {
     .carousel-image {
         height: 420px;
     }
 }
-@media (max-width:767px) {
+
+@media (max-width: 767px) {
     .carousel-image {
         height: 300px;
     }
+
     #offresCarousel .offer-media {
         height: 240px;
     }
@@ -390,26 +529,30 @@
     #mainCarousel .row.g-0 {
         position: relative;
     }
+
     #mainCarousel .col-md-9 {
         flex: 0 0 100%;
         max-width: 100%;
     }
+
     #mainCarousel .col-md-3 {
         position: absolute;
         inset: 0;
         flex: 0 0 100%;
         max-width: 100%;
-        background: transparent!important;
+        background: transparent !important;
         display: flex;
         align-items: center;
         justify-content: center;
         pointer-events: none;
     }
+
     #mainCarousel .voyage-link {
         pointer-events: auto;
-        background: rgba(0,0,0,.35);
+        background: rgba(0, 0, 0, 0.35);
         padding: 18px 20px;
     }
+
     #mainCarousel .carousel-caption {
         position: static;
         width: auto;
@@ -417,37 +560,56 @@
     }
 }
 
-/* DETAILS */
-@media (max-width:576px) {
+/* ======================
+   responsive détails
+   ====================== */
+
+@media (max-width: 576px) {
     .detail-body {
         padding: 18px;
     }
+
     .detail-row {
         flex-direction: column;
         align-items: flex-start;
     }
+
     .detail-actions {
         flex-direction: column;
         align-items: stretch;
     }
+
     .detail-btn {
         width: 100%;
     }
 }
 
-/* GRID */
-@media (max-width:767px) {
+/* ======================
+   responsive grille
+   ====================== */
+
+@media (max-width: 767px) {
     .grid-img,
     .grid-noimg {
         height: 160px;
     }
+
     .grid-title-overlay {
         font-size: 0.9rem;
     }
 }
 
-/* RESERVATION */
-@media (max-width:991px) {
+/* ======================
+   responsive réservation
+   ====================== */
+
+@media (min-width: 992px) {
+    .res-right {
+        margin-left: auto;
+    }
+}
+
+@media (max-width: 991px) {
     .res-img,
     .res-noimg {
         min-height: 320px;

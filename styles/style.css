@@ -18,9 +18,15 @@
     --border-radius: 14px;
     --btn-radius: 50rem;
     --shadow: 0 8px 20px rgba(0, 127, 140, 0.15);
+    --transition: all 0.3s ease;
 }
 
 /* base */
+html,
+body {
+    background-color: var(--bg-light);
+}
+
 body {
     font-family: "Poiret One", sans-serif;
     font-weight: 400; /* poiret one n'a pas de vrai gras */
@@ -29,8 +35,6 @@ body {
     letter-spacing: 0.35px; /* lisibilité */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-
-    background-color: #fff;
     margin: 0;
     padding: 0;
     color: var(--text-color);
@@ -177,4 +181,3 @@ a:hover img {
     max-width: 300px;
     margin: 0 auto;
 }
-

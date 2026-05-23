@@ -1,19 +1,27 @@
 <?php
 
+// sécurité des données
+
 $lesReservationsDestinations = $lesReservationsDestinations ?? [];
 $lesReservationsVoyages = $lesReservationsVoyages ?? [];
 
 ?>
 
+<!-- mes réservations -->
+
 <h3 class="section-title text-center mt-5">mes réservations</h3>
 
 <div class="container mt-4">
+
+    <!-- aucune réservation -->
 
     <?php if (empty($lesReservationsDestinations) && empty($lesReservationsVoyages)): ?>
         <div class="alert alert-info text-center">
             aucune réservation pour le moment.
         </div>
     <?php endif; ?>
+
+    <!-- réservations destinations -->
 
     <h5 class="text-center mt-5">réservations destination</h5>
 
@@ -22,7 +30,6 @@ $lesReservationsVoyages = $lesReservationsVoyages ?? [];
             aucune réservation sur mesure.
         </div>
     <?php else: ?>
-
         <table class="table table-bordered mt-3 align-middle">
             <thead>
                 <tr>
@@ -36,50 +43,59 @@ $lesReservationsVoyages = $lesReservationsVoyages ?? [];
             </thead>
 
             <tbody>
-                <?php foreach ($lesReservationsDestinations as $r): ?>
+                <?php foreach ($lesReservationsDestinations as $reservation): ?>
                     <?php
-                    $id = (int)($r["id_reservation_destination"] ?? 0);
+                    $id = (int) ($reservation["id_reservation_destination"] ?? 0);
 
-                    $pays = (string)($r["pays"] ?? "");
-                    $ville = (string)($r["ville"] ?? "");
+                    $pays = (string) ($reservation["pays"] ?? "");
+                    $ville = (string) ($reservation["ville"] ?? "");
                     $destination = trim($ville . " — " . $pays, " —");
 
-                    $dateDepart = (string)($r["date_depart"] ?? "");
-                    $dateRetour = (string)($r["date_retour"] ?? "");
+                    $dateDepart = (string) ($reservation["date_depart"] ?? "");
+                    $dateRetour = (string) ($reservation["date_retour"] ?? "");
 
-                    $nb = (int)($r["nb_personnes"] ?? 1);
-                    $prix = (float)($r["prix_total"] ?? 0);
+                    $nb = (int) ($reservation["nb_personnes"] ?? 1);
+                    $prix = (float) ($reservation["prix_total"] ?? 0);
 
-                    $statut = (string)($r["statut"] ?? "en_attente");
+                    $statut = (string) ($reservation["statut"] ?? "en_attente");
+
+                    $labelStatut = "en attente";
+                    $classStatut = "bg-warning text-dark";
+                    $largeurStatut = "110px";
+
+                    if ($statut === "confirmee") {
+                        $labelStatut = "confirmée";
+                        $classStatut = "bg-success";
+                    } elseif ($statut === "annulee") {
+                        $labelStatut = "annulée";
+                        $classStatut = "bg-danger";
+                    }
                     ?>
+
                     <tr>
                         <td><?= $id ?></td>
                         <td><?= htmlspecialchars($destination) ?></td>
                         <td><?= htmlspecialchars($dateDepart) ?> → <?= htmlspecialchars($dateRetour) ?></td>
                         <td><?= $nb ?></td>
                         <td><?= number_format($prix, 2, ",", " ") ?> €</td>
-                        <td class="text-center">
-    <?php if ($statut === "confirmee"): ?>
-        <span class="badge bg-success d-inline-block text-center" style="min-width:110px;">
-            confirmée
-        </span>
-    <?php elseif ($statut === "annulee"): ?>
-        <span class="badge bg-danger d-inline-block text-center" style="min-width:110px;">
-            annulée
-        </span>
-    <?php else: ?>
-        <span class="badge bg-warning text-dark d-inline-block text-center" style="min-width:110px;">
-            en attente
-        </span>
-    <?php endif; ?>
-</td>
 
+                        <!-- statut réservation -->
+
+                        <td class="text-center">
+                            <span
+                                class="badge <?= htmlspecialchars($classStatut) ?> d-inline-block text-center"
+                                style="min-width:<?= htmlspecialchars($largeurStatut) ?>;"
+                            >
+                                <?= htmlspecialchars($labelStatut) ?>
+                            </span>
+                        </td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
-
     <?php endif; ?>
+
+    <!-- réservations voyages -->
 
     <h5 class="text-center mt-5">réservations voyages organisés</h5>
 
@@ -88,7 +104,6 @@ $lesReservationsVoyages = $lesReservationsVoyages ?? [];
             aucune réservation de voyage organisé.
         </div>
     <?php else: ?>
-
         <table class="table table-bordered mt-3 align-middle">
             <thead>
                 <tr>
@@ -103,24 +118,37 @@ $lesReservationsVoyages = $lesReservationsVoyages ?? [];
             </thead>
 
             <tbody>
-                <?php foreach ($lesReservationsVoyages as $r): ?>
+                <?php foreach ($lesReservationsVoyages as $reservation): ?>
                     <?php
-                    $id = (int)($r["id_reservation_voyage"] ?? 0);
+                    $id = (int) ($reservation["id_reservation_voyage"] ?? 0);
 
-                    $voyageTitre = (string)($r["voyage_titre"] ?? "");
+                    $voyageTitre = (string) ($reservation["voyage_titre"] ?? "");
 
-                    $pays = (string)($r["pays"] ?? "");
-                    $ville = (string)($r["ville"] ?? "");
+                    $pays = (string) ($reservation["pays"] ?? "");
+                    $ville = (string) ($reservation["ville"] ?? "");
                     $destination = trim($ville . " — " . $pays, " —");
 
-                    $dateDepart = (string)($r["voyage_date_depart"] ?? "");
-                    $dateRetour = (string)($r["voyage_date_retour"] ?? "");
+                    $dateDepart = (string) ($reservation["voyage_date_depart"] ?? "");
+                    $dateRetour = (string) ($reservation["voyage_date_retour"] ?? "");
 
-                    $nb = (int)($r["nb_personnes"] ?? 1);
-                    $prix = (float)($r["prix_total"] ?? 0);
+                    $nb = (int) ($reservation["nb_personnes"] ?? 1);
+                    $prix = (float) ($reservation["prix_total"] ?? 0);
 
-                    $statut = (string)($r["statut"] ?? "en_attente");
+                    $statut = (string) ($reservation["statut"] ?? "en_attente");
+
+                    $labelStatut = "en attente";
+                    $classStatut = "bg-warning text-dark";
+                    $largeurStatut = "120px";
+
+                    if ($statut === "confirmee") {
+                        $labelStatut = "confirmée";
+                        $classStatut = "bg-success";
+                    } elseif ($statut === "annulee") {
+                        $labelStatut = "annulée";
+                        $classStatut = "bg-danger";
+                    }
                     ?>
+
                     <tr>
                         <td><?= $id ?></td>
                         <td><?= htmlspecialchars($voyageTitre) ?></td>
@@ -128,27 +156,21 @@ $lesReservationsVoyages = $lesReservationsVoyages ?? [];
                         <td><?= htmlspecialchars($dateDepart) ?> → <?= htmlspecialchars($dateRetour) ?></td>
                         <td><?= $nb ?></td>
                         <td><?= number_format($prix, 2, ",", " ") ?> €</td>
-                        <td class="text-center">
-    <?php if ($statut === "confirmee"): ?>
-        <span class="badge bg-success d-inline-block text-center" style="min-width:120px;">
-            confirmée
-        </span>
-    <?php elseif ($statut === "annulee"): ?>
-        <span class="badge bg-danger d-inline-block text-center" style="min-width:120px;">
-            annulée
-        </span>
-    <?php else: ?>
-        <span class="badge bg-warning text-dark d-inline-block text-center" style="min-width:120px;">
-            en attente
-        </span>
-    <?php endif; ?>
-</td>
 
+                        <!-- statut réservation -->
+
+                        <td class="text-center">
+                            <span
+                                class="badge <?= htmlspecialchars($classStatut) ?> d-inline-block text-center"
+                                style="min-width:<?= htmlspecialchars($largeurStatut) ?>;"
+                            >
+                                <?= htmlspecialchars($labelStatut) ?>
+                            </span>
+                        </td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
-
     <?php endif; ?>
 
 </div>

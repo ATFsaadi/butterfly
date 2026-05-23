@@ -1,10 +1,16 @@
 <?php
 
+// démarrage de la session
+
 if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
 
+// suppression des données de session
+
 $_SESSION = [];
+
+// suppression du cookie de session
 
 if (ini_get("session.use_cookies")) {
     $params = session_get_cookie_params();
@@ -20,7 +26,11 @@ if (ini_get("session.use_cookies")) {
     );
 }
 
+// destruction de la session
+
 session_destroy();
+
+// redirection accueil
 
 header("location: index.php?page=home");
 exit();

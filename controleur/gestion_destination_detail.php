@@ -1,115 +1,135 @@
 <?php
 
+// variables de base
+
 $erreurReservation = "";
 $successReservation = "";
 
-// CSRF
+$destination = null;
+$offreActive = null;
+
+// token csrf
+
 if (empty($_SESSION["csrf_token"])) {
     $_SESSION["csrf_token"] = bin2hex(random_bytes(32));
 }
 
-$id_destination = (int) ($_GET["id_destination"] ?? 0);
+// récupération des paramètres
 
-$date_depart = (string) ($_GET["date_depart"] ?? "");
-$date_retour = (string) ($_GET["date_retour"] ?? "");
-$nb_personnes = (int) ($_GET["nb_personnes"] ?? 1);
+$idDestination = (int) ($_GET["id_destination"] ?? 0);
 
-if ($nb_personnes < 1) {
-    $nb_personnes = 1;
+$dateDepart = (string) ($_GET["date_depart"] ?? "");
+$dateRetour = (string) ($_GET["date_retour"] ?? "");
+$nbPersonnes = (int) ($_GET["nb_personnes"] ?? 1);
+
+if ($nbPersonnes < 1) {
+    $nbPersonnes = 1;
 }
 
-// message flash (PRG)
+// message flash
+
 if (!empty($_SESSION["flash_success_reservation_destination"])) {
     $successReservation = (string) $_SESSION["flash_success_reservation_destination"];
     unset($_SESSION["flash_success_reservation_destination"]);
 }
 
-$destination = null;
-$offreActive = null;
+// chargement de la destination
 
-// Charge destination + offre (GET)
-if ($id_destination > 0) {
-    $destination = $unControleur->selectWhere_destination($id_destination);
+if ($idDestination > 0) {
+    $destination = $unControleur->selectWhere_destination($idDestination);
 
     if (!$destination) {
         $erreurReservation = "destination introuvable.";
     } elseif ((int) ($destination["actif"] ?? 1) !== 1) {
         $erreurReservation = "cette destination n'est pas disponible.";
     } else {
-        $offreActive = $unControleur->selectWhere_offre_active_by_destination($id_destination);
+        $offreActive = $unControleur->selectWhere_offre_active_by_destination($idDestination);
     }
 } else {
     $erreurReservation = "destination invalide.";
 }
 
-// POST : réserver
+// validation de la réservation
+
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["confirmer_reservation_destination"])) {
     $unControleur->verifConnexion();
+
     $idClient = $unControleur->getIdClientConnecte();
+
+    // vérification csrf
 
     if (!hash_equals($_SESSION["csrf_token"], (string) ($_POST["csrf_token"] ?? ""))) {
         $erreurReservation = "action non autorisée. veuillez réessayer.";
-    } elseif ($id_destination <= 0) {
+    } elseif ($idDestination <= 0) {
         $erreurReservation = "destination invalide.";
     } elseif ($idClient <= 0) {
         $erreurReservation = "compte client introuvable.";
     } else {
-        // recharger destination + offre au moment du POST
-        $destination = $unControleur->selectWhere_destination($id_destination);
+        // rechargement de la destination
+
+        $destination = $unControleur->selectWhere_destination($idDestination);
 
         if (!$destination || (int) ($destination["actif"] ?? 1) !== 1) {
             $erreurReservation = "impossible de réserver : destination indisponible.";
         } else {
-            $offreActive = $unControleur->selectWhere_offre_active_by_destination($id_destination);
+            $offreActive = $unControleur->selectWhere_offre_active_by_destination($idDestination);
 
-            $date_depart = trim((string) ($_POST["date_depart"] ?? ""));
-            $date_retour = trim((string) ($_POST["date_retour"] ?? ""));
-            $nb_personnes = (int) ($_POST["nb_personnes"] ?? 1);
+            // récupération du formulaire
 
-            if ($nb_personnes < 1) {
-                $nb_personnes = 1;
+            $dateDepart = trim((string) ($_POST["date_depart"] ?? ""));
+            $dateRetour = trim((string) ($_POST["date_retour"] ?? ""));
+            $nbPersonnes = (int) ($_POST["nb_personnes"] ?? 1);
+
+            if ($nbPersonnes < 1) {
+                $nbPersonnes = 1;
             }
 
-            // validations
-            if ($date_depart === "" || $date_retour === "") {
+            // validation des dates
+
+            if ($dateDepart === "" || $dateRetour === "") {
                 $erreurReservation = "dates obligatoires.";
-            } elseif ($date_retour < $date_depart) {
+            } elseif ($dateRetour < $dateDepart) {
                 $erreurReservation = "la date de retour doit être après la date de départ.";
             } else {
-                $prix_base = (float) ($destination["prix_base"] ?? 0);
+                // calcul du prix
 
-                if ($prix_base <= 0) {
+                $prixBase = (float) ($destination["prix_base"] ?? 0);
+
+                if ($prixBase <= 0) {
                     $erreurReservation = "prix de la destination invalide.";
                 } else {
-                    $prix_unitaire = $prix_base;
+                    $prixUnitaire = $prixBase;
 
                     if ($offreActive) {
-                        $reduc = (int) ($offreActive["pourcentage_reduction"] ?? 0);
-                        if ($reduc > 0 && $reduc <= 100) {
-                            $prix_unitaire = $prix_base * (1 - ($reduc / 100));
+                        $reduction = (int) ($offreActive["pourcentage_reduction"] ?? 0);
+
+                        if ($reduction > 0 && $reduction <= 100) {
+                            $prixUnitaire = $prixBase * (1 - ($reduction / 100));
                         }
                     }
 
-                    $prix_total = round($prix_unitaire * $nb_personnes, 2);
+                    $prixTotal = round($prixUnitaire * $nbPersonnes, 2);
+
+                    // insertion de la réservation
 
                     $ok = $unControleur->reserver_destination([
                         "id_client" => $idClient,
-                        "id_destination" => $id_destination,
-                        "date_depart" => $date_depart,
-                        "date_retour" => $date_retour,
-                        "nb_personnes" => $nb_personnes,
-                        "prix_total" => $prix_total,
+                        "id_destination" => $idDestination,
+                        "date_depart" => $dateDepart,
+                        "date_retour" => $dateRetour,
+                        "nb_personnes" => $nbPersonnes,
+                        "prix_total" => $prixTotal,
                     ]);
 
                     if ($ok) {
                         $_SESSION["csrf_token"] = bin2hex(random_bytes(32));
                         $_SESSION["flash_success_reservation_destination"] = "demande de réservation envoyée.";
 
-                        header("location: index.php?page=destination_detail&id_destination=" . $id_destination);
+                        header("location: index.php?page=destination_detail&id_destination=" . $idDestination);
                         exit();
-                    } else {
-                        $erreurReservation = "impossible d'enregistrer la réservation.";
                     }
+
+                    $erreurReservation = "impossible d'enregistrer la réservation.";
                 }
             }
         }

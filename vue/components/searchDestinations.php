@@ -1,11 +1,21 @@
 <?php
-$q = trim((string)($_GET["q"] ?? ""));
-$page = (string)($_GET["page"] ?? "destinations");
+
+// récupération des paramètres
+
+$q = trim((string) ($_GET["q"] ?? ""));
+$page = (string) ($_GET["page"] ?? "destinations");
+
+// vérification de la page autorisée
+
 $allowed = ["home", "destinations", "offres", "voyages"];
+
 if (!in_array($page, $allowed, true)) {
     $page = "destinations";
 }
+
 ?>
+
+<!-- formulaire recherche -->
 
 <form
     class="voyage-menu container-fluid py-3 justify-content-center align-items-center gap-3 d-flex flex-column flex-lg-row"
@@ -13,6 +23,8 @@ if (!in_array($page, $allowed, true)) {
     action="index.php"
 >
     <input type="hidden" name="page" value="<?= htmlspecialchars($page) ?>">
+
+    <!-- champ destination -->
 
     <div class="voyage-field">
         <label class="form-label">Destination</label>
@@ -24,6 +36,8 @@ if (!in_array($page, $allowed, true)) {
             value="<?= htmlspecialchars($q) ?>"
         >
     </div>
+
+    <!-- boutons recherche -->
 
     <div class="voyage-search-group">
         <button class="voyage-search-btn" type="submit">

@@ -1,8 +1,16 @@
 <?php
+
+// sécurité des données
+
 $lesDestinations = $lesDestinations ?? ($destinations ?? []);
+
 ?>
 
+<!-- liste destinations -->
+
 <h3 class="section-title text-center mt-5">liste des destinations</h3>
+
+<!-- filtre destinations -->
 
 <form method="post" class="mb-4">
     <input
@@ -10,7 +18,7 @@ $lesDestinations = $lesDestinations ?? ($destinations ?? []);
         name="filtre"
         placeholder="filtrer (pays / ville / continent)"
         class="form-control mb-2"
-        value="<?= htmlspecialchars((string)($_POST["filtre"] ?? "")) ?>"
+        value="<?= htmlspecialchars((string) ($_POST["filtre"] ?? "")) ?>"
     >
 
     <div class="d-flex justify-content-center">
@@ -19,6 +27,8 @@ $lesDestinations = $lesDestinations ?? ($destinations ?? []);
         </button>
     </div>
 </form>
+
+<!-- tableau destinations -->
 
 <div class="container mt-4">
     <table class="table table-bordered">
@@ -36,17 +46,18 @@ $lesDestinations = $lesDestinations ?? ($destinations ?? []);
 
         <tbody>
             <?php if (!empty($lesDestinations)): ?>
-                <?php foreach ($lesDestinations as $d): ?>
-
+                <?php foreach ($lesDestinations as $destination): ?>
                     <?php
-                    $id = (int)($d["id_destination"] ?? 0);
-                    $pays = (string)($d["pays"] ?? "");
-                    $ville = (string)($d["ville"] ?? "");
-                    $continent = (string)($d["continent"] ?? "");
-                    $prixBase = (float)($d["prix_base"] ?? 0);
-                    $actif = ((int)($d["actif"] ?? 0) === 1);
-                    $image = (string)($d["image_url"] ?? "");
+                    $id = (int) ($destination["id_destination"] ?? 0);
+                    $pays = (string) ($destination["pays"] ?? "");
+                    $ville = (string) ($destination["ville"] ?? "");
+                    $continent = (string) ($destination["continent"] ?? "");
+                    $prixBase = (float) ($destination["prix_base"] ?? 0);
+                    $actif = ((int) ($destination["actif"] ?? 0) === 1);
+                    $image = (string) ($destination["image_url"] ?? "");
                     ?>
+
+                    <!-- ligne destination -->
 
                     <tr>
                         <td>
@@ -67,6 +78,8 @@ $lesDestinations = $lesDestinations ?? ($destinations ?? []);
                         <td><?= number_format($prixBase, 2, ",", " ") ?> €</td>
                         <td><?= $actif ? "oui" : "non" ?></td>
 
+                        <!-- actions destination -->
+
                         <td>
                             <a
                                 href="index.php?page=admin_destinations&action=edit&id_destination=<?= $id ?>"
@@ -84,9 +97,12 @@ $lesDestinations = $lesDestinations ?? ($destinations ?? []);
                             </a>
                         </td>
                     </tr>
-
                 <?php endforeach; ?>
+
             <?php else: ?>
+
+                <!-- aucune destination -->
+
                 <tr>
                     <td colspan="7" class="text-center text-muted">
                         aucune destination pour le moment

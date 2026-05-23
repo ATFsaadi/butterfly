@@ -1,10 +1,16 @@
 <?php
 
+// sécurité des données
+
 $lesVoyages = $lesVoyages ?? ($voyages ?? []);
 
 ?>
 
+<!-- liste voyages -->
+
 <h3 class="section-title text-center mt-5">liste des voyages</h3>
+
+<!-- filtre voyages -->
 
 <form method="post" class="mb-4">
     <input
@@ -12,13 +18,17 @@ $lesVoyages = $lesVoyages ?? ($voyages ?? []);
         name="filtre"
         placeholder="filtrer (titre / pays / ville / statut)"
         class="form-control mb-2"
-        value="<?= htmlspecialchars((string)($_POST["filtre"] ?? "")) ?>"
+        value="<?= htmlspecialchars((string) ($_POST["filtre"] ?? "")) ?>"
     >
 
     <div class="d-flex justify-content-center">
-        <button type="submit" name="Filtrer" class="btn btn-primary">filtrer</button>
+        <button type="submit" name="Filtrer" class="btn btn-primary">
+            filtrer
+        </button>
     </div>
 </form>
+
+<!-- tableau voyages -->
 
 <div class="container mt-4">
     <table class="table table-bordered align-middle">
@@ -37,27 +47,33 @@ $lesVoyages = $lesVoyages ?? ($voyages ?? []);
 
         <tbody>
             <?php if (!empty($lesVoyages)): ?>
-                <?php foreach ($lesVoyages as $v): ?>
-
+                <?php foreach ($lesVoyages as $voyage): ?>
                     <?php
-                    $id = (int)($v["id_voyage"] ?? 0);
-                    $titre = (string)($v["titre"] ?? "");
-                    $pays = (string)($v["pays"] ?? "");
-                    $ville = (string)($v["ville"] ?? "");
-                    $continent = (string)($v["continent"] ?? "");
-                    $dateDepart = (string)($v["date_depart"] ?? "");
-                    $dateRetour = (string)($v["date_retour"] ?? "");
-                    $prix = (float)($v["prix"] ?? 0);
-                    $nbPlaces = (int)($v["nb_places"] ?? 0);
-                    $nbRestantes = (int)($v["nb_places_restantes"] ?? 0);
-                    $statut = (string)($v["statut"] ?? "");
-                    $image = (string)($v["image_url"] ?? "");
+                    $id = (int) ($voyage["id_voyage"] ?? 0);
+                    $titre = (string) ($voyage["titre"] ?? "");
 
-                    $destLabel = trim($pays . " - " . $ville, " -");
+                    $pays = (string) ($voyage["pays"] ?? "");
+                    $ville = (string) ($voyage["ville"] ?? "");
+                    $continent = (string) ($voyage["continent"] ?? "");
+
+                    $dateDepart = (string) ($voyage["date_depart"] ?? "");
+                    $dateRetour = (string) ($voyage["date_retour"] ?? "");
+
+                    $prix = (float) ($voyage["prix"] ?? 0);
+                    $nbPlaces = (int) ($voyage["nb_places"] ?? 0);
+                    $nbRestantes = (int) ($voyage["nb_places_restantes"] ?? 0);
+
+                    $statut = (string) ($voyage["statut"] ?? "");
+                    $image = (string) ($voyage["image_url"] ?? "");
+
+                    $destinationLabel = trim($pays . " - " . $ville, " -");
+
                     if ($continent !== "") {
-                        $destLabel .= " (" . $continent . ")";
+                        $destinationLabel .= " (" . $continent . ")";
                     }
                     ?>
+
+                    <!-- ligne voyage -->
 
                     <tr>
                         <td style="width:140px;">
@@ -73,11 +89,13 @@ $lesVoyages = $lesVoyages ?? ($voyages ?? []);
                         </td>
 
                         <td><?= htmlspecialchars($titre) ?></td>
-                        <td><?= htmlspecialchars($destLabel) ?></td>
+                        <td><?= htmlspecialchars($destinationLabel) ?></td>
                         <td><?= htmlspecialchars($dateDepart) ?> → <?= htmlspecialchars($dateRetour) ?></td>
                         <td><?= number_format($prix, 2, ",", " ") ?> €</td>
                         <td><?= $nbRestantes ?> / <?= $nbPlaces ?></td>
                         <td><?= htmlspecialchars($statut) ?></td>
+
+                        <!-- actions voyage -->
 
                         <td>
                             <a
@@ -96,9 +114,12 @@ $lesVoyages = $lesVoyages ?? ($voyages ?? []);
                             </a>
                         </td>
                     </tr>
-
                 <?php endforeach; ?>
+
             <?php else: ?>
+
+                <!-- aucun voyage -->
+
                 <tr>
                     <td colspan="8" class="text-center text-muted">
                         aucun voyage pour le moment

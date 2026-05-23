@@ -1,31 +1,41 @@
 <?php
 
+// sécurité utilisateur connecté
+
 if (!isset($_SESSION["user"])) {
     header("Location: index.php?page=home");
     exit();
 }
 
-$idUtilisateur = (int)($_SESSION["user"]["id_utilisateur"] ?? 0);
+// variables de base
+
+$idUtilisateur = (int) ($_SESSION["user"]["id_utilisateur"] ?? 0);
+
 $message = "";
 $erreur = "";
 
-/* modification du profil */
+// modification du profil
+
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["modifier_profil"])) {
-    if (!hash_equals($_SESSION["csrf_token"], (string)($_POST["csrf_token"] ?? ""))) {
+    if (!hash_equals($_SESSION["csrf_token"], (string) ($_POST["csrf_token"] ?? ""))) {
         die("csrf invalide");
     }
 
-    $nom = trim((string)($_POST["nom"] ?? ""));
-    $prenom = trim((string)($_POST["prenom"] ?? ""));
-    $email = trim((string)($_POST["email"] ?? ""));
-    $telephone = trim((string)($_POST["telephone"] ?? ""));
-    $adresse = trim((string)($_POST["adresse"] ?? ""));
-    $ville = trim((string)($_POST["ville"] ?? ""));
-    $pays = trim((string)($_POST["pays"] ?? ""));
+    // récupération des champs
 
-    $motDePasseActuel = (string)($_POST["mot_de_passe_actuel"] ?? "");
-    $nouveauMotDePasse = (string)($_POST["nouveau_mot_de_passe"] ?? "");
-    $confirmationMotDePasse = (string)($_POST["confirmation_mot_de_passe"] ?? "");
+    $nom = trim((string) ($_POST["nom"] ?? ""));
+    $prenom = trim((string) ($_POST["prenom"] ?? ""));
+    $email = trim((string) ($_POST["email"] ?? ""));
+    $telephone = trim((string) ($_POST["telephone"] ?? ""));
+    $adresse = trim((string) ($_POST["adresse"] ?? ""));
+    $ville = trim((string) ($_POST["ville"] ?? ""));
+    $pays = trim((string) ($_POST["pays"] ?? ""));
+
+    $motDePasseActuel = (string) ($_POST["mot_de_passe_actuel"] ?? "");
+    $nouveauMotDePasse = (string) ($_POST["nouveau_mot_de_passe"] ?? "");
+    $confirmationMotDePasse = (string) ($_POST["confirmation_mot_de_passe"] ?? "");
+
+    // validation du profil
 
     if ($nom === "" || $prenom === "" || $email === "") {
         $erreur = "Nom, prénom et email sont obligatoires.";
@@ -34,6 +44,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["modifier_profil"])) {
     } elseif ($unControleur->emailExistePourAutreUtilisateur($email, $idUtilisateur)) {
         $erreur = "Cet email est déjà utilisé.";
     } else {
+        // mise à jour du profil
+
         $unControleur->updateProfilClient([
             "id_utilisateur" => $idUtilisateur,
             "nom" => $nom,
@@ -42,11 +54,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["modifier_profil"])) {
             "telephone" => $telephone,
             "adresse" => $adresse,
             "ville" => $ville,
-            "pays" => $pays
+            "pays" => $pays,
         ]);
 
         $_SESSION["user"]["prenom"] = $prenom;
         $_SESSION["user"]["email"] = $email;
+
+        // changement du mot de passe
 
         if ($motDePasseActuel !== "" || $nouveauMotDePasse !== "" || $confirmationMotDePasse !== "") {
             if ($motDePasseActuel === "" || $nouveauMotDePasse === "" || $confirmationMotDePasse === "") {
@@ -62,7 +76,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["modifier_profil"])) {
                     $erreur = "Mot de passe actuel incorrect.";
                 } else {
                     $hash = password_hash($nouveauMotDePasse, PASSWORD_DEFAULT);
+
                     $unControleur->updateMotDePasseUtilisateur($idUtilisateur, $hash);
+
                     $message = "Profil et mot de passe mis à jour avec succès.";
                 }
             }
@@ -72,14 +88,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["modifier_profil"])) {
     }
 }
 
-/* suppression du compte */
+// suppression du compte
+
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["supprimer_compte"])) {
-    if (!hash_equals($_SESSION["csrf_token"], (string)($_POST["csrf_token"] ?? ""))) {
+    if (!hash_equals($_SESSION["csrf_token"], (string) ($_POST["csrf_token"] ?? ""))) {
         die("csrf invalide");
     }
 
-    $motDePasseSuppression = (string)($_POST["mot_de_passe_suppression"] ?? "");
-    $confirmationSuppression = trim((string)($_POST["confirmation_suppression"] ?? ""));
+    // récupération des champs
+
+    $motDePasseSuppression = (string) ($_POST["mot_de_passe_suppression"] ?? "");
+    $confirmationSuppression = trim((string) ($_POST["confirmation_suppression"] ?? ""));
+
+    // validation de la suppression
 
     if ($motDePasseSuppression === "") {
         $erreur = "Veuillez saisir votre mot de passe pour supprimer le compte.";
@@ -91,13 +112,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["supprimer_compte"])) 
         if (!$utilisateur || !password_verify($motDePasseSuppression, $utilisateur["mot_de_passe_hash"])) {
             $erreur = "Mot de passe incorrect.";
         } else {
-           $unControleur->setUtilisateurActif($idUtilisateur, 0);
-session_destroy();
-header("Location: index.php?page=home");
-exit();
+            // désactivation du compte
+
+            $unControleur->setUtilisateurActif($idUtilisateur, 0);
+
+            session_destroy();
+
+            header("Location: index.php?page=home");
+            exit();
         }
     }
 }
+
+// récupération du profil
 
 $profil = $unControleur->getProfilClient($idUtilisateur);
 

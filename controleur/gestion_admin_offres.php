@@ -1,23 +1,30 @@
 <?php
 
+// sécurité admin
+
 $unControleur->verifAdmin();
+
+// variables de base
 
 $errors = [];
 $success = "";
 $offre = null;
 
+// action supprimer ou modifier
+
 if (isset($_GET["action"], $_GET["id_offre"])) {
     $action = $_GET["action"];
-    $id_offre = (int) $_GET["id_offre"];
+    $idOffre = (int) $_GET["id_offre"];
 
     if ($action === "sup") {
-        $unControleur->delete_offre($id_offre);
+        $unControleur->delete_offre($idOffre);
+
         header("location: index.php?page=admin_offres");
         exit();
     }
 
     if ($action === "edit") {
-        $offre = $unControleur->selectWhere_offre($id_offre);
+        $offre = $unControleur->selectWhere_offre($idOffre);
 
         if (!$offre) {
             header("location: index.php?page=admin_offres");
@@ -26,10 +33,16 @@ if (isset($_GET["action"], $_GET["id_offre"])) {
     }
 }
 
+// récupération des destinations
+
 $destinations = $unControleur->selectAll_destinations_admin();
+
+// traitement du formulaire
 
 if (isset($_POST["Valider"]) || isset($_POST["Modifier"])) {
     $isEdit = isset($_POST["Modifier"]);
+
+    // préparation des données
 
     $tab = [
         "id_destination" => (int) ($_POST["id_destination"] ?? 0),
@@ -44,27 +57,32 @@ if (isset($_POST["Valider"]) || isset($_POST["Modifier"])) {
         $tab["actif"] = isset($_POST["actif"]) ? 1 : 0;
     }
 
-    // vérification destination
+    // validation destination
+
     if ($tab["id_destination"] <= 0) {
         $errors[] = "la destination est obligatoire.";
     } else {
         $destination = $unControleur->selectWhere_destination($tab["id_destination"]);
+
         if (!$destination) {
             $errors[] = "la destination sélectionnée est invalide.";
         }
     }
 
-    // vérification titre
+    // validation titre
+
     if ($tab["titre"] === "") {
         $errors[] = "le titre est obligatoire.";
     }
 
-    // vérification pourcentage
+    // validation pourcentage
+
     if ($tab["pourcentage_reduction"] <= 0 || $tab["pourcentage_reduction"] > 100) {
         $errors[] = "le pourcentage de réduction doit être compris entre 1 et 100.";
     }
 
-    // vérification dates
+    // validation dates
+
     if ($tab["date_debut"] === "") {
         $errors[] = "la date de début est obligatoire.";
     }
@@ -78,13 +96,17 @@ if (isset($_POST["Valider"]) || isset($_POST["Modifier"])) {
     }
 
     // vérification offre à modifier
+
     if ($isEdit) {
         $offreExistante = $unControleur->selectWhere_offre($tab["id_offre"]);
+
         if (!$offreExistante) {
             header("location: index.php?page=admin_offres");
             exit();
         }
     }
+
+    // insertion ou modification
 
     if (empty($errors)) {
         if ($isEdit) {
@@ -97,15 +119,23 @@ if (isset($_POST["Valider"]) || isset($_POST["Modifier"])) {
         exit();
     }
 
-    // pour garder l'affichage du formulaire rempli en cas d'erreur
+    // conservation du formulaire en cas d'erreur
+
     if ($isEdit) {
         $offre = $tab;
     }
 }
 
+// filtre de recherche
+
 if (isset($_POST["Filtrer"])) {
     $filtre = trim((string) ($_POST["filtre"] ?? ""));
-    $lesOffres = $filtre !== "" ? $unControleur->selectLike_offre($filtre) : $unControleur->selectAll_offres();
+
+    if ($filtre !== "") {
+        $lesOffres = $unControleur->selectLike_offre($filtre);
+    } else {
+        $lesOffres = $unControleur->selectAll_offres();
+    }
 } else {
     $lesOffres = $unControleur->selectAll_offres();
 }

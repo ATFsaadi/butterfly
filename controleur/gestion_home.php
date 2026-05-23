@@ -1,9 +1,16 @@
 <?php
 
+// récupération des données d'accueil
+
 $voyages = $unControleur->selectAll_voyages_actifs();
 $offres = $unControleur->selectAll_offres_actives();
 $destinations = $unControleur->selectAll_destinations();
+
+// variables de recherche
+
 $villesDepart = [];
+
+// message après inscription
 
 $successRegister = "";
 $openLoginAfterRegister = false;

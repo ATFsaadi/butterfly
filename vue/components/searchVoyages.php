@@ -1,14 +1,21 @@
 <?php
-$q = trim((string)($_GET["q"] ?? ""));
+
+// récupération de la recherche
+
+$q = trim((string) ($_GET["q"] ?? ""));
+
 ?>
 
-<form
+<!-- formulaire recherche voyages -->
 
+<form
     class="voyage-menu container-fluid py-3 justify-content-center align-items-center gap-3 d-flex flex-column flex-lg-row"
     method="get"
     action="index.php"
 >
     <input type="hidden" name="page" value="voyages">
+
+    <!-- champ voyages -->
 
     <div class="voyage-field">
         <label class="form-label">Voyages</label>
@@ -20,6 +27,8 @@ $q = trim((string)($_GET["q"] ?? ""));
             value="<?= htmlspecialchars($q) ?>"
         >
     </div>
+
+    <!-- boutons recherche -->
 
     <div class="voyage-search-group">
         <button class="voyage-search-btn" type="submit">

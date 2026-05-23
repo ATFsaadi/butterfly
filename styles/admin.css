@@ -87,52 +87,6 @@ table.table.table-bordered .btn.btn-danger.btn-sm {
 table.table.table-bordered tbody tr:hover {
     background: rgba(244, 249, 249, 0.65);
 }
-/* flatpickr */
-.flatpickr-calendar {
-    border-radius: 16px;
-    border: 1px solid var(--border-color);
-    box-shadow: 0 12px 28px rgba(0,0,0,0.10);
-    overflow: hidden;
-    font-family: "Poiret One", sans-serif;
-}
-
-.flatpickr-months .flatpickr-month {
-    background: var(--bg-light);
-}
-
-.flatpickr-current-month,
-.flatpickr-weekdays {
-    color: var(--secondary-color);
-}
-
-.flatpickr-day {
-    border-radius: 12px;
-}
-
-.flatpickr-day:hover {
-    background: rgba(242, 116, 56, 0.12);
-}
-
-.flatpickr-day.selected,
-.flatpickr-day.startRange,
-.flatpickr-day.endRange {
-    background: var(--primary-color);
-    border-color: var(--primary-color);
-    color: #fff;
-}
-
-.flatpickr-day.inRange {
-    background: rgba(242, 116, 56, 0.18);
-    border-color: transparent;
-}
-
-.flatpickr-day.disabled,
-.flatpickr-day.prevMonthDay.disabled,
-.flatpickr-day.nextMonthDay.disabled {
-    color: #b9b9b9;
-    opacity: 0.6;
-}
-
 /* input date admin */
 input[name="date_depart"],
 input[name="date_retour"] {

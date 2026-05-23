@@ -11,10 +11,14 @@ class Controleur
         $this->modele = new Modele();
     }
 
+    // accès au modèle
+
     public function getModele(): Modele
     {
         return $this->modele;
     }
+
+    // sécurité et session
 
     public function verifConnexion(): void
     {
@@ -32,6 +36,11 @@ class Controleur
             header("location: index.php?page=home");
             exit();
         }
+    }
+
+    public function estAdmin(): bool
+    {
+        return isset($_SESSION["user"]["role"]) && $_SESSION["user"]["role"] === "admin";
     }
 
     public function getIdClientConnecte(): int
@@ -58,12 +67,7 @@ class Controleur
         return (int) $_SESSION["user"]["id_utilisateur"];
     }
 
-    public function estAdmin(): bool
-    {
-        return isset($_SESSION["user"]["role"]) && $_SESSION["user"]["role"] === "admin";
-    }
-
-    /* utilisateurs / client */
+    // utilisateurs et connexion
 
     public function select_user_login(string $email)
     {
@@ -85,6 +89,8 @@ class Controleur
         return $this->modele->inscription_complete($userTab, $clientTab);
     }
 
+    // clients
+
     public function insert_client(array $tab): void
     {
         $this->modele->insert_client($tab);
@@ -95,7 +101,32 @@ class Controleur
         return $this->modele->selectWhere_client_by_user($id_utilisateur);
     }
 
-    /* continents / destinations */
+    public function selectAll_clients_admin(): array
+    {
+        return $this->modele->selectAll_clients_admin();
+    }
+
+    public function selectLike_clients_admin(string $filtre): array
+    {
+        return $this->modele->selectLike_clients_admin($filtre);
+    }
+
+    public function selectWhere_client_admin(int $idUtilisateur)
+    {
+        return $this->modele->selectWhere_client_admin($idUtilisateur);
+    }
+
+    public function deleteClientByAdmin(int $idUtilisateur): void
+    {
+        $this->modele->deleteClientByAdmin($idUtilisateur);
+    }
+
+    public function setUtilisateurActif(int $idUtilisateur, int $actif): void
+    {
+        $this->modele->setUtilisateurActif($idUtilisateur, $actif);
+    }
+
+    // continents
 
     public function selectAll_continents()
     {
@@ -106,6 +137,8 @@ class Controleur
     {
         return $this->modele->selectWhere_continent($id_continent);
     }
+
+    // destinations
 
     public function insert_destination(array $tab): void
     {
@@ -137,9 +170,16 @@ class Controleur
         return $this->modele->selectWhere_destination_by_pays_ville($pays, $ville);
     }
 
-    public function selectWhere_destination_by_pays_ville_except_id(string $pays, string $ville, int $id_destination)
-    {
-        return $this->modele->selectWhere_destination_by_pays_ville_except_id($pays, $ville, $id_destination);
+    public function selectWhere_destination_by_pays_ville_except_id(
+        string $pays,
+        string $ville,
+        int $id_destination
+    ) {
+        return $this->modele->selectWhere_destination_by_pays_ville_except_id(
+            $pays,
+            $ville,
+            $id_destination
+        );
     }
 
     public function update_destination(array $tab): void
@@ -157,7 +197,7 @@ class Controleur
         $this->modele->set_destination_actif($id_destination, $actif);
     }
 
-    /* offres */
+    // offres
 
     public function insert_offre(array $tab): void
     {
@@ -209,7 +249,7 @@ class Controleur
         $this->modele->set_offre_actif($id_offre, $actif);
     }
 
-    /* voyages */
+    // voyages
 
     public function insert_voyage(array $tab): void
     {
@@ -224,6 +264,11 @@ class Controleur
     public function selectAll_voyages_actifs()
     {
         return $this->modele->selectAll_voyages_actifs();
+    }
+
+    public function selectAll_voyages_actifs_by_destination(int $id_destination): array
+    {
+        return $this->modele->selectAll_voyages_actifs_by_destination($id_destination);
     }
 
     public function selectWhere_voyage(int $id_voyage)
@@ -241,17 +286,17 @@ class Controleur
         $this->modele->delete_voyage($id_voyage);
     }
 
-    public function selectAll_voyages_actifs_by_destination(int $id_destination): array
-    {
-        return $this->modele->selectAll_voyages_actifs_by_destination($id_destination);
-    }
-
     public function set_voyage_statut(int $id_voyage, string $statut): void
     {
         $this->modele->set_voyage_statut($id_voyage, $statut);
     }
 
-    /* reservations */
+    public function maj_statut_voyage_si_complet(int $id_voyage): void
+    {
+        $this->modele->maj_statut_voyage_si_complet($id_voyage);
+    }
+
+    // réservations
 
     public function insert_reservation_destination(array $tab): void
     {
@@ -263,14 +308,14 @@ class Controleur
         $this->modele->insert_reservation_voyage($tab);
     }
 
-    public function reserver_voyage(array $tab): bool
-    {
-        return $this->modele->reserver_voyage($tab);
-    }
-
     public function reserver_destination(array $tab): bool
     {
         return $this->modele->reserver_destination($tab);
+    }
+
+    public function reserver_voyage(array $tab): bool
+    {
+        return $this->modele->reserver_voyage($tab);
     }
 
     public function selectAll_reservations_destinations()
@@ -283,6 +328,11 @@ class Controleur
         return $this->modele->selectAll_reservations_voyages();
     }
 
+    public function selectAll_reservations()
+    {
+        return $this->modele->selectAll_reservations_union();
+    }
+
     public function selectWhere_reservations_destinations_by_client(int $id_client)
     {
         return $this->modele->selectWhere_reservations_destinations_by_client($id_client);
@@ -291,6 +341,11 @@ class Controleur
     public function selectWhere_reservations_voyages_by_client(int $id_client)
     {
         return $this->modele->selectWhere_reservations_voyages_by_client($id_client);
+    }
+
+    public function selectWhere_reservations_by_client(int $id_client)
+    {
+        return $this->modele->selectWhere_reservations_by_client_union($id_client);
     }
 
     public function selectMesReservations(): array
@@ -313,27 +368,22 @@ class Controleur
         $this->modele->update_reservation_voyage_statut($tab);
     }
 
-    public function selectAll_reservations()
-    {
-        return $this->modele->selectAll_reservations_union();
-    }
-
-    public function selectWhere_reservations_by_client(int $id_client)
-    {
-        return $this->modele->selectWhere_reservations_by_client_union($id_client);
-    }
-
     public function select_id_voyage_by_reservation_voyage(int $id_reservation_voyage): int
     {
         return $this->modele->select_id_voyage_by_reservation_voyage($id_reservation_voyage);
     }
 
-    public function maj_statut_voyage_si_complet(int $id_voyage): void
+    public function selectReservationsDestinationsByUtilisateur(int $idUtilisateur): array
     {
-        $this->modele->maj_statut_voyage_si_complet($id_voyage);
+        return $this->modele->selectReservationsDestinationsByUtilisateur($idUtilisateur);
     }
 
-    /* profil */
+    public function selectReservationsVoyagesByUtilisateur(int $idUtilisateur): array
+    {
+        return $this->modele->selectReservationsVoyagesByUtilisateur($idUtilisateur);
+    }
+
+    // profil client
 
     public function getProfilClient(int $idUtilisateur)
     {
@@ -360,44 +410,10 @@ class Controleur
         $this->modele->updateMotDePasseUtilisateur($idUtilisateur, $hash);
     }
 
-    public function setUtilisateurActif(int $idUtilisateur, int $actif): void
-{
-    $this->modele->setUtilisateurActif($idUtilisateur, $actif);
-}
+    // dashboard admin
 
-
-    public function selectAll_clients_admin(): array
-{
-    return $this->modele->selectAll_clients_admin();
-}
-
-public function deleteClientByAdmin(int $idUtilisateur): void
-{
-    $this->modele->deleteClientByAdmin($idUtilisateur);
-}
-
-public function selectLike_clients_admin(string $filtre): array
-{
-    return $this->modele->selectLike_clients_admin($filtre);
-}
-public function selectWhere_client_admin(int $idUtilisateur)
-{
-    return $this->modele->selectWhere_client_admin($idUtilisateur);
-}
-
-public function selectReservationsDestinationsByUtilisateur(int $idUtilisateur): array
-{
-    return $this->modele->selectReservationsDestinationsByUtilisateur($idUtilisateur);
-}
-
-public function selectReservationsVoyagesByUtilisateur(int $idUtilisateur): array
-{
-    return $this->modele->selectReservationsVoyagesByUtilisateur($idUtilisateur);
-}
-
-public function getStatsDashboardAdmin(): array
-{
-    return $this->modele->getStatsDashboardAdmin();
-}
-
+    public function getStatsDashboardAdmin(): array
+    {
+        return $this->modele->getStatsDashboardAdmin();
+    }
 }

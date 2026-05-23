@@ -1,25 +1,28 @@
 <?php
 
+// sécurité admin
 $unControleur->verifAdmin();
 
+// variables de base
 $errors = [];
-$success = "";
 
 $destinationToEdit = null;
 $continents = $unControleur->selectAll_continents();
 
+// action supprimer ou modifier
 if (isset($_GET["action"], $_GET["id_destination"])) {
     $action = $_GET["action"];
-    $id_destination = (int) $_GET["id_destination"];
+    $idDestination = (int) $_GET["id_destination"];
 
-    if ($action === "sup") {
-        $unControleur->delete_destination($id_destination);
+    if ($action === "sup" && $idDestination > 0) {
+        $unControleur->delete_destination($idDestination);
+
         header("location: index.php?page=admin_destinations");
         exit();
     }
 
-    if ($action === "edit") {
-        $destinationToEdit = $unControleur->selectWhere_destination($id_destination);
+    if ($action === "edit" && $idDestination > 0) {
+        $destinationToEdit = $unControleur->selectWhere_destination($idDestination);
 
         if (!$destinationToEdit) {
             header("location: index.php?page=admin_destinations");
@@ -28,69 +31,100 @@ if (isset($_GET["action"], $_GET["id_destination"])) {
     }
 }
 
+// upload image destination
 function handleImageUpload(array $file): ?string
 {
     if (($file["error"] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
         return null;
     }
 
-    $allowed = ["jpg", "jpeg", "png", "gif", "webp"];
-    $ext = strtolower(pathinfo($file["name"] ?? "", PATHINFO_EXTENSION));
+    $extensionsAutorisees = ["jpg", "jpeg", "png", "gif", "webp"];
+    $extension = strtolower(pathinfo($file["name"] ?? "", PATHINFO_EXTENSION));
 
-    if ($ext === "" || !in_array($ext, $allowed, true)) {
+    if ($extension === "" || !in_array($extension, $extensionsAutorisees, true)) {
         return null;
     }
 
-    $targetDir = "images/destinations/";
-    if (!is_dir($targetDir)) {
-        mkdir($targetDir, 0755, true);
+    // Vérification réelle du type MIME
+    $typesAutorises = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+    $typeMime = mime_content_type($file["tmp_name"]);
+
+    if (!in_array($typeMime, $typesAutorises, true)) {
+        return null;
     }
 
-    $fileName = "dest_" . time() . "_" . bin2hex(random_bytes(6)) . "." . $ext;
-    $targetFile = $targetDir . $fileName;
+    $dossierDestination = "images/destinations/";
 
-    if (is_uploaded_file($file["tmp_name"] ?? "") && move_uploaded_file($file["tmp_name"], $targetFile)) {
-        return $targetFile;
+    if (!is_dir($dossierDestination)) {
+        mkdir($dossierDestination, 0755, true);
+    }
+
+    try {
+        $nomFichier = "dest_" . time() . "_" . bin2hex(random_bytes(6)) . "." . $extension;
+    } catch (Exception $e) {
+        return null;
+    }
+
+    $cheminFichier = $dossierDestination . $nomFichier;
+
+    if (
+        is_uploaded_file($file["tmp_name"] ?? "") &&
+        move_uploaded_file($file["tmp_name"], $cheminFichier)
+    ) {
+        return $cheminFichier;
     }
 
     return null;
 }
 
+// traitement du formulaire
 if (isset($_POST["submit"])) {
     $isEdit = isset($_POST["id_destination"]) && $_POST["id_destination"] !== "";
 
     $pays = trim((string) ($_POST["pays"] ?? ""));
     $ville = trim((string) ($_POST["ville"] ?? ""));
-    $prix_base = (float) ($_POST["prix_base"] ?? 0);
+    $prixBase = (float) ($_POST["prix_base"] ?? 0);
 
-    $id_continent = null;
+    $idContinent = null;
+
     if (($_POST["id_continent"] ?? "") !== "") {
-        $id_continent = (int) $_POST["id_continent"];
+        $idContinent = (int) $_POST["id_continent"];
     }
 
+    // validation des champs
     if ($pays === "") {
-        $errors[] = "le pays est obligatoire.";
+        $errors[] = "Le pays est obligatoire.";
     }
 
     if ($ville === "") {
-        $errors[] = "la ville est obligatoire.";
+        $errors[] = "La ville est obligatoire.";
     }
 
-    if ($prix_base <= 0) {
-        $errors[] = "le prix de base doit être supérieur à 0.";
+    if ($prixBase <= 0) {
+        $errors[] = "Le prix de base doit être supérieur à 0.";
     }
 
-    if ($id_continent !== null) {
-        $continent = $unControleur->selectWhere_continent($id_continent);
+    if ($idContinent !== null) {
+        $continent = $unControleur->selectWhere_continent($idContinent);
+
         if (!$continent) {
-            $errors[] = "le continent sélectionné est invalide.";
+            $errors[] = "Le continent sélectionné est invalide.";
         }
     }
 
+    // récupération destination en modification
     if ($isEdit) {
         $idEdit = (int) $_POST["id_destination"];
 
-        if ($destinationToEdit === null || (int) ($destinationToEdit["id_destination"] ?? 0) !== $idEdit) {
+        if ($idEdit <= 0) {
+            header("location: index.php?page=admin_destinations");
+            exit();
+        }
+
+        if (
+            $destinationToEdit === null ||
+            (int) ($destinationToEdit["id_destination"] ?? 0) !== $idEdit
+        ) {
             $destinationToEdit = $unControleur->selectWhere_destination($idEdit);
         }
 
@@ -100,7 +134,7 @@ if (isset($_POST["submit"])) {
         }
     }
 
-    // vérification du doublon (pays, ville)
+    // vérification doublon pays et ville
     if ($pays !== "" && $ville !== "") {
         if ($isEdit) {
             $doublon = $unControleur->selectWhere_destination_by_pays_ville_except_id(
@@ -113,25 +147,31 @@ if (isset($_POST["submit"])) {
         }
 
         if ($doublon) {
-            $errors[] = "cette destination existe déjà pour ce pays et cette ville.";
+            $errors[] = "Cette destination existe déjà pour ce pays et cette ville.";
         }
     }
 
-    $imgPath = null;
+    // traitement de l'image
+    $imagePath = null;
+
     if (!empty($_FILES["image"]["name"] ?? "")) {
-        $imgPath = handleImageUpload($_FILES["image"]);
-        if ($imgPath === null) {
-            $errors[] = "image invalide ou upload échoué (jpg/jpeg/png/gif/webp).";
+        $imagePath = handleImageUpload($_FILES["image"]);
+
+        if ($imagePath === null) {
+            $errors[] = "Image invalide ou upload échoué. Formats acceptés : jpg, jpeg, png, gif, webp.";
         }
     }
 
+    // préparation des données
     $tab = [
         "pays" => $pays,
         "ville" => $ville,
-        "id_continent" => $id_continent,
-        "description" => ($_POST["description"] ?? "") !== "" ? trim((string) $_POST["description"]) : null,
-        "prix_base" => $prix_base,
-        "image_url" => $imgPath ?? ($isEdit ? ($destinationToEdit["image_url"] ?? null) : null),
+        "id_continent" => $idContinent,
+        "description" => ($_POST["description"] ?? "") !== ""
+            ? trim((string) $_POST["description"])
+            : null,
+        "prix_base" => $prixBase,
+        "image_url" => $imagePath ?? ($isEdit ? ($destinationToEdit["image_url"] ?? null) : null),
         "actif" => isset($_POST["actif"]) ? 1 : 0,
     ];
 
@@ -139,6 +179,7 @@ if (isset($_POST["submit"])) {
         $tab["id_destination"] = (int) $_POST["id_destination"];
     }
 
+    // insertion ou modification
     if (empty($errors)) {
         if ($isEdit) {
             $unControleur->update_destination($tab);
@@ -151,28 +192,33 @@ if (isset($_POST["submit"])) {
     }
 }
 
+// récupération des destinations
 $destinations = $unControleur->selectAll_destinations_admin();
 
+// filtre de recherche
 if (isset($_POST["Filtrer"])) {
     $filtre = trim((string) ($_POST["filtre"] ?? ""));
 
     if ($filtre !== "") {
         $filtreMin = mb_strtolower($filtre);
 
-        $destinations = array_values(array_filter($destinations, function ($d) use ($filtreMin) {
-            $pays = mb_strtolower((string) ($d["pays"] ?? ""));
-            $ville = mb_strtolower((string) ($d["ville"] ?? ""));
-            $continent = mb_strtolower((string) ($d["continent"] ?? ""));
-            $description = mb_strtolower((string) ($d["description"] ?? ""));
-            $etat = ((int) ($d["actif"] ?? 0) === 1) ? "actif" : "inactif";
+        $destinations = array_values(array_filter($destinations, function ($destination) use ($filtreMin) {
+            $pays = mb_strtolower((string) ($destination["pays"] ?? ""));
+            $ville = mb_strtolower((string) ($destination["ville"] ?? ""));
+            $continent = mb_strtolower((string) ($destination["continent"] ?? ""));
+            $description = mb_strtolower((string) ($destination["description"] ?? ""));
+            $etat = ((int) ($destination["actif"] ?? 0) === 1) ? "actif" : "inactif";
 
-            return str_contains($pays, $filtreMin)
-                || str_contains($ville, $filtreMin)
-                || str_contains($continent, $filtreMin)
-                || str_contains($description, $filtreMin)
-                || str_contains($etat, $filtreMin);
+            // compatible PHP 7 et PHP 8
+            return strpos($pays, $filtreMin) !== false
+                || strpos($ville, $filtreMin) !== false
+                || strpos($continent, $filtreMin) !== false
+                || strpos($description, $filtreMin) !== false
+                || strpos($etat, $filtreMin) !== false;
         }));
     }
 }
 
+// destination à afficher dans le formulaire
 $destination = $destinationToEdit;
+?>

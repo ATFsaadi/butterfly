@@ -1,12 +1,18 @@
 <?php
 
-$id_voyage = (int)($_GET["id_voyage"] ?? 0);
+// récupération du voyage
+
+$idVoyage = (int) ($_GET["id_voyage"] ?? 0);
 
 $voyage = null;
 
-if ($id_voyage > 0) {
-    $voyage = $unControleur->selectWhere_voyage($id_voyage);
+// chargement du voyage
+
+if ($idVoyage > 0) {
+    $voyage = $unControleur->selectWhere_voyage($idVoyage);
 }
+
+// redirection si voyage introuvable
 
 if (!$voyage) {
     header("location: index.php?page=destinations");

@@ -1,19 +1,20 @@
 <?php
+
+// sécurité des données
+
 $voyage = $voyage ?? null;
 $destination = $destination ?? null;
+$offreActive = $offreActive ?? null;
 
 $nb_personnes = $nb_personnes ?? 1;
-$offreActive = $offreActive ?? null;
+$date_depart = $date_depart ?? "";
+$date_retour = $date_retour ?? "";
 
 $erreurReservation = $erreurReservation ?? "";
 $successReservation = $successReservation ?? "";
 
-$date_depart = $date_depart ?? "";
-$date_retour = $date_retour ?? "";
+// variables de base
 
-/* =========================================================
-   Préparer tout ce qui est utilisé dans la page
-========================================================= */
 $idVoyage = 0;
 $idDestination = 0;
 
@@ -22,14 +23,17 @@ $titre = "";
 $titleLeft = "";
 $hrefLeft = "";
 
-$nb_personnes_int = (int)$nb_personnes;
+$nb_personnes_int = (int) $nb_personnes;
+
 if ($nb_personnes_int < 1) {
     $nb_personnes_int = 1;
 }
 
-$reduc = !empty($offreActive) ? (int)($offreActive["pourcentage_reduction"] ?? 0) : 0;
-$prix_unitaire = 0;
+// calcul promotion
 
+$reduc = !empty($offreActive) ? (int) ($offreActive["pourcentage_reduction"] ?? 0) : 0;
+
+$prix_unitaire = 0;
 $total_sans_promo = 0;
 $total_avec_promo = 0;
 $economies = 0;
@@ -37,15 +41,15 @@ $economies = 0;
 $placesRestantes = 0;
 $bloque = false;
 
-/* Cas VOYAGE */
+// données voyage
+
 if (!empty($voyage)) {
+    $idVoyage = (int) ($voyage["id_voyage"] ?? 0);
+    $idDestination = (int) ($voyage["id_destination"] ?? 0);
 
-    $idVoyage = (int)($voyage["id_voyage"] ?? 0);
-    $idDestination = (int)($voyage["id_destination"] ?? 0);
-
-    $prix_voyage = (float)($voyage["prix"] ?? 0);
-
+    $prix_voyage = (float) ($voyage["prix"] ?? 0);
     $prix_unitaire = $prix_voyage;
+
     if ($prix_voyage > 0 && $reduc > 0 && $reduc <= 100) {
         $prix_unitaire = $prix_voyage * (1 - ($reduc / 100));
     }
@@ -54,44 +58,49 @@ if (!empty($voyage)) {
     $total_avec_promo = $prix_unitaire * $nb_personnes_int;
     $economies = $total_sans_promo - $total_avec_promo;
 
-    $imageVoyage = (string)($voyage["image_url"] ?? "");
-    $imageDestination = (string)($voyage["destination_image_url"] ?? "");
+    $imageVoyage = (string) ($voyage["image_url"] ?? "");
+    $imageDestination = (string) ($voyage["destination_image_url"] ?? "");
     $image = $imageVoyage !== "" ? $imageVoyage : $imageDestination;
 
-    $titleLeft = (string)($voyage["titre"] ?? "");
+    $titleLeft = (string) ($voyage["titre"] ?? "");
     $hrefLeft = "index.php?page=voyage_detail&id_voyage=" . $idVoyage;
 
-    $placesRestantes = (int)($voyage["nb_places_restantes"] ?? 0);
-    $statutVoyage = (string)($voyage["statut"] ?? "");
+    $placesRestantes = (int) ($voyage["nb_places_restantes"] ?? 0);
+    $statutVoyage = (string) ($voyage["statut"] ?? "");
+
     $bloque = ($statutVoyage !== "actif" || $placesRestantes <= 0);
+}
 
-/* Cas DESTINATION */
-} elseif (!empty($destination)) {
+// données destination
 
-    $idDestination = (int)($destination["id_destination"] ?? 0);
+if (empty($voyage) && !empty($destination)) {
+    $idDestination = (int) ($destination["id_destination"] ?? 0);
 
-    $pays = (string)($destination["pays"] ?? "");
-    $ville = (string)($destination["ville"] ?? "");
+    $pays = (string) ($destination["pays"] ?? "");
+    $ville = (string) ($destination["ville"] ?? "");
 
     $titre = trim($ville . " — " . $pays, " —");
     $titleLeft = $titre;
     $hrefLeft = "index.php?page=destination_detail&id_destination=" . $idDestination;
 
-    $image = (string)($destination["image_url"] ?? "");
+    $image = (string) ($destination["image_url"] ?? "");
 
-    $prix_base = (float)($destination["prix_base"] ?? 0);
-
+    $prix_base = (float) ($destination["prix_base"] ?? 0);
     $prix_unitaire = $prix_base;
+
     if ($prix_base > 0 && $reduc > 0 && $reduc <= 100) {
         $prix_unitaire = $prix_base * (1 - ($reduc / 100));
     }
 
     $nb_nuits = 1;
+
     if (!empty($date_depart) && !empty($date_retour)) {
         $ts_depart = strtotime($date_depart);
         $ts_retour = strtotime($date_retour);
+
         if ($ts_depart !== false && $ts_retour !== false) {
-            $nb_nuits = (int)(($ts_retour - $ts_depart) / 86400);
+            $nb_nuits = (int) (($ts_retour - $ts_depart) / 86400);
+
             if ($nb_nuits < 1) {
                 $nb_nuits = 1;
             }
@@ -102,16 +111,20 @@ if (!empty($voyage)) {
     $total_avec_promo = $prix_unitaire * $nb_personnes_int * $nb_nuits;
     $economies = $total_sans_promo - $total_avec_promo;
 
-    $destinationActive = (int)($destination["actif"] ?? 0);
+    $destinationActive = (int) ($destination["actif"] ?? 0);
     $bloque = ($destinationActive !== 1);
 }
+
 ?>
 
-<div class="container py-5">
+<!-- réservation -->
 
+<div class="container py-5">
     <h2 class="section-title text-center mb-4">réservation</h2>
 
     <?php if (empty($voyage) && empty($destination)): ?>
+
+        <!-- élément introuvable -->
 
         <div class="alert alert-danger">
             <?= $erreurReservation !== "" ? htmlspecialchars($erreurReservation) : "élément introuvable." ?>
@@ -119,19 +132,28 @@ if (!empty($voyage)) {
 
     <?php else: ?>
 
+        <!-- messages -->
+
         <?php if (!empty($erreurReservation)): ?>
-            <div class="alert alert-danger"><?= htmlspecialchars($erreurReservation) ?></div>
+            <div class="alert alert-danger">
+                <?= htmlspecialchars($erreurReservation) ?>
+            </div>
         <?php endif; ?>
 
         <?php if (!empty($successReservation)): ?>
-            <div class="alert alert-success"><?= htmlspecialchars($successReservation) ?></div>
+            <div class="alert alert-success">
+                <?= htmlspecialchars($successReservation) ?>
+            </div>
         <?php endif; ?>
+
+        <!-- contenu réservation -->
 
         <div class="row g-4 res-wrap align-items-stretch">
 
+            <!-- visuel réservation -->
+
             <div class="col-lg-7 res-left">
                 <div class="card shadow-sm res-card h-100">
-
                     <div class="res-media">
 
                         <?php if ($image !== ""): ?>
@@ -141,7 +163,9 @@ if (!empty($voyage)) {
                         <?php endif; ?>
 
                         <?php if ($titleLeft !== ""): ?>
-                            <h1 class="res-title-overlay" style="font-weight: bold;"><?= htmlspecialchars($titleLeft) ?></h1>
+                            <h1 class="res-title-overlay" style="font-weight: bold;">
+                                <?= htmlspecialchars($titleLeft) ?>
+                            </h1>
                         <?php endif; ?>
 
                         <div class="res-back-overlay">
@@ -151,9 +175,10 @@ if (!empty($voyage)) {
                         </div>
 
                     </div>
-
                 </div>
             </div>
+
+            <!-- formulaire réservation -->
 
             <div class="col-lg-5 res-right">
                 <div class="card shadow-sm res-card h-100">
@@ -161,49 +186,72 @@ if (!empty($voyage)) {
 
                         <?php if (!empty($voyage)): ?>
 
+                            <!-- réservation voyage -->
+
                             <h5 class="mb-3">choisissez le nombre de voyageurs</h5>
 
                             <?php if ($bloque): ?>
-                                <div class="alert alert-info">réservation indisponible pour ce voyage.</div>
+                                <div class="alert alert-info">
+                                    réservation indisponible pour ce voyage.
+                                </div>
                             <?php endif; ?>
 
-                            <form method="post" action="index.php?page=reservation&id_voyage=<?= (int)$idVoyage ?>">
-                                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION["csrf_token"] ?? "") ?>">
+                            <form method="post" action="index.php?page=reservation&id_voyage=<?= (int) $idVoyage ?>">
+                                <input
+                                    type="hidden"
+                                    name="csrf_token"
+                                    value="<?= htmlspecialchars($_SESSION["csrf_token"] ?? "") ?>"
+                                >
+
+                                <!-- nombre voyageurs -->
 
                                 <div class="row g-3">
                                     <div class="col-md-12">
                                         <label class="form-label">nombre de personnes</label>
+
                                         <input
                                             type="number"
                                             class="form-control"
                                             id="voyage_nb_personnes"
                                             name="nb_personnes"
                                             min="1"
-                                            max="<?= max(1, (int)$placesRestantes) ?>"
-                                            value="<?= (int)$nb_personnes_int ?>"
+                                            max="<?= max(1, (int) $placesRestantes) ?>"
+                                            value="<?= (int) $nb_personnes_int ?>"
                                             required
                                             <?= $bloque ? "disabled" : "" ?>
                                         >
-                                        <div class="form-text"><?= (int)$placesRestantes ?> place(s) restante(s)</div>
+
+                                        <div class="form-text">
+                                            <?= (int) $placesRestantes ?> place(s) restante(s)
+                                        </div>
                                     </div>
                                 </div>
 
                                 <hr class="my-4">
 
+                                <!-- total voyage -->
+
                                 <div class="d-flex justify-content-between align-items-center">
                                     <span class="fs-6">total estimé</span>
+
                                     <span class="fs-4 fw-bold" id="voyage_total">
-                                        <?= number_format((float)$total_avec_promo, 2, ",", " ") ?> €
+                                        <?= number_format((float) $total_avec_promo, 2, ",", " ") ?> €
                                     </span>
                                 </div>
 
+                                <!-- promotion voyage -->
+
                                 <?php if ($reduc > 0 && $economies > 0.01): ?>
                                     <div class="text-success small mt-1">
-                                        vous payez <strong><?= number_format((float)$total_avec_promo, 2, ",", " ") ?> €</strong>
-                                        au lieu de <s><?= number_format((float)$total_sans_promo, 2, ",", " ") ?> €</s>
-                                        (économie <?= number_format((float)$economies, 2, ",", " ") ?> €)
+                                        vous payez
+                                        <strong><?= number_format((float) $total_avec_promo, 2, ",", " ") ?> €</strong>
+                                        au lieu de
+                                        <s><?= number_format((float) $total_sans_promo, 2, ",", " ") ?> €</s>
+                                        (économie <?= number_format((float) $economies, 2, ",", " ") ?> €)
                                     </div>
                                 <?php endif; ?>
+
+                                <!-- validation voyage -->
 
                                 <button
                                     type="submit"
@@ -222,20 +270,33 @@ if (!empty($voyage)) {
 
                         <?php else: ?>
 
-                            <?php if (!isset($nb_nuits)) $nb_nuits = 1; ?>
+                            <!-- réservation destination -->
+
+                            <?php if (!isset($nb_nuits)) {
+                                $nb_nuits = 1;
+                            } ?>
 
                             <h5 class="mb-3">réservation sur mesure</h5>
 
                             <?php if ($bloque): ?>
-                                <div class="alert alert-info">réservation indisponible pour cette destination.</div>
+                                <div class="alert alert-info">
+                                    réservation indisponible pour cette destination.
+                                </div>
                             <?php endif; ?>
 
-                            <form method="post" action="index.php?page=reservation&id_destination=<?= (int)$idDestination ?>">
-                                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION["csrf_token"] ?? "") ?>">
+                            <form method="post" action="index.php?page=reservation&id_destination=<?= (int) $idDestination ?>">
+                                <input
+                                    type="hidden"
+                                    name="csrf_token"
+                                    value="<?= htmlspecialchars($_SESSION["csrf_token"] ?? "") ?>"
+                                >
+
+                                <!-- dates et voyageurs -->
 
                                 <div class="row g-3">
                                     <div class="col-md-6">
                                         <label class="form-label">date de départ</label>
+
                                         <input
                                             type="date"
                                             class="form-control"
@@ -250,6 +311,7 @@ if (!empty($voyage)) {
 
                                     <div class="col-md-6">
                                         <label class="form-label">date de retour</label>
+
                                         <input
                                             type="date"
                                             class="form-control"
@@ -264,13 +326,14 @@ if (!empty($voyage)) {
 
                                     <div class="col-md-12">
                                         <label class="form-label">nombre de personnes</label>
+
                                         <input
                                             type="number"
                                             class="form-control"
                                             id="nb_personnes"
                                             name="nb_personnes"
                                             min="1"
-                                            value="<?= (int)$nb_personnes_int ?>"
+                                            value="<?= (int) $nb_personnes_int ?>"
                                             required
                                             <?= $bloque ? "disabled" : "" ?>
                                         >
@@ -279,29 +342,42 @@ if (!empty($voyage)) {
 
                                 <hr class="my-4">
 
+                                <!-- résumé destination -->
+
                                 <div class="text-muted small mb-2" id="dest_info">
-                                    <strong id="dest_nb_personnes"><?= (int)$nb_personnes_int ?></strong> personne(s) ·
-                                    <strong id="dest_nb_nuits"><?= (int)$nb_nuits ?></strong> nuit(s)
+                                    <strong id="dest_nb_personnes"><?= (int) $nb_personnes_int ?></strong> personne(s) ·
+                                    <strong id="dest_nb_nuits"><?= (int) $nb_nuits ?></strong> nuit(s)
                                 </div>
+
+                                <!-- total destination -->
 
                                 <div class="d-flex justify-content-between align-items-center">
                                     <span class="fs-6">total estimé</span>
+
                                     <span class="fs-4 fw-bold" id="dest_total">
-                                        <?= number_format((float)$total_avec_promo, 2, ",", " ") ?> €
+                                        <?= number_format((float) $total_avec_promo, 2, ",", " ") ?> €
                                     </span>
                                 </div>
+
+                                <!-- erreur dates -->
 
                                 <div class="text-danger small mt-2 d-none" id="dest_err_date">
                                     date de retour invalide (doit être après la date de départ).
                                 </div>
 
+                                <!-- promotion destination -->
+
                                 <?php if ($reduc > 0 && $economies > 0.01): ?>
                                     <div class="text-success small mt-1">
-                                        vous payez <strong><?= number_format((float)$total_avec_promo, 2, ",", " ") ?> €</strong>
-                                        au lieu de <s><?= number_format((float)$total_sans_promo, 2, ",", " ") ?> €</s>
-                                        (économie <?= number_format((float)$economies, 2, ",", " ") ?> €)
+                                        vous payez
+                                        <strong><?= number_format((float) $total_avec_promo, 2, ",", " ") ?> €</strong>
+                                        au lieu de
+                                        <s><?= number_format((float) $total_sans_promo, 2, ",", " ") ?> €</s>
+                                        (économie <?= number_format((float) $economies, 2, ",", " ") ?> €)
                                     </div>
                                 <?php endif; ?>
+
+                                <!-- validation destination -->
 
                                 <button
                                     type="submit"
@@ -328,7 +404,15 @@ if (!empty($voyage)) {
         </div>
     <?php endif; ?>
 
-    <div id="js_dest" data-prix-unitaire="<?= !empty($destination) ? htmlspecialchars(number_format((float)$prix_unitaire, 2, ".", "")) : "0.00" ?>"></div>
-    <div id="js_voyage" data-prix-unitaire="<?= !empty($voyage) ? htmlspecialchars(number_format((float)$prix_unitaire, 2, ".", "")) : "0.00" ?>"></div>
+    <!-- données javascript -->
 
+    <div
+        id="js_dest"
+        data-prix-unitaire="<?= !empty($destination) ? htmlspecialchars(number_format((float) $prix_unitaire, 2, ".", "")) : "0.00" ?>"
+    ></div>
+
+    <div
+        id="js_voyage"
+        data-prix-unitaire="<?= !empty($voyage) ? htmlspecialchars(number_format((float) $prix_unitaire, 2, ".", "")) : "0.00" ?>"
+    ></div>
 </div>

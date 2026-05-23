@@ -1,9 +1,13 @@
 <?php
 
-$q = trim((string)($_GET["q"] ?? ""));
+// récupération de la recherche
 
-if ($q !== "" && mb_strlen($q) >= 2) {
-    $destinations = $unControleur->selectLike_destination($q);
+$recherche = trim((string) ($_GET["q"] ?? ""));
+
+// récupération des destinations
+
+if ($recherche !== "" && mb_strlen($recherche) >= 2) {
+    $destinations = $unControleur->selectLike_destination($recherche);
 } else {
     $destinations = $unControleur->selectAll_destinations();
 }
