@@ -1,6 +1,4 @@
-/* ======================
-   base commune
-   ====================== */
+/* base commune */
 
 .section-title {
     font-weight: 800;
@@ -27,9 +25,7 @@
     border-radius: 0;
 }
 
-/* ======================
-   boutons projet
-   ====================== */
+/* boutons projet */
 
 .ui-btn,
 .detail-btn,
@@ -37,7 +33,7 @@
 .res-btn {
     font-size: 0.78rem;
     padding: 4px 10px;
-    border-radius: 50rem;
+    border-radius: var(--btn-radius);
     border-width: 1px;
     font-weight: 600;
     line-height: 1.2;
@@ -73,9 +69,7 @@
     opacity: 0.85;
 }
 
-/* ======================
-   modales auth
-   ====================== */
+/* modales auth */
 
 .auth-card {
     display: flex;
@@ -193,9 +187,7 @@
     height: auto;
 }
 
-/* ======================
-   pages détails
-   ====================== */
+/* pages dÃ©tails */
 
 .detail-wrap {
     max-width: 700px;
@@ -281,9 +273,7 @@
     color: #e11d48;
 }
 
-/* ======================
-   grille offres destinations voyages
-   ====================== */
+/* grille offres destinations voyages */
 
 .grid-card {
     border: 0;
@@ -377,9 +367,7 @@
     pointer-events: none;
 }
 
-/* ======================
-   réservation
-   ====================== */
+/* rÃ©servation */
 
 .res-wrap {
     align-items: stretch;
@@ -444,7 +432,7 @@
 .res-back-overlay .btn-outline-primary {
     font-size: 0.78rem;
     padding: 4px 10px;
-    border-radius: 50rem;
+    border-radius: var(--btn-radius);
     border-width: 1px;
     font-weight: 600;
     background: var(--primary-color);
@@ -462,7 +450,7 @@
     color: #fff;
     font-weight: 800;
     padding: 10px 16px;
-    border-radius: 50rem;
+    border-radius: var(--btn-radius);
 }
 
 .res-cta:hover {
@@ -481,9 +469,7 @@
     box-shadow: 0 0 0 0.15rem rgba(0, 127, 140, 0.15);
 }
 
-/* ======================
-   responsive auth
-   ====================== */
+/* responsive auth */
 
 @media (max-width: 768px) {
     .auth-card {
@@ -507,9 +493,7 @@
     }
 }
 
-/* ======================
-   responsive carousel
-   ====================== */
+/* responsive carousel */
 
 @media (max-width: 991px) {
     .carousel-image {
@@ -560,9 +544,7 @@
     }
 }
 
-/* ======================
-   responsive détails
-   ====================== */
+/* responsive dÃ©tails */
 
 @media (max-width: 576px) {
     .detail-body {
@@ -584,9 +566,7 @@
     }
 }
 
-/* ======================
-   responsive grille
-   ====================== */
+/* responsive grille */
 
 @media (max-width: 767px) {
     .grid-img,
@@ -599,9 +579,7 @@
     }
 }
 
-/* ======================
-   responsive réservation
-   ====================== */
+/* responsive rÃ©servation */
 
 @media (min-width: 992px) {
     .res-right {

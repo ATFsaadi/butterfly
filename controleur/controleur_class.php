@@ -390,6 +390,11 @@ class Controleur
         return $this->modele->getProfilClient($idUtilisateur);
     }
 
+    public function getProfilUtilisateur(int $idUtilisateur)
+    {
+        return $this->modele->getProfilUtilisateur($idUtilisateur);
+    }
+
     public function emailExistePourAutreUtilisateur(string $email, int $idUtilisateur)
     {
         return $this->modele->emailExistePourAutreUtilisateur($email, $idUtilisateur);
@@ -398,6 +403,11 @@ class Controleur
     public function updateProfilClient(array $tab): void
     {
         $this->modele->updateProfilClient($tab);
+    }
+
+    public function updateProfilUtilisateur(array $tab): void
+    {
+        $this->modele->updateProfilUtilisateur($tab);
     }
 
     public function selectMotDePasseUtilisateur(int $idUtilisateur)

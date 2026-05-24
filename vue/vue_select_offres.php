@@ -3,6 +3,28 @@
 // sécurité des données
 
 $lesOffres = $lesOffres ?? ($offres ?? []);
+$filtreActuel = (string) ($_GET["filtre"] ?? ($_POST["filtre"] ?? ""));
+$triActuel = (string) ($_GET["tri"] ?? "titre");
+$ordreActuel = (string) ($_GET["ordre"] ?? "asc");
+
+// lien tri
+
+function lienTriOffre(string $colonne, string $label, string $filtreActuel, string $triActuel, string $ordreActuel): string
+{
+    $ordre = ($triActuel === $colonne && $ordreActuel === "asc") ? "desc" : "asc";
+    $icone = $triActuel === $colonne ? ($ordreActuel === "asc" ? " ^" : " v") : "";
+
+    $url = "index.php?" . http_build_query([
+        "page" => "admin_offres",
+        "filtre" => $filtreActuel,
+        "tri" => $colonne,
+        "ordre" => $ordre,
+    ]);
+
+    return '<a class="admin-sort-link" href="' . htmlspecialchars($url) . '">'
+        . htmlspecialchars($label . $icone)
+        . '</a>';
+}
 
 ?>
 
@@ -12,35 +34,43 @@ $lesOffres = $lesOffres ?? ($offres ?? []);
 
 <!-- filtre offres -->
 
-<form method="post" class="mb-4">
+<form method="get" action="index.php" class="mb-4 admin-filter">
+    <input type="hidden" name="page" value="admin_offres">
+    <input type="hidden" name="tri" value="<?= htmlspecialchars($triActuel) ?>">
+    <input type="hidden" name="ordre" value="<?= htmlspecialchars($ordreActuel) ?>">
+
     <input
         type="text"
         name="filtre"
         placeholder="filtrer (titre / pays / ville / continent)"
         class="form-control mb-2"
-        value="<?= htmlspecialchars((string) ($_POST["filtre"] ?? "")) ?>"
+        value="<?= htmlspecialchars($filtreActuel) ?>"
     >
 
-    <div class="d-flex justify-content-center">
-        <button type="submit" name="Filtrer" class="btn btn-primary">
+    <div class="d-flex justify-content-center gap-2 flex-wrap">
+        <button type="submit" class="btn admin-btn admin-btn-primary">
             filtrer
         </button>
+
+        <a href="index.php?page=admin_offres" class="btn admin-btn admin-btn-outline">
+            reinitialiser
+        </a>
     </div>
 </form>
 
 <!-- tableau offres -->
 
-<div class="container mt-4">
-    <table class="table table-bordered align-middle">
+<div class="container mt-4 table-responsive">
+    <table class="table table-bordered align-middle admin-table">
         <thead>
             <tr>
                 <th>id</th>
-                <th>titre</th>
-                <th>destination</th>
-                <th>réduction</th>
-                <th>début</th>
-                <th>fin</th>
-                <th>actif</th>
+                <th><?= lienTriOffre("titre", "titre", $filtreActuel, $triActuel, $ordreActuel) ?></th>
+                <th><?= lienTriOffre("destination", "destination", $filtreActuel, $triActuel, $ordreActuel) ?></th>
+                <th><?= lienTriOffre("reduction", "reduction", $filtreActuel, $triActuel, $ordreActuel) ?></th>
+                <th><?= lienTriOffre("date_debut", "debut", $filtreActuel, $triActuel, $ordreActuel) ?></th>
+                <th><?= lienTriOffre("date_fin", "fin", $filtreActuel, $triActuel, $ordreActuel) ?></th>
+                <th><?= lienTriOffre("actif", "actif", $filtreActuel, $triActuel, $ordreActuel) ?></th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -85,7 +115,7 @@ $lesOffres = $lesOffres ?? ($offres ?? []);
                             <div class="d-flex gap-2 justify-content-center">
                                 <a
                                     href="index.php?page=admin_offres&action=edit&id_offre=<?= $idOffre ?>"
-                                    class="btn btn-warning btn-sm"
+                                    class="btn btn-sm admin-btn admin-btn-green"
                                 >
                                     modifier
                                 </a>
@@ -93,7 +123,7 @@ $lesOffres = $lesOffres ?? ($offres ?? []);
                                 <a
                                     href="index.php?page=admin_offres&action=sup&id_offre=<?= $idOffre ?>"
                                     onclick="return confirm('voulez-vous vraiment supprimer cette offre ?');"
-                                    class="btn btn-danger btn-sm"
+                                    class="btn btn-sm admin-btn admin-btn-red"
                                 >
                                     supprimer
                                 </a>

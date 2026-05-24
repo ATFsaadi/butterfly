@@ -3,6 +3,28 @@
 // sécurité des données
 
 $lesVoyages = $lesVoyages ?? ($voyages ?? []);
+$filtreActuel = (string) ($_GET["filtre"] ?? ($_POST["filtre"] ?? ""));
+$triActuel = (string) ($_GET["tri"] ?? "titre");
+$ordreActuel = (string) ($_GET["ordre"] ?? "asc");
+
+// lien tri
+
+function lienTriVoyage(string $colonne, string $label, string $filtreActuel, string $triActuel, string $ordreActuel): string
+{
+    $ordre = ($triActuel === $colonne && $ordreActuel === "asc") ? "desc" : "asc";
+    $icone = $triActuel === $colonne ? ($ordreActuel === "asc" ? " ^" : " v") : "";
+
+    $url = "index.php?" . http_build_query([
+        "page" => "admin_voyages",
+        "filtre" => $filtreActuel,
+        "tri" => $colonne,
+        "ordre" => $ordre,
+    ]);
+
+    return '<a class="admin-sort-link" href="' . htmlspecialchars($url) . '">'
+        . htmlspecialchars($label . $icone)
+        . '</a>';
+}
 
 ?>
 
@@ -12,35 +34,43 @@ $lesVoyages = $lesVoyages ?? ($voyages ?? []);
 
 <!-- filtre voyages -->
 
-<form method="post" class="mb-4">
+<form method="get" action="index.php" class="mb-4 admin-filter">
+    <input type="hidden" name="page" value="admin_voyages">
+    <input type="hidden" name="tri" value="<?= htmlspecialchars($triActuel) ?>">
+    <input type="hidden" name="ordre" value="<?= htmlspecialchars($ordreActuel) ?>">
+
     <input
         type="text"
         name="filtre"
         placeholder="filtrer (titre / pays / ville / statut)"
         class="form-control mb-2"
-        value="<?= htmlspecialchars((string) ($_POST["filtre"] ?? "")) ?>"
+        value="<?= htmlspecialchars($filtreActuel) ?>"
     >
 
-    <div class="d-flex justify-content-center">
-        <button type="submit" name="Filtrer" class="btn btn-primary">
+    <div class="d-flex justify-content-center gap-2 flex-wrap">
+        <button type="submit" class="btn admin-btn admin-btn-primary">
             filtrer
         </button>
+
+        <a href="index.php?page=admin_voyages" class="btn admin-btn admin-btn-outline">
+            reinitialiser
+        </a>
     </div>
 </form>
 
 <!-- tableau voyages -->
 
-<div class="container mt-4">
-    <table class="table table-bordered align-middle">
+<div class="container mt-4 table-responsive">
+    <table class="table table-bordered align-middle admin-table">
         <thead>
             <tr>
                 <th>aperçu</th>
-                <th>titre</th>
-                <th>destination</th>
-                <th>dates</th>
-                <th>prix</th>
-                <th>places</th>
-                <th>statut</th>
+                <th><?= lienTriVoyage("titre", "titre", $filtreActuel, $triActuel, $ordreActuel) ?></th>
+                <th><?= lienTriVoyage("destination", "destination", $filtreActuel, $triActuel, $ordreActuel) ?></th>
+                <th><?= lienTriVoyage("dates", "dates", $filtreActuel, $triActuel, $ordreActuel) ?></th>
+                <th><?= lienTriVoyage("prix", "prix", $filtreActuel, $triActuel, $ordreActuel) ?></th>
+                <th><?= lienTriVoyage("places", "places", $filtreActuel, $triActuel, $ordreActuel) ?></th>
+                <th><?= lienTriVoyage("statut", "statut", $filtreActuel, $triActuel, $ordreActuel) ?></th>
                 <th style="width:200px;">actions</th>
             </tr>
         </thead>
@@ -93,14 +123,18 @@ $lesVoyages = $lesVoyages ?? ($voyages ?? []);
                         <td><?= htmlspecialchars($dateDepart) ?> → <?= htmlspecialchars($dateRetour) ?></td>
                         <td><?= number_format($prix, 2, ",", " ") ?> €</td>
                         <td><?= $nbRestantes ?> / <?= $nbPlaces ?></td>
-                        <td><?= htmlspecialchars($statut) ?></td>
+                        <td>
+                            <span class="admin-status <?= $statut === "actif" ? "is-active" : "is-muted" ?>">
+                                <?= htmlspecialchars($statut) ?>
+                            </span>
+                        </td>
 
                         <!-- actions voyage -->
 
                         <td>
                             <a
                                 href="index.php?page=admin_voyages&action=edit&id_voyage=<?= $id ?>"
-                                class="btn btn-warning btn-sm"
+                                class="btn btn-sm admin-btn admin-btn-green"
                             >
                                 modifier
                             </a>
@@ -108,7 +142,7 @@ $lesVoyages = $lesVoyages ?? ($voyages ?? []);
                             <a
                                 href="index.php?page=admin_voyages&action=sup&id_voyage=<?= $id ?>"
                                 onclick="return confirm('supprimer ce voyage ?');"
-                                class="btn btn-danger btn-sm"
+                                class="btn btn-sm admin-btn admin-btn-red"
                             >
                                 supprimer
                             </a>

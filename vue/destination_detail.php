@@ -32,6 +32,11 @@ $destination = $destination ?? null;
     $image = (string) ($destination["image_url"] ?? "");
 
     $titre = trim($pays . " - " . $ville, " -");
+    $reservationUrl = "index.php?page=reservation&id_destination=" . $id;
+
+    if (!isset($_SESSION["user"])) {
+        $reservationUrl = "index.php?page=login&redirect=reservation&id_destination=" . $id;
+    }
     ?>
 
     <!-- titre destination -->
@@ -92,7 +97,7 @@ $destination = $destination ?? null;
                 <div class="detail-actions d-flex justify-content-center gap-2 mt-3">
                     <a
                         class="btn btn-success btn-sm flex-fill text-center px-3 detail-btn"
-                        href="index.php?page=reservation&id_destination=<?= $id ?>"
+                        href="<?= htmlspecialchars($reservationUrl) ?>"
                     >
                         réserver
                     </a>

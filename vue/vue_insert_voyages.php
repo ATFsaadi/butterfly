@@ -25,6 +25,7 @@ $prix = $voyageToEdit["prix"] ?? "";
 $nbPlaces = $voyageToEdit["nb_places"] ?? "";
 $nbPlacesRestantes = $voyageToEdit["nb_places_restantes"] ?? "";
 $statut = (string) ($voyageToEdit["statut"] ?? "actif");
+$isActif = ($statut !== "annule");
 
 ?>
 
@@ -216,9 +217,25 @@ $statut = (string) ($voyageToEdit["statut"] ?? "actif");
 
             <!-- statut -->
 
-            <label class="form-label">statut du voyage</label>
+            <div class="form-check form-switch mt-2 mb-3">
+                <input
+                    class="form-check-input"
+                    type="checkbox"
+                    role="switch"
+                    value="1"
+                    id="statut_voyage"
+                    name="statut_actif"
+                    <?= $isActif ? "checked" : "" ?>
+                >
 
-            <select name="statut" class="form-control mb-3">
+                <label class="form-check-label" for="statut_voyage">
+                    voyage actif
+                </label>
+            </div>
+
+            <label class="form-label d-none">statut du voyage</label>
+
+            <select name="statut" class="form-control mb-3 d-none" aria-hidden="true">
                 <?php
                 $statuts = [
                     "actif" => "actif",

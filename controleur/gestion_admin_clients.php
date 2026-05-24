@@ -33,3 +33,31 @@ if ($filtre !== "") {
 } else {
     $clients = $unControleur->selectAll_clients_admin();
 }
+
+// tri clients
+
+$tri = (string) ($_GET["tri"] ?? "nom");
+$ordre = (string) ($_GET["ordre"] ?? "asc");
+
+$trisAutorises = ["nom", "prenom", "email", "telephone", "ville", "pays", "actif"];
+
+if (!in_array($tri, $trisAutorises, true)) {
+    $tri = "nom";
+}
+
+if ($ordre !== "desc") {
+    $ordre = "asc";
+}
+
+usort($clients, function (array $a, array $b) use ($tri, $ordre): int {
+    $valeurA = $a[$tri] ?? "";
+    $valeurB = $b[$tri] ?? "";
+
+    if ($tri === "actif") {
+        $comparaison = (int) $valeurA <=> (int) $valeurB;
+    } else {
+        $comparaison = strcasecmp((string) $valeurA, (string) $valeurB);
+    }
+
+    return $ordre === "desc" ? -$comparaison : $comparaison;
+});

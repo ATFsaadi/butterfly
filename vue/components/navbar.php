@@ -18,6 +18,9 @@ $prenomAffiche =
     ?? $_SESSION["client"]["prenom"]
     ?? (($_SESSION["user"]["role"] ?? "") === "admin" ? "admin" : "");
 
+$isUserConnecte = isset($_SESSION["user"]);
+$isAdminConnecte = $isUserConnecte && (($_SESSION["user"]["role"] ?? "") === "admin");
+
 ?>
 
 <!-- navbar haute -->
@@ -49,7 +52,18 @@ $prenomAffiche =
 
         <!-- menu utilisateur -->
 
-        <div class="navbar-right">
+        <?php if ($isAdminConnecte): ?>
+            <button
+                class="navbar-toggler d-lg-none nav-link admin-menu-toggle"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#adminNav"
+            >
+                Admin
+            </button>
+        <?php endif; ?>
+
+        <div class="navbar-right <?= $isAdminConnecte ? "admin-desktop-nav" : "" ?>">
             <ul class="navbar-nav flex-row align-items-center gap-3">
 
                 <?php if (isset($_SESSION["user"])): ?>
@@ -193,10 +207,15 @@ $prenomAffiche =
                             </form>
                         </li>
 
-                        <!-- nom admin -->
+                        <!-- profil admin -->
 
-                        <li class="nav-item d-flex flex-column align-items-center nav-item-fixed">
-                            <span class="nav-link"><?= htmlspecialchars((string) $prenomAffiche) ?></span>
+                        <li class="nav-item nav-item-fixed">
+                            <a
+                                class="nav-link <?= $pageActuelle === "profile" ? "active" : "" ?>"
+                                href="index.php?page=profile"
+                            >
+                                Admin
+                            </a>
                         </li>
 
                     <?php else: ?>
@@ -337,6 +356,46 @@ $prenomAffiche =
             </ul>
         </div>
     </div>
+
+    <?php if ($isAdminConnecte): ?>
+        <!-- menu admin mobile -->
+
+        <div class="collapse admin-mobile-panel d-lg-none" id="adminNav">
+            <a href="index.php?page=admin_reservations" class="<?= $pageActuelle === "admin_reservations" ? "active" : "" ?>">
+                <i class="fas fa-calendar-check"></i> reservations
+            </a>
+            <a href="index.php?page=admin_voyages" class="<?= $pageActuelle === "admin_voyages" ? "active" : "" ?>">
+                <i class="fas fa-route"></i> voyages
+            </a>
+            <a href="index.php?page=admin_destinations" class="<?= $pageActuelle === "admin_destinations" ? "active" : "" ?>">
+                <i class="fas fa-map-marked-alt"></i> destinations
+            </a>
+            <a href="index.php?page=admin_offres" class="<?= $pageActuelle === "admin_offres" ? "active" : "" ?>">
+                <i class="fas fa-tags"></i> offres
+            </a>
+            <a href="index.php?page=admin_clients" class="<?= $pageActuelle === "admin_clients" ? "active" : "" ?>">
+                <i class="fas fa-users"></i> clients
+            </a>
+            <a href="index.php?page=admin_dashboard" class="<?= $pageActuelle === "admin_dashboard" ? "active" : "" ?>">
+                <i class="fas fa-chart-line"></i> dashboard
+            </a>
+            <a href="index.php?page=profile" class="<?= $pageActuelle === "profile" ? "active" : "" ?>">
+                <i class="fas fa-user-cog"></i> profil
+            </a>
+
+            <form method="post" action="index.php">
+                <input
+                    type="hidden"
+                    name="csrf_token"
+                    value="<?= htmlspecialchars((string) $_SESSION["csrf_token"]) ?>"
+                >
+
+                <button type="submit" name="logout">
+                    <i class="fas fa-sign-out-alt"></i> deconnexion
+                </button>
+            </form>
+        </div>
+    <?php endif; ?>
 </nav>
 
 <!-- navbar principale -->

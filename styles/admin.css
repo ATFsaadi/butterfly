@@ -5,21 +5,44 @@ form.mb-4 {
     padding: 22px;
     background: #fff;
     border: 1px solid var(--border-color);
-    border-radius: 16px;
+    border-radius: var(--border-radius);
 }
 
 /* champs */
 form.mb-4 .form-control {
-    border-radius: 12px;
+    border-radius: var(--btn-radius);
     border: 1px solid var(--border-color);
     padding: 12px 14px;
     font-size: 0.95rem;
 }
 
+.admin-filter .form-control {
+    border-radius: var(--btn-radius);
+    border: 1px solid var(--border-color);
+    padding: 10px 13px;
+    font-size: 0.92rem;
+}
+
 /* focus champs */
-form.mb-4 .form-control:focus {
+form.mb-4 .form-control:focus,
+.admin-filter .form-control:focus {
     border-color: var(--primary-color);
     box-shadow: 0 0 0 3px rgba(242, 116, 56, 0.12);
+}
+
+/* listes */
+form.mb-4 select.form-control,
+.admin-filter select.form-control {
+    appearance: none;
+    background-image:
+        linear-gradient(45deg, transparent 50%, var(--primary-color) 50%),
+        linear-gradient(135deg, var(--primary-color) 50%, transparent 50%);
+    background-position:
+        calc(100% - 18px) 52%,
+        calc(100% - 12px) 52%;
+    background-size: 6px 6px, 6px 6px;
+    background-repeat: no-repeat;
+    padding-right: 38px;
 }
 
 /* textarea */
@@ -31,7 +54,7 @@ form.mb-4 textarea.form-control {
 /* bouton principal */
 form.mb-4 .btn.btn-primary {
     border: none;
-    border-radius: 50rem;
+    border-radius: var(--btn-radius);
     padding: 12px 18px;
     font-weight: 700;
     background: linear-gradient(135deg, var(--primary-color), #F2A65B);
@@ -44,17 +67,17 @@ form.mb-4 .btn.btn-primary:hover {
 }
 
 /* table */
-table.table.table-bordered {
+table.table.table-bordered.admin-table {
     max-width: 1100px;
     margin: 0 auto 50px;
     background: #fff;
-    border-radius: 16px;
+    border-radius: var(--border-radius);
     overflow: hidden;
     border: 1px solid var(--border-color);
 }
 
 /* entete table */
-table.table.table-bordered thead th {
+table.table.table-bordered.admin-table thead th {
     background: var(--bg-light);
     color: var(--secondary-color);
     font-weight: 700;
@@ -63,33 +86,252 @@ table.table.table-bordered thead th {
 }
 
 /* cellules table */
-table.table.table-bordered td {
+table.table.table-bordered.admin-table td {
     padding: 14px;
     vertical-align: middle;
     border-bottom: 1px solid rgba(220, 230, 230, 0.8);
 }
 
 /* images table */
-table.table.table-bordered img {
-    border-radius: 10px;
+table.table.table-bordered.admin-table img {
+    border-radius: var(--btn-radius);
     border: 1px solid var(--border-color);
 }
 
 /* actions */
-table.table.table-bordered .btn.btn-warning.btn-sm,
-table.table.table-bordered .btn.btn-danger.btn-sm {
-    border-radius: 50rem;
+table.table.table-bordered.admin-table .btn.btn-warning.btn-sm,
+table.table.table-bordered.admin-table .btn.btn-danger.btn-sm {
+    border-radius: var(--btn-radius);
     padding: 7px 12px;
     font-weight: 600;
 }
 
 /* hover ligne */
-table.table.table-bordered tbody tr:hover {
+table.table.table-bordered.admin-table tbody tr:hover {
     background: rgba(244, 249, 249, 0.65);
 }
+
+/* admin table */
+.admin-table {
+    background: #fff;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+}
+
+.admin-table thead th {
+    background: var(--bg-light);
+    color: var(--secondary-color);
+    font-size: 0.88rem;
+    font-weight: 800;
+    letter-spacing: 0;
+}
+
+.admin-table td {
+    font-size: 0.92rem;
+}
+
+.admin-table .table-success,
+.admin-table .table-secondary {
+    --bs-table-bg: #fff;
+    --bs-table-striped-bg: var(--bg-light);
+    --bs-table-hover-bg: rgba(235, 120, 20, 0.06);
+}
+
+.admin-sort-link {
+    color: var(--secondary-color);
+    text-decoration: none;
+}
+
+.admin-sort-link:hover {
+    color: var(--primary-color);
+}
+
+/* boutons admin */
+.admin-btn {
+    border-radius: var(--btn-radius);
+    border: 1px solid var(--primary-color);
+    padding: 7px 13px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    transition: 0.2s ease;
+}
+
+.admin-btn.admin-btn-primary {
+    background: linear-gradient(135deg, var(--primary-color), #F2A65B);
+    color: #fff;
+}
+
+.admin-btn.admin-btn-outline {
+    background: transparent;
+    color: var(--primary-color);
+}
+
+.admin-btn.admin-btn-green {
+    background: #198754;
+    border-color: #198754;
+    color: #fff;
+}
+
+.admin-btn.admin-btn-red {
+    background: #dc3545;
+    border-color: #dc3545;
+    color: #fff;
+}
+
+.admin-btn.admin-btn-green:hover,
+.admin-btn.admin-btn-red:hover {
+    color: #fff;
+}
+
+.admin-btn.admin-btn-green:hover {
+    background: #157347;
+    border-color: #157347;
+}
+
+.admin-btn.admin-btn-red:hover {
+    background: #bb2d3b;
+    border-color: #bb2d3b;
+}
+
+.admin-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+/* statuts */
+.admin-status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 78px;
+    padding: 4px 10px;
+    border-radius: var(--btn-radius);
+    font-size: 0.8rem;
+    font-weight: 800;
+    border: 1px solid currentColor;
+}
+
+.admin-status.is-active {
+    color: var(--primary-color);
+    background: rgba(235, 120, 20, 0.08);
+}
+
+.admin-status.is-muted {
+    color: var(--muted-color);
+    background: var(--bg-light);
+}
+
+/* switch */
+.form-check-input:checked {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.form-check-input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(235, 120, 20, 0.16);
+}
+
 /* input date admin */
 input[name="date_depart"],
-input[name="date_retour"] {
+input[name="date_retour"],
+input[name="date_debut"],
+input[name="date_fin"] {
     cursor: pointer;
     background: #fff;
+}
+
+/* calendrier */
+.flatpickr-calendar {
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-size: 0.88rem;
+    box-shadow: 0 18px 38px rgba(0, 127, 140, 0.18);
+    font-family: "Poiret One", sans-serif;
+}
+
+.flatpickr-months,
+.flatpickr-weekdays {
+    background: var(--bg-light);
+}
+
+.flatpickr-current-month,
+.flatpickr-monthDropdown-months,
+.flatpickr-weekday {
+    color: var(--secondary-color) !important;
+    font-weight: 800;
+}
+
+.flatpickr-day {
+    border-radius: 8px;
+    height: 34px;
+    line-height: 34px;
+    max-width: 34px;
+}
+
+.flatpickr-days,
+.dayContainer {
+    width: 286px;
+    min-width: 286px;
+    max-width: 286px;
+}
+
+.flatpickr-day.today {
+    border-color: var(--primary-color);
+}
+
+.flatpickr-day.selected,
+.flatpickr-day.startRange,
+.flatpickr-day.endRange,
+.flatpickr-day.selected:hover {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.flatpickr-monthDropdown-months,
+.numInputWrapper input {
+    color: var(--secondary-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+}
+
+.flatpickr-calendar select {
+    background-color: #fff;
+    color: var(--secondary-color);
+}
+
+/* dashboard */
+.admin-dashboard {
+    max-width: 1180px;
+}
+
+.admin-dashboard-head {
+    border-left: 4px solid var(--primary-color);
+    padding-left: 16px;
+}
+
+.admin-stat-card {
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    background: #fff;
+    box-shadow: 0 12px 26px rgba(0, 127, 140, 0.08);
+}
+
+.admin-stat-label {
+    color: var(--muted-color);
+    font-size: 0.82rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.admin-stat-value {
+    color: var(--text-color);
+    font-size: 1.65rem;
+    font-weight: 800;
+}
+
+.admin-stat-note {
+    color: var(--secondary-color);
+    font-size: 0.86rem;
 }

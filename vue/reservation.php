@@ -144,6 +144,13 @@ if (empty($voyage) && !empty($destination)) {
             <div class="alert alert-success">
                 <?= htmlspecialchars($successReservation) ?>
             </div>
+
+            <script>
+                // retour accueil
+                window.setTimeout(function () {
+                    window.location.href = "index.php?page=home";
+                }, 1800);
+            </script>
         <?php endif; ?>
 
         <!-- contenu réservation -->

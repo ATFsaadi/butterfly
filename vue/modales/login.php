@@ -33,7 +33,7 @@ if ($id_destination_redirect > 0) {
     aria-hidden="true"
 >
     <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content p-0" style="border-radius:20px; overflow:hidden;">
+        <div class="modal-content p-0" style="border-radius:12px; overflow:hidden;">
 
             <!-- bouton fermeture -->
 

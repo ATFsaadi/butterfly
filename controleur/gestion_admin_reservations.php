@@ -68,3 +68,45 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["maj_statut"])) {
 // récupération des réservations
 
 $lesReservations = $unControleur->selectAll_reservations();
+
+// tri
+
+$tri = (string) ($_GET["tri"] ?? "date");
+$ordre = (string) ($_GET["ordre"] ?? "desc");
+$trisAutorises = ["id", "client", "destination", "voyage", "date", "voyageurs", "total", "statut", "type"];
+
+if (!in_array($tri, $trisAutorises, true)) {
+    $tri = "date";
+}
+
+if ($ordre !== "asc") {
+    $ordre = "desc";
+}
+
+usort($lesReservations, function (array $a, array $b) use ($tri, $ordre): int {
+    if ($tri === "id") {
+        $comparaison = (int) ($a["id_reservation"] ?? 0) <=> (int) ($b["id_reservation"] ?? 0);
+    } elseif ($tri === "client") {
+        $valeurA = trim((string) ($a["prenom"] ?? "") . " " . (string) ($a["nom"] ?? ""));
+        $valeurB = trim((string) ($b["prenom"] ?? "") . " " . (string) ($b["nom"] ?? ""));
+        $comparaison = strcasecmp($valeurA, $valeurB);
+    } elseif ($tri === "destination") {
+        $valeurA = trim((string) ($a["ville"] ?? "") . " " . (string) ($a["pays"] ?? ""));
+        $valeurB = trim((string) ($b["ville"] ?? "") . " " . (string) ($b["pays"] ?? ""));
+        $comparaison = strcasecmp($valeurA, $valeurB);
+    } elseif ($tri === "voyage") {
+        $comparaison = strcasecmp((string) ($a["voyage_titre"] ?? ""), (string) ($b["voyage_titre"] ?? ""));
+    } elseif ($tri === "voyageurs") {
+        $comparaison = (int) ($a["nb_personnes"] ?? 0) <=> (int) ($b["nb_personnes"] ?? 0);
+    } elseif ($tri === "total") {
+        $comparaison = (float) ($a["prix_total"] ?? 0) <=> (float) ($b["prix_total"] ?? 0);
+    } elseif ($tri === "type") {
+        $comparaison = strcasecmp((string) ($a["type_reservation"] ?? ""), (string) ($b["type_reservation"] ?? ""));
+    } elseif ($tri === "statut") {
+        $comparaison = strcasecmp((string) ($a["statut"] ?? ""), (string) ($b["statut"] ?? ""));
+    } else {
+        $comparaison = strcmp((string) ($a["date_depart"] ?? ""), (string) ($b["date_depart"] ?? ""));
+    }
+
+    return $ordre === "desc" ? -$comparaison : $comparaison;
+});

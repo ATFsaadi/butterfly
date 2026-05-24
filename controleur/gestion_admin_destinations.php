@@ -196,28 +196,52 @@ if (isset($_POST["submit"])) {
 $destinations = $unControleur->selectAll_destinations_admin();
 
 // filtre de recherche
-if (isset($_POST["Filtrer"])) {
-    $filtre = trim((string) ($_POST["filtre"] ?? ""));
 
-    if ($filtre !== "") {
-        $filtreMin = mb_strtolower($filtre);
+$filtre = trim((string) ($_GET["filtre"] ?? ($_POST["filtre"] ?? "")));
 
-        $destinations = array_values(array_filter($destinations, function ($destination) use ($filtreMin) {
-            $pays = mb_strtolower((string) ($destination["pays"] ?? ""));
-            $ville = mb_strtolower((string) ($destination["ville"] ?? ""));
-            $continent = mb_strtolower((string) ($destination["continent"] ?? ""));
-            $description = mb_strtolower((string) ($destination["description"] ?? ""));
-            $etat = ((int) ($destination["actif"] ?? 0) === 1) ? "actif" : "inactif";
+if ($filtre !== "") {
+    $filtreMin = mb_strtolower($filtre);
 
-            // compatible PHP 7 et PHP 8
-            return strpos($pays, $filtreMin) !== false
-                || strpos($ville, $filtreMin) !== false
-                || strpos($continent, $filtreMin) !== false
-                || strpos($description, $filtreMin) !== false
-                || strpos($etat, $filtreMin) !== false;
-        }));
-    }
+    $destinations = array_values(array_filter($destinations, function ($destination) use ($filtreMin) {
+        $pays = mb_strtolower((string) ($destination["pays"] ?? ""));
+        $ville = mb_strtolower((string) ($destination["ville"] ?? ""));
+        $continent = mb_strtolower((string) ($destination["continent"] ?? ""));
+        $description = mb_strtolower((string) ($destination["description"] ?? ""));
+        $etat = ((int) ($destination["actif"] ?? 0) === 1) ? "actif" : "inactif";
+
+        return strpos($pays, $filtreMin) !== false
+            || strpos($ville, $filtreMin) !== false
+            || strpos($continent, $filtreMin) !== false
+            || strpos($description, $filtreMin) !== false
+            || strpos($etat, $filtreMin) !== false;
+    }));
 }
+
+// tri
+
+$tri = (string) ($_GET["tri"] ?? "pays");
+$ordre = (string) ($_GET["ordre"] ?? "asc");
+$trisAutorises = ["pays", "ville", "continent", "prix_base", "actif"];
+
+if (!in_array($tri, $trisAutorises, true)) {
+    $tri = "pays";
+}
+
+if ($ordre !== "desc") {
+    $ordre = "asc";
+}
+
+usort($destinations, function (array $a, array $b) use ($tri, $ordre): int {
+    if ($tri === "prix_base") {
+        $comparaison = (float) ($a[$tri] ?? 0) <=> (float) ($b[$tri] ?? 0);
+    } elseif ($tri === "actif") {
+        $comparaison = (int) ($a[$tri] ?? 0) <=> (int) ($b[$tri] ?? 0);
+    } else {
+        $comparaison = strcasecmp((string) ($a[$tri] ?? ""), (string) ($b[$tri] ?? ""));
+    }
+
+    return $ordre === "desc" ? -$comparaison : $comparaison;
+});
 
 // destination à afficher dans le formulaire
 $destination = $destinationToEdit;

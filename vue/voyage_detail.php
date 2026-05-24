@@ -43,6 +43,11 @@ $voyage = $voyage ?? null;
 
     $idDestination = (int) ($voyage["id_destination"] ?? 0);
     $bloque = ($statut !== "actif" || $placesRestantes <= 0);
+    $reservationUrl = "index.php?page=reservation&id_voyage=" . $idVoyage;
+
+    if (!isset($_SESSION["user"])) {
+        $reservationUrl = "index.php?page=login&redirect=reservation&id_voyage=" . $idVoyage;
+    }
     ?>
 
     <!-- titre voyage -->
@@ -145,7 +150,7 @@ $voyage = $voyage ?? null;
                     <?php if (!$bloque): ?>
                         <a
                             class="btn btn-success btn-sm flex-fill text-center px-3 detail-btn"
-                            href="index.php?page=reservation&id_voyage=<?= $idVoyage ?>"
+                            href="<?= htmlspecialchars($reservationUrl) ?>"
                         >
                             réserver
                         </a>

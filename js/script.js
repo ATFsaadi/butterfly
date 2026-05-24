@@ -154,17 +154,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     L.marker([lat, lng], { icon }).addTo(footerMap);
 
-    /* clic footer => google maps */
+    /* clic footer */
     footerEl.addEventListener('click', () => {
-      const address = encodeURIComponent("40 Boulevard Haussmann, 75009 Paris");
-      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-
-      const url = `https://www.google.com/maps/search/?api=1&query=${address}`;
-      if (isMobile) {
-        window.location.href = url;
-      } else {
-        window.open(url, '_blank');
-      }
+      openModal();
     });
   }
 

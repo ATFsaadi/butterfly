@@ -3,6 +3,26 @@
 // sécurité des données
 
 $lesReservations = $lesReservations ?? [];
+$triActuel = (string) ($_GET["tri"] ?? "date");
+$ordreActuel = (string) ($_GET["ordre"] ?? "desc");
+
+// lien tri
+
+function lienTriReservation(string $colonne, string $label, string $triActuel, string $ordreActuel): string
+{
+    $ordre = ($triActuel === $colonne && $ordreActuel === "asc") ? "desc" : "asc";
+    $icone = $triActuel === $colonne ? ($ordreActuel === "asc" ? " ^" : " v") : "";
+
+    $url = "index.php?" . http_build_query([
+        "page" => "admin_reservations",
+        "tri" => $colonne,
+        "ordre" => $ordre,
+    ]);
+
+    return '<a class="admin-sort-link" href="' . htmlspecialchars($url) . '">'
+        . htmlspecialchars($label . $icone)
+        . '</a>';
+}
 
 $resaDest = array_values(array_filter($lesReservations, function ($reservation) {
     return ($reservation["type_reservation"] ?? "") === "destination";
@@ -16,7 +36,7 @@ $resaVoy = array_values(array_filter($lesReservations, function ($reservation) {
 
 <!-- gestion réservations -->
 
-<h3 class="section-title text-center mt-5">gestion des réservations</h3>
+<h3 class="section-title text-center mt-5">Gestion des Réservations</h3>
 
 <?php if (empty($resaDest) && empty($resaVoy)): ?>
 
@@ -37,16 +57,16 @@ $resaVoy = array_values(array_filter($lesReservations, function ($reservation) {
             aucune réservation destination.
         </div>
     <?php else: ?>
-        <table class="table table-bordered mt-3 align-middle">
+        <table class="table table-bordered mt-3 align-middle admin-table">
             <thead>
                 <tr>
-                    <th>#</th>
-                    <th>client</th>
-                    <th>destination</th>
-                    <th>dates</th>
-                    <th>voyageurs</th>
-                    <th>total</th>
-                    <th>statut</th>
+                    <th><?= lienTriReservation("id", "#", $triActuel, $ordreActuel) ?></th>
+                    <th><?= lienTriReservation("client", "client", $triActuel, $ordreActuel) ?></th>
+                    <th><?= lienTriReservation("destination", "destination", $triActuel, $ordreActuel) ?></th>
+                    <th><?= lienTriReservation("date", "dates", $triActuel, $ordreActuel) ?></th>
+                    <th><?= lienTriReservation("voyageurs", "voyageurs", $triActuel, $ordreActuel) ?></th>
+                    <th><?= lienTriReservation("total", "total", $triActuel, $ordreActuel) ?></th>
+                    <th><?= lienTriReservation("statut", "statut", $triActuel, $ordreActuel) ?></th>
                     <th>action</th>
                 </tr>
             </thead>
@@ -114,7 +134,7 @@ $resaVoy = array_values(array_filter($lesReservations, function ($reservation) {
                                         <input type="hidden" name="type" value="destination">
                                         <input type="hidden" name="id_reservation" value="<?= $idResa ?>">
 
-                                        <button class="btn btn-sm btn-success" type="submit">
+                                        <button class="btn btn-sm admin-btn admin-btn-green" type="submit">
                                             confirmer
                                         </button>
                                     </form>
@@ -130,7 +150,7 @@ $resaVoy = array_values(array_filter($lesReservations, function ($reservation) {
                                         <input type="hidden" name="type" value="destination">
                                         <input type="hidden" name="id_reservation" value="<?= $idResa ?>">
 
-                                        <button class="btn btn-sm btn-outline-danger" type="submit">
+                                        <button class="btn btn-sm admin-btn admin-btn-red" type="submit">
                                             annuler
                                         </button>
                                     </form>
@@ -152,17 +172,17 @@ $resaVoy = array_values(array_filter($lesReservations, function ($reservation) {
             aucune réservation voyage.
         </div>
     <?php else: ?>
-        <table class="table table-bordered mt-3 align-middle">
+        <table class="table table-bordered mt-3 align-middle admin-table">
             <thead>
                 <tr>
-                    <th>#</th>
-                    <th>client</th>
-                    <th>destination</th>
-                    <th>voyage</th>
-                    <th>dates</th>
-                    <th>voyageurs</th>
-                    <th>total</th>
-                    <th>statut</th>
+                    <th><?= lienTriReservation("id", "#", $triActuel, $ordreActuel) ?></th>
+                    <th><?= lienTriReservation("client", "client", $triActuel, $ordreActuel) ?></th>
+                    <th><?= lienTriReservation("destination", "destination", $triActuel, $ordreActuel) ?></th>
+                    <th><?= lienTriReservation("voyage", "voyage", $triActuel, $ordreActuel) ?></th>
+                    <th><?= lienTriReservation("date", "dates", $triActuel, $ordreActuel) ?></th>
+                    <th><?= lienTriReservation("voyageurs", "voyageurs", $triActuel, $ordreActuel) ?></th>
+                    <th><?= lienTriReservation("total", "total", $triActuel, $ordreActuel) ?></th>
+                    <th><?= lienTriReservation("statut", "statut", $triActuel, $ordreActuel) ?></th>
                     <th>action</th>
                 </tr>
             </thead>
@@ -232,7 +252,7 @@ $resaVoy = array_values(array_filter($lesReservations, function ($reservation) {
                                         <input type="hidden" name="type" value="voyage">
                                         <input type="hidden" name="id_reservation" value="<?= $idResa ?>">
 
-                                        <button class="btn btn-sm btn-success" type="submit">
+                                        <button class="btn btn-sm admin-btn admin-btn-green" type="submit">
                                             confirmer
                                         </button>
                                     </form>
@@ -248,7 +268,7 @@ $resaVoy = array_values(array_filter($lesReservations, function ($reservation) {
                                         <input type="hidden" name="type" value="voyage">
                                         <input type="hidden" name="id_reservation" value="<?= $idResa ?>">
 
-                                        <button class="btn btn-sm btn-outline-danger" type="submit">
+                                        <button class="btn btn-sm admin-btn admin-btn-red" type="submit">
                                             annuler
                                         </button>
                                     </form>

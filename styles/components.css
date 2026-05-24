@@ -1,6 +1,4 @@
-/* =========================
-   navbar du haut (nav)
-   ========================= */
+/* navbar du haut (nav) */
 
 nav.custom-navbar{
   padding: 0;
@@ -30,7 +28,7 @@ nav.custom-navbar .navbar-nav .nav-item{
   margin: 0;
 }
 
-/* liens (navbar du haut) — reprends le rendu de l'ancien */
+/* liens (navbar du haut) â€” reprends le rendu de l'ancien */
 nav.custom-navbar .nav-link{
   font-size: 15px;
   color: var(--secondary-color);
@@ -56,7 +54,7 @@ nav.custom-navbar .nav-link:hover{
   background: transparent;
 }
 
-/* icones rondes (navbar du haut) — comme l'ancien */
+/* icones rondes (navbar du haut) â€” comme l'ancien */
 nav.custom-navbar .icon-circle{
   display: flex;
   justify-content: center;
@@ -112,9 +110,7 @@ nav.custom-navbar .navbar-right .mt-1{
 }
 
 
-/* =========================
-   menu bas sticky (div)
-   ========================= */
+/* menu bas sticky (div) */
 
 div.custom-navbar{
   height: 30px;
@@ -125,13 +121,13 @@ div.custom-navbar{
   z-index: 1050;
 }
 
-/* enlève padding bootstrap qui agrandit le fond */
+/* enlÃ¨ve padding bootstrap qui agrandit le fond */
 div.custom-navbar .container-fluid{
   padding-top: 0 !important;
   padding-bottom: 0 !important;
 }
 
-/* menu centré dans la hauteur */
+/* menu centrÃ© dans la hauteur */
 div.custom-navbar .navbar-nav{
   height: 100%;
   align-items: center;
@@ -141,7 +137,7 @@ div.custom-navbar .navbar-nav{
   padding: 0;
 }
 
-/* liens du menu bas — reprends couleurs/rendu de l'ancien */
+/* liens du menu bas â€” reprends couleurs/rendu de l'ancien */
 div.custom-navbar .nav-link{
   padding-top: 0 !important;
   padding-bottom: 0 !important;
@@ -178,8 +174,8 @@ div.custom-navbar #navbarNav{
 
 /* barre recherche */
 #voyageBar{
-  position: relative !important;
-  top: auto !important;
+  position: sticky !important;
+  top: 30px !important;
   left: 0;
   background-color: var(--bg-light);
 
@@ -193,7 +189,8 @@ div.custom-navbar #navbarNav{
   display: flex;         
   align-items: center;
 
-  z-index: 2 !important;
+  z-index: 1040 !important;
+  box-shadow: 0 8px 18px rgba(0, 127, 140, 0.06);
 
 }
 
@@ -215,7 +212,7 @@ div.custom-navbar #navbarNav{
   background:transparent;
 }
 
-/* actions (boutons à droite) */
+/* actions (boutons Ã  droite) */
 .voyage-search-group{
   display:flex;
   align-items:center;
@@ -228,11 +225,11 @@ div.custom-navbar #navbarNav{
   height:16px;
 }
 
-/* reset = lien qui ressemble à un bouton rond */
+/* reset = lien qui ressemble Ã  un bouton rond */
 .voyage-reset-icon{
   width:20px;
   height:20px;
-  border-radius:50%;
+  border-radius:var(--btn-radius);
   background:var(--primary-color);
   border:none;
   display:flex;
@@ -241,7 +238,7 @@ div.custom-navbar #navbarNav{
   cursor:pointer;
   transition:.3s ease;
   text-decoration:none; /*   important pour un <a> */
-  margin-top:0;         /*   on enlève le décalage */
+  margin-top:0;         /*   on enlÃ¨ve le dÃ©calage */
 }
 
 .voyage-reset-icon:hover{
@@ -314,9 +311,7 @@ div.custom-navbar #navbarNav{
   opacity: .92;
 }
 
-/* ======================
-   CAROUSEL
-   ====================== */
+/* CAROUSEL */
 
 .carousel {
     overflow: hidden;
@@ -475,9 +470,7 @@ div.custom-navbar #navbarNav{
 }
 
 
-/* ======================
-   FOOTER
-   ====================== */
+/* FOOTER */
 
 .footer-voyage{
   margin-top:80px;
@@ -508,7 +501,7 @@ div.custom-navbar #navbarNav{
 
 .footer-voyage a:hover{ color:var(--primary-color); }
 
-/* Contact (⚠️ seulement contact, pas les réseaux) */
+/* Contact (âš ï¸ seulement contact, pas les rÃ©seaux) */
 .footer-contact p{
   margin:0 0 8px;
   font-size:.92rem;
@@ -549,7 +542,7 @@ div.custom-navbar #navbarNav{
   justify-content:center;
   width:38px;
   height:38px;
-  border-radius:50rem;
+  border-radius:var(--btn-radius);
   margin-right:8px;
 
   background:rgba(255,255,255,.06);
@@ -562,8 +555,8 @@ div.custom-navbar #navbarNav{
 .footer-social a i{
   display:block;
   line-height:1;
-  margin:0;          /*   évite tout décalage */
-  width:auto;        /*   évite le width:18px du contact */
+  margin:0;          /*   Ã©vite tout dÃ©calage */
+  width:auto;        /*   Ã©vite le width:18px du contact */
 }
 
 .footer-social a:hover{
@@ -573,7 +566,7 @@ div.custom-navbar #navbarNav{
   color:var(--primary-color);
 }
 
-/* Séparation */
+/* SÃ©paration */
 .footer-voyage hr{
   border-color:rgba(255,255,255,.10);
   margin:28px 0 14px;

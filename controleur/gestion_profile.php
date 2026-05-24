@@ -1,27 +1,26 @@
 <?php
 
-// sécurité utilisateur connecté
+// securite utilisateur
 
 if (!isset($_SESSION["user"])) {
     header("Location: index.php?page=home");
     exit();
 }
 
-// variables de base
+// variables
 
 $idUtilisateur = (int) ($_SESSION["user"]["id_utilisateur"] ?? 0);
+$isAdminProfil = (($_SESSION["user"]["role"] ?? "") === "admin");
 
 $message = "";
 $erreur = "";
 
-// modification du profil
+// modification profil
 
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["modifier_profil"])) {
     if (!hash_equals($_SESSION["csrf_token"], (string) ($_POST["csrf_token"] ?? ""))) {
         die("csrf invalide");
     }
-
-    // récupération des champs
 
     $nom = trim((string) ($_POST["nom"] ?? ""));
     $prenom = trim((string) ($_POST["prenom"] ?? ""));
@@ -35,40 +34,44 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["modifier_profil"])) {
     $nouveauMotDePasse = (string) ($_POST["nouveau_mot_de_passe"] ?? "");
     $confirmationMotDePasse = (string) ($_POST["confirmation_mot_de_passe"] ?? "");
 
-    // validation du profil
-
-    if ($nom === "" || $prenom === "" || $email === "") {
-        $erreur = "Nom, prénom et email sont obligatoires.";
+    if (!$isAdminProfil && ($nom === "" || $prenom === "" || $email === "")) {
+        $erreur = "Nom, prenom et email sont obligatoires.";
+    } elseif ($isAdminProfil && $email === "") {
+        $erreur = "Email obligatoire.";
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $erreur = "Email invalide.";
     } elseif ($unControleur->emailExistePourAutreUtilisateur($email, $idUtilisateur)) {
-        $erreur = "Cet email est déjà utilisé.";
+        $erreur = "Cet email est deja utilise.";
     } else {
-        // mise à jour du profil
+        if ($isAdminProfil) {
+            $unControleur->updateProfilUtilisateur([
+                "id_utilisateur" => $idUtilisateur,
+                "email" => $email,
+            ]);
+        } else {
+            $unControleur->updateProfilClient([
+                "id_utilisateur" => $idUtilisateur,
+                "nom" => $nom,
+                "prenom" => $prenom,
+                "email" => $email,
+                "telephone" => $telephone,
+                "adresse" => $adresse,
+                "ville" => $ville,
+                "pays" => $pays,
+            ]);
 
-        $unControleur->updateProfilClient([
-            "id_utilisateur" => $idUtilisateur,
-            "nom" => $nom,
-            "prenom" => $prenom,
-            "email" => $email,
-            "telephone" => $telephone,
-            "adresse" => $adresse,
-            "ville" => $ville,
-            "pays" => $pays,
-        ]);
+            $_SESSION["user"]["prenom"] = $prenom;
+        }
 
-        $_SESSION["user"]["prenom"] = $prenom;
         $_SESSION["user"]["email"] = $email;
-
-        // changement du mot de passe
 
         if ($motDePasseActuel !== "" || $nouveauMotDePasse !== "" || $confirmationMotDePasse !== "") {
             if ($motDePasseActuel === "" || $nouveauMotDePasse === "" || $confirmationMotDePasse === "") {
-                $erreur = "Pour changer le mot de passe, remplissez tous les champs mot de passe.";
+                $erreur = "Pour changer le mot de passe, remplissez tous les champs.";
             } elseif ($nouveauMotDePasse !== $confirmationMotDePasse) {
-                $erreur = "La confirmation du nouveau mot de passe ne correspond pas.";
+                $erreur = "La confirmation ne correspond pas.";
             } elseif (strlen($nouveauMotDePasse) < 6) {
-                $erreur = "Le nouveau mot de passe doit contenir au moins 6 caractères.";
+                $erreur = "Le nouveau mot de passe doit contenir au moins 6 caracteres.";
             } else {
                 $utilisateur = $unControleur->selectMotDePasseUtilisateur($idUtilisateur);
 
@@ -76,57 +79,54 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["modifier_profil"])) {
                     $erreur = "Mot de passe actuel incorrect.";
                 } else {
                     $hash = password_hash($nouveauMotDePasse, PASSWORD_DEFAULT);
-
                     $unControleur->updateMotDePasseUtilisateur($idUtilisateur, $hash);
-
-                    $message = "Profil et mot de passe mis à jour avec succès.";
+                    $message = "Profil et mot de passe mis a jour.";
                 }
             }
         } else {
-            $message = "Profil mis à jour avec succès.";
+            $message = "Profil mis a jour.";
         }
     }
 }
 
-// suppression du compte
+// suppression compte
 
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["supprimer_compte"])) {
     if (!hash_equals($_SESSION["csrf_token"], (string) ($_POST["csrf_token"] ?? ""))) {
         die("csrf invalide");
     }
 
-    // récupération des champs
-
-    $motDePasseSuppression = (string) ($_POST["mot_de_passe_suppression"] ?? "");
-    $confirmationSuppression = trim((string) ($_POST["confirmation_suppression"] ?? ""));
-
-    // validation de la suppression
-
-    if ($motDePasseSuppression === "") {
-        $erreur = "Veuillez saisir votre mot de passe pour supprimer le compte.";
-    } elseif ($confirmationSuppression !== "SUPPRIMER") {
-        $erreur = "Vous devez écrire SUPPRIMER pour confirmer.";
+    if ($isAdminProfil) {
+        $erreur = "Suppression admin non disponible depuis le profil.";
     } else {
-        $utilisateur = $unControleur->selectMotDePasseUtilisateur($idUtilisateur);
+        $motDePasseSuppression = (string) ($_POST["mot_de_passe_suppression"] ?? "");
+        $confirmationSuppression = trim((string) ($_POST["confirmation_suppression"] ?? ""));
 
-        if (!$utilisateur || !password_verify($motDePasseSuppression, $utilisateur["mot_de_passe_hash"])) {
-            $erreur = "Mot de passe incorrect.";
+        if ($motDePasseSuppression === "") {
+            $erreur = "Veuillez saisir votre mot de passe.";
+        } elseif ($confirmationSuppression !== "SUPPRIMER") {
+            $erreur = "Vous devez ecrire SUPPRIMER pour confirmer.";
         } else {
-            // désactivation du compte
+            $utilisateur = $unControleur->selectMotDePasseUtilisateur($idUtilisateur);
 
-            $unControleur->setUtilisateurActif($idUtilisateur, 0);
+            if (!$utilisateur || !password_verify($motDePasseSuppression, $utilisateur["mot_de_passe_hash"])) {
+                $erreur = "Mot de passe incorrect.";
+            } else {
+                $unControleur->setUtilisateurActif($idUtilisateur, 0);
+                session_destroy();
 
-            session_destroy();
-
-            header("Location: index.php?page=home");
-            exit();
+                header("Location: index.php?page=home");
+                exit();
+            }
         }
     }
 }
 
-// récupération du profil
+// recuperation profil
 
-$profil = $unControleur->getProfilClient($idUtilisateur);
+$profil = $isAdminProfil
+    ? $unControleur->getProfilUtilisateur($idUtilisateur)
+    : $unControleur->getProfilClient($idUtilisateur);
 
 if (!$profil) {
     $profil = [];

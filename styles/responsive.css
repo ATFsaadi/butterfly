@@ -57,20 +57,83 @@
 /* ajustements globaux */
 @media (max-width: 991.98px) {
     .sticky-top { border-bottom: 1px solid #eee; }
+    nav.custom-navbar > .container-fluid {
+        padding: 16px 18px !important;
+    }
+    .admin-desktop-nav {
+        display: none !important;
+    }
+    .admin-menu-toggle {
+        display: flex !important;
+        margin-left: auto;
+        border: 0;
+        border-radius: var(--btn-radius);
+        padding: 10px 12px;
+        background: transparent;
+        color: var(--secondary-color);
+        font-weight: 800;
+    }
+    .admin-menu-toggle:hover {
+        background: rgba(235, 120, 20, 0.1);
+        color: var(--primary-color);
+    }
+    .admin-mobile-panel,
     .sticky-top .navbar-collapse {
-        background: white;
-        padding: 20px 15px;
-        border-radius: 0 0 18px 18px;
+        width: calc(100% - 32px);
+        margin: 0 auto 12px;
+        padding: 12px;
+        background: #fff;
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius);
+        box-shadow: 0 12px 28px rgba(0, 127, 140, 0.12);
+    }
+    .sticky-top .navbar-collapse {
         margin-top: 10px;
+    }
+    .sticky-top .navbar-collapse .navbar-nav {
+        gap: 4px;
+        align-items: stretch;
+    }
+    .sticky-top .navbar-collapse .nav-item {
+        margin: 0 !important;
+    }
+    .admin-mobile-panel a,
+    .admin-mobile-panel button,
+    .sticky-top .navbar-collapse .nav-link {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        border: 0;
+        border-radius: var(--btn-radius);
+        background: transparent;
+        color: var(--secondary-color);
+        text-decoration: none;
+        font-weight: 700;
+        text-align: left;
+    }
+    .admin-mobile-panel a.active,
+    .admin-mobile-panel a:hover,
+    .admin-mobile-panel button:hover,
+    .sticky-top .navbar-collapse .nav-link.active,
+    .sticky-top .navbar-collapse .nav-link:hover {
+        background: rgba(235, 120, 20, 0.1);
+        color: var(--primary-color);
     }
     .sticky-top .dropdown-menu {
         border: none;
-        border-radius: 14px;
+        border-radius: var(--border-radius);
         margin-top: 8px;
         background: #fafafa;
     }
 
     .voyage-menu-title h1 { font-size: 36px !important; padding: 0 20px; }
+    .admin-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
 }
 
 /* alignement navbar desktop */
@@ -82,11 +145,11 @@
 @media (max-width: 576px) {
     .voyage-menu-title h1 { font-size: 32px !important; }
     .modal-dialog { margin: 15px; }
-    .modal-content { border-radius: 16px !important; }
+    .modal-content { border-radius: var(--border-radius) !important; }
 }
 
 /* style modale */
-.modal-content { border-radius: 20px !important; overflow: hidden; }
+.modal-content { border-radius: var(--border-radius) !important; overflow: hidden; }
 
 /* footer mobile */
 @media (max-width: 767.98px) {
@@ -123,8 +186,8 @@ main { padding-top: 20px; }
     #voyageBar .voyage-menu.d-none.d-lg-flex { display: none !important; }
 
     #voyageBar {
-        position: relative !important;
-        top: auto !important;
+        position: sticky !important;
+        top: 0 !important;
         height: 90px;
         background: var(--bg-light);
         border-bottom: 1px solid #eee;
@@ -132,7 +195,7 @@ main { padding-top: 20px; }
         align-items: center;
         justify-content: center;
         padding: 0 20px;
-        z-index: 10;
+        z-index: 1040;
     }
 
     .mobile-search-toggle {
@@ -145,7 +208,7 @@ main { padding-top: 20px; }
         font-weight: 700;
         font-size: 1.1rem;
         padding: 16px 32px;
-        border-radius: 50px;
+        border-radius: var(--btn-radius);
         border: none;
         min-width: 240px;
         height: 64px;
@@ -201,7 +264,7 @@ main { padding-top: 20px; }
     }
     .voyage-mobile-drawer .voyage-btn {
         height: 78px;
-        border-radius: 18px;
+        border-radius: var(--border-radius);
         border: 1.8px solid #e0e0e0;
         background: white;
         font-size: 1.1rem;
@@ -212,7 +275,7 @@ main { padding-top: 20px; }
         position: static;
         display: none;
         margin-top: 10px;
-        border-radius: 18px;
+        border-radius: var(--border-radius);
         border: 1.8px solid #e0e0e0;
         background: #fafafa;
         padding: 12px 0;

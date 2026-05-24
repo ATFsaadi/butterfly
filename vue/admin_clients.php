@@ -3,57 +3,79 @@
 // sécurité des données
 
 $clients = $clients ?? [];
+$filtreActuel = (string) ($_GET["filtre"] ?? "");
+$triActuel = (string) ($_GET["tri"] ?? "nom");
+$ordreActuel = (string) ($_GET["ordre"] ?? "asc");
+
+// lien tri
+
+function lienTriClient(string $colonne, string $label, string $filtreActuel, string $triActuel, string $ordreActuel): string
+{
+    $ordre = ($triActuel === $colonne && $ordreActuel === "asc") ? "desc" : "asc";
+    $icone = "";
+
+    if ($triActuel === $colonne) {
+        $icone = $ordreActuel === "asc" ? " ^" : " v";
+    }
+
+    $url = "index.php?" . http_build_query([
+        "page" => "admin_clients",
+        "filtre" => $filtreActuel,
+        "tri" => $colonne,
+        "ordre" => $ordre,
+    ]);
+
+    return '<a class="admin-sort-link" href="' . htmlspecialchars($url) . '">'
+        . htmlspecialchars($label . $icone)
+        . '</a>';
+}
 
 ?>
 
 <!-- liste clients -->
+<h3 class="section-title text-center mt-5">Gestion des Clients</h3>
 
-<div class="container mt-5">
-    <div class="card shadow-sm border-0 rounded-4 p-4">
+<!-- filtre clients -->
+<form method="get" action="index.php" class="mb-4 admin-filter">
+    <input type="hidden" name="page" value="admin_clients">
+    <input type="hidden" name="tri" value="<?= htmlspecialchars($triActuel) ?>">
+    <input type="hidden" name="ordre" value="<?= htmlspecialchars($ordreActuel) ?>">
 
-        <!-- en-tête -->
+    <input
+        type="text"
+        name="filtre"
+        class="form-control mb-2"
+        placeholder="rechercher un client..."
+        value="<?= htmlspecialchars($filtreActuel) ?>"
+    >
 
-        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-            <h2 class="mb-0">Liste des clients</h2>
+    <div class="d-flex justify-content-center gap-2 flex-wrap">
+        <button type="submit" class="btn admin-btn admin-btn-primary">
+            rechercher
+        </button>
 
-            <!-- recherche client -->
-
-            <form method="get" action="index.php" class="d-flex gap-2">
-                <input type="hidden" name="page" value="admin_clients">
-
-                <input
-                    type="text"
-                    name="filtre"
-                    class="form-control"
-                    placeholder="Rechercher un client..."
-                    value="<?= htmlspecialchars((string) ($_GET["filtre"] ?? "")) ?>"
-                >
-
-                <button type="submit" class="btn btn-dark">
-                    Rechercher
-                </button>
-
-                <a href="index.php?page=admin_clients" class="btn btn-outline-secondary">
-                    Réinitialiser
-                </a>
-            </form>
-        </div>
-
+        <a href="index.php?page=admin_clients" class="btn admin-btn admin-btn-outline">
+            reinitialiser
+        </a>
+    </div>
+</form>
+  
+<h5 class="text-center mt-5">liste des clients</h5>
         <!-- tableau clients -->
 
         <?php if (!empty($clients)): ?>
             <div class="table-responsive">
-                <table class="table table-hover align-middle">
+                <table class="table table-bordered table-hover align-middle admin-table">
                     <thead>
                         <tr>
-                            <th>Nom</th>
-                            <th>Prénom</th>
-                            <th>Email</th>
-                            <th>Téléphone</th>
-                            <th>Ville</th>
-                            <th>Pays</th>
-                            <th>Statut</th>
-                            <th>Action</th>
+                            <th><?= lienTriClient("nom", "nom", $filtreActuel, $triActuel, $ordreActuel) ?></th>
+                            <th><?= lienTriClient("prenom", "prenom", $filtreActuel, $triActuel, $ordreActuel) ?></th>
+                            <th><?= lienTriClient("email", "email", $filtreActuel, $triActuel, $ordreActuel) ?></th>
+                            <th><?= lienTriClient("telephone", "telephone", $filtreActuel, $triActuel, $ordreActuel) ?></th>
+                            <th><?= lienTriClient("ville", "ville", $filtreActuel, $triActuel, $ordreActuel) ?></th>
+                            <th><?= lienTriClient("pays", "pays", $filtreActuel, $triActuel, $ordreActuel) ?></th>
+                            <th><?= lienTriClient("actif", "statut", $filtreActuel, $triActuel, $ordreActuel) ?></th>
+                            <th>action</th>
                         </tr>
                     </thead>
 
@@ -83,7 +105,7 @@ $clients = $clients ?? [];
                                     <div class="d-flex gap-2">
                                         <a
                                             href="index.php?page=admin_client_detail&id_utilisateur=<?= (int) ($client["id_utilisateur"] ?? 0) ?>"
-                                            class="btn btn-sm btn-primary"
+                                            class="btn btn-sm admin-btn admin-btn-green"
                                         >
                                             Détail
                                         </a>
@@ -107,7 +129,7 @@ $clients = $clients ?? [];
                                                 <button
                                                     type="submit"
                                                     name="changer_statut_client"
-                                                    class="btn btn-sm btn-warning"
+                                                    class="btn btn-sm admin-btn admin-btn-red"
                                                 >
                                                     Désactiver
                                                 </button>
@@ -117,7 +139,7 @@ $clients = $clients ?? [];
                                                 <button
                                                     type="submit"
                                                     name="changer_statut_client"
-                                                    class="btn btn-sm btn-success"
+                                                    class="btn btn-sm admin-btn admin-btn-green"
                                                 >
                                                     Activer
                                                 </button>

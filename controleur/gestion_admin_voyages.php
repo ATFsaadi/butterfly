@@ -86,7 +86,7 @@ if (isset($_POST["submit"])) {
     $prix = (float) ($_POST["prix"] ?? 0);
     $nbPlaces = (int) ($_POST["nb_places"] ?? 0);
     $nbPlacesRestantes = (int) ($_POST["nb_places_restantes"] ?? 0);
-    $statut = trim((string) ($_POST["statut"] ?? "actif"));
+    $statut = isset($_POST["statut_actif"]) ? "actif" : "annule";
 
     // récupération du voyage en modification
 
@@ -221,25 +221,51 @@ if (isset($_POST["submit"])) {
 
 // filtre de recherche
 
-if (isset($_POST["Filtrer"])) {
-    $filtre = trim((string) ($_POST["filtre"] ?? ""));
-    $tousLesVoyages = $unControleur->selectAll_voyages_admin();
+$filtre = trim((string) ($_GET["filtre"] ?? ($_POST["filtre"] ?? "")));
+$lesVoyages = $unControleur->selectAll_voyages_admin();
 
-    if ($filtre !== "") {
-        $filtreMin = mb_strtolower($filtre);
+if ($filtre !== "") {
+    $filtreMin = mb_strtolower($filtre);
 
-        $lesVoyages = array_values(array_filter($tousLesVoyages, function ($voyage) use ($filtreMin) {
-            return str_contains(mb_strtolower((string) ($voyage["titre"] ?? "")), $filtreMin)
-                || str_contains(mb_strtolower((string) ($voyage["pays"] ?? "")), $filtreMin)
-                || str_contains(mb_strtolower((string) ($voyage["ville"] ?? "")), $filtreMin)
-                || str_contains(mb_strtolower((string) ($voyage["statut"] ?? "")), $filtreMin);
-        }));
-    } else {
-        $lesVoyages = $tousLesVoyages;
-    }
-} else {
-    $lesVoyages = $unControleur->selectAll_voyages_admin();
+    $lesVoyages = array_values(array_filter($lesVoyages, function ($voyage) use ($filtreMin) {
+        return str_contains(mb_strtolower((string) ($voyage["titre"] ?? "")), $filtreMin)
+            || str_contains(mb_strtolower((string) ($voyage["pays"] ?? "")), $filtreMin)
+            || str_contains(mb_strtolower((string) ($voyage["ville"] ?? "")), $filtreMin)
+            || str_contains(mb_strtolower((string) ($voyage["statut"] ?? "")), $filtreMin);
+    }));
 }
+
+// tri
+
+$tri = (string) ($_GET["tri"] ?? "titre");
+$ordre = (string) ($_GET["ordre"] ?? "asc");
+$trisAutorises = ["titre", "destination", "dates", "prix", "places", "statut"];
+
+if (!in_array($tri, $trisAutorises, true)) {
+    $tri = "titre";
+}
+
+if ($ordre !== "desc") {
+    $ordre = "asc";
+}
+
+usort($lesVoyages, function (array $a, array $b) use ($tri, $ordre): int {
+    if ($tri === "destination") {
+        $valeurA = trim((string) ($a["pays"] ?? "") . " " . (string) ($a["ville"] ?? ""));
+        $valeurB = trim((string) ($b["pays"] ?? "") . " " . (string) ($b["ville"] ?? ""));
+        $comparaison = strcasecmp($valeurA, $valeurB);
+    } elseif ($tri === "dates") {
+        $comparaison = strcmp((string) ($a["date_depart"] ?? ""), (string) ($b["date_depart"] ?? ""));
+    } elseif ($tri === "prix") {
+        $comparaison = (float) ($a["prix"] ?? 0) <=> (float) ($b["prix"] ?? 0);
+    } elseif ($tri === "places") {
+        $comparaison = (int) ($a["nb_places_restantes"] ?? 0) <=> (int) ($b["nb_places_restantes"] ?? 0);
+    } else {
+        $comparaison = strcasecmp((string) ($a[$tri] ?? ""), (string) ($b[$tri] ?? ""));
+    }
+
+    return $ordre === "desc" ? -$comparaison : $comparaison;
+});
 
 // variables pour la vue
 

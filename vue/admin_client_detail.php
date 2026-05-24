@@ -11,14 +11,14 @@ $reservationsVoyages = $reservationsVoyages ?? [];
 <!-- détail client -->
 
 <div class="container mt-5">
-    <div class="card shadow-sm border-0 rounded-4 p-4">
+    <div class="card shadow-sm border-0 rounded-3 p-4">
 
         <!-- en-tête -->
 
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2 class="mb-0">Détail du client</h2>
 
-            <a href="index.php?page=admin_clients" class="btn btn-outline-secondary">
+            <a href="index.php?page=admin_clients" class="btn admin-btn admin-btn-outline">
                 Retour
             </a>
         </div>
@@ -135,7 +135,7 @@ $reservationsVoyages = $reservationsVoyages ?? [];
 
         <?php if (!empty($reservationsDestinations)): ?>
             <div class="table-responsive mb-5">
-                <table class="table table-hover align-middle">
+                <table class="table table-hover align-middle admin-table">
                     <thead>
                         <tr>
                             <th>Destination</th>
@@ -177,7 +177,7 @@ $reservationsVoyages = $reservationsVoyages ?? [];
 
         <?php if (!empty($reservationsVoyages)): ?>
             <div class="table-responsive">
-                <table class="table table-hover align-middle">
+                <table class="table table-hover align-middle admin-table">
                     <thead>
                         <tr>
                             <th>Voyage</th>

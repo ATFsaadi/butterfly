@@ -1184,6 +1184,34 @@ class Modele
         ]);
     }
 
+    public function getProfilUtilisateur(int $idUtilisateur): array|false
+    {
+        $sql = "select
+                    id_utilisateur,
+                    email,
+                    role,
+                    actif,
+                    date_creation
+                from utilisateurs
+                where id_utilisateur = :id_utilisateur";
+
+        return $this->fetchOne($sql, [
+            ":id_utilisateur" => $idUtilisateur,
+        ]);
+    }
+
+    public function updateProfilUtilisateur(array $tab): void
+    {
+        $sql = "update utilisateurs
+                set email = :email
+                where id_utilisateur = :id_utilisateur";
+
+        $this->execute($sql, [
+            ":email" => $tab["email"],
+            ":id_utilisateur" => $tab["id_utilisateur"],
+        ]);
+    }
+
     public function updateProfilClient(array $tab): void
     {
         $sqlUtilisateur = "update utilisateurs

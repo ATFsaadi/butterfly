@@ -27,7 +27,7 @@
 
                 <div class="mini-map-container">
                     <div id="footerMap" class="footer-map"></div>
-                    <small>Cliquez pour ouvrir Google Maps</small>
+                    <small>Cliquez pour ouvrir la carte</small>
                 </div>
             </div>
 

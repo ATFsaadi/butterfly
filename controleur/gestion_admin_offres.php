@@ -128,14 +128,40 @@ if (isset($_POST["Valider"]) || isset($_POST["Modifier"])) {
 
 // filtre de recherche
 
-if (isset($_POST["Filtrer"])) {
-    $filtre = trim((string) ($_POST["filtre"] ?? ""));
+$filtre = trim((string) ($_GET["filtre"] ?? ($_POST["filtre"] ?? "")));
 
-    if ($filtre !== "") {
-        $lesOffres = $unControleur->selectLike_offre($filtre);
-    } else {
-        $lesOffres = $unControleur->selectAll_offres();
-    }
+if ($filtre !== "") {
+    $lesOffres = $unControleur->selectLike_offre($filtre);
 } else {
     $lesOffres = $unControleur->selectAll_offres();
 }
+
+// tri
+
+$tri = (string) ($_GET["tri"] ?? "titre");
+$ordre = (string) ($_GET["ordre"] ?? "asc");
+$trisAutorises = ["titre", "destination", "reduction", "date_debut", "date_fin", "actif"];
+
+if (!in_array($tri, $trisAutorises, true)) {
+    $tri = "titre";
+}
+
+if ($ordre !== "desc") {
+    $ordre = "asc";
+}
+
+usort($lesOffres, function (array $a, array $b) use ($tri, $ordre): int {
+    if ($tri === "destination") {
+        $valeurA = trim((string) ($a["pays"] ?? "") . " " . (string) ($a["ville"] ?? ""));
+        $valeurB = trim((string) ($b["pays"] ?? "") . " " . (string) ($b["ville"] ?? ""));
+        $comparaison = strcasecmp($valeurA, $valeurB);
+    } elseif ($tri === "reduction") {
+        $comparaison = (int) ($a["pourcentage_reduction"] ?? 0) <=> (int) ($b["pourcentage_reduction"] ?? 0);
+    } elseif ($tri === "actif") {
+        $comparaison = (int) ($a["actif"] ?? 0) <=> (int) ($b["actif"] ?? 0);
+    } else {
+        $comparaison = strcasecmp((string) ($a[$tri] ?? ""), (string) ($b[$tri] ?? ""));
+    }
+
+    return $ordre === "desc" ? -$comparaison : $comparaison;
+});
