@@ -1,5 +1,7 @@
 <?php
 
+// Vue offres : affiche les promotions actives avec prix remis.
+
 // sécurité des données
 
 $offres = $offres ?? [];

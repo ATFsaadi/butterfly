@@ -1,16 +1,13 @@
--- =========================================================
--- Base de donnees : bfly
--- Projet : Butterfly Voyage
--- =========================================================
+-- Script SQL complet : base, tables, contraintes et donnees de test
 
+-- Base de donnees : bfly
+
+-- Parametres SQL
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 SET NAMES utf8mb4;
 
--- =========================================================
--- Preparation de la base
--- =========================================================
-
+-- Creation base
 DROP DATABASE IF EXISTS `bfly`;
 
 CREATE DATABASE `bfly`
@@ -19,11 +16,8 @@ CREATE DATABASE `bfly`
 
 USE `bfly`;
 
+-- Nettoyage tables
 SET FOREIGN_KEY_CHECKS = 0;
-
--- =========================================================
--- Nettoyage des anciennes tables
--- =========================================================
 
 DROP TABLE IF EXISTS `reservations_voyages`;
 DROP TABLE IF EXISTS `reservations_destinations`;
@@ -36,9 +30,7 @@ DROP TABLE IF EXISTS `utilisateurs`;
 
 SET FOREIGN_KEY_CHECKS = 1;
 
--- =========================================================
--- Table : utilisateurs
--- =========================================================
+-- Table utilisateurs
 
 CREATE TABLE `utilisateurs` (
   `id_utilisateur` int UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -53,9 +45,7 @@ CREATE TABLE `utilisateurs` (
   KEY `idx_utilisateurs_role_actif` (`role`, `actif`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- =========================================================
--- Table : client
--- =========================================================
+-- Table client
 
 CREATE TABLE `client` (
   `id_client` int UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -77,9 +67,7 @@ CREATE TABLE `client` (
     ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- =========================================================
--- Table : continents
--- =========================================================
+-- Table continents
 
 CREATE TABLE `continents` (
   `id_continent` int UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -88,9 +76,7 @@ CREATE TABLE `continents` (
   UNIQUE KEY `uk_continents_nom` (`nom`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- =========================================================
--- Table : destinations
--- =========================================================
+-- Table destinations
 
 CREATE TABLE `destinations` (
   `id_destination` int UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -114,9 +100,7 @@ CREATE TABLE `destinations` (
     ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- =========================================================
--- Table : offres
--- =========================================================
+-- Table offres
 
 CREATE TABLE `offres` (
   `id_offre` int UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -138,9 +122,7 @@ CREATE TABLE `offres` (
     ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- =========================================================
--- Table : voyages_organises
--- =========================================================
+-- Table voyages organises
 
 CREATE TABLE `voyages_organises` (
   `id_voyage` int UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -166,9 +148,7 @@ CREATE TABLE `voyages_organises` (
     ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- =========================================================
--- Table : reservations_destinations
--- =========================================================
+-- Table reservations destinations
 
 CREATE TABLE `reservations_destinations` (
   `id_reservation_destination` int UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -197,9 +177,7 @@ CREATE TABLE `reservations_destinations` (
     ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- =========================================================
--- Table : reservations_voyages
--- =========================================================
+-- Table reservations voyages
 
 CREATE TABLE `reservations_voyages` (
   `id_reservation_voyage` int UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -226,10 +204,11 @@ CREATE TABLE `reservations_voyages` (
     ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- =========================================================
--- Donnees conservees : continents uniquement
--- =========================================================
+-- Donnees
 
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- Continents de reference
 INSERT INTO `continents` (`id_continent`, `nom`) VALUES
 (1, 'Europe'),
 (2, 'Afrique'),
@@ -238,14 +217,10 @@ INSERT INTO `continents` (`id_continent`, `nom`) VALUES
 (5, 'Amerique du Sud'),
 (6, 'Oceanie');
 
-USE `bfly`;
-
-SET FOREIGN_KEY_CHECKS = 0;
-
--- Utilisateurs
-
+-- Comptes de test
 INSERT INTO `utilisateurs`
 (`id_utilisateur`, `email`, `mot_de_passe_hash`, `role`, `actif`) VALUES
+(1, 'admin@bfly.com', '$2y$12$6mfYL/.r.AF5iLPmC4VR0ObktMUkrp6TUo04o7n0zlYAY0kabuJSu', 'admin', 1),
 (3, 'camille.martin@bfly.com', '$2y$12$6mfYL/.r.AF5iLPmC4VR0ObktMUkrp6TUo04o7n0zlYAY0kabuJSu', 'client', 1),
 (4, 'yanis.meziane@bfly.com', '$2y$12$6mfYL/.r.AF5iLPmC4VR0ObktMUkrp6TUo04o7n0zlYAY0kabuJSu', 'client', 1),
 (5, 'sophie.bernard@bfly.com', '$2y$12$6mfYL/.r.AF5iLPmC4VR0ObktMUkrp6TUo04o7n0zlYAY0kabuJSu', 'client', 1),
@@ -270,8 +245,7 @@ INSERT INTO `utilisateurs`
 (24, 'amina.larbi@bfly.com', '$2y$12$6mfYL/.r.AF5iLPmC4VR0ObktMUkrp6TUo04o7n0zlYAY0kabuJSu', 'client', 1),
 (25, 'elodie.mercier@bfly.com', '$2y$12$6mfYL/.r.AF5iLPmC4VR0ObktMUkrp6TUo04o7n0zlYAY0kabuJSu', 'client', 1);
 
--- Clients
-
+-- Clients de test
 INSERT INTO `client`
 (`id_client`, `id_utilisateur`, `nom`, `prenom`, `telephone`, `adresse`, `ville`, `pays`) VALUES
 (1, 3, 'Martin', 'Camille', '+33610000001', '12 rue Victor Hugo', 'Paris', 'France'),
@@ -298,8 +272,7 @@ INSERT INTO `client`
 (22, 24, 'Larbi', 'Amina', '+212600000001', 'Boulevard Mohammed V', 'Casablanca', 'Maroc'),
 (23, 25, 'Mercier', 'Elodie', '+33610000011', '10 rue des Arts', 'Strasbourg', 'France');
 
--- Destinations
-
+-- Destinations de test
 INSERT INTO `destinations`
 (`id_destination`, `pays`, `ville`, `id_continent`, `description`, `prix_base`, `image_url`, `actif`) VALUES
 (1, 'France', 'Paris', 1, 'Decouverte de Paris, monuments, musees et gastronomie.', 350.00, NULL, 1),
@@ -318,28 +291,36 @@ INSERT INTO `destinations`
 (14, 'Mexique', 'Cancun', 4, 'Sejour soleil a Cancun entre plages et culture maya.', 780.00, NULL, 1),
 (15, 'Cuba', 'La Havane', 4, 'Voyage a La Havane, culture cubaine, musique et architecture coloree.', 760.00, NULL, 1);
 
--- Voyages
+-- Offres de test
+INSERT INTO `offres`
+(`id_offre`, `id_destination`, `titre`, `pourcentage_reduction`, `date_debut`, `date_fin`, `actif`) VALUES
+(1, 1, 'Offre ete Paris', 10, '2026-06-01', '2026-06-30', 1),
+(2, 6, 'Majorque soleil', 15, '2026-07-01', '2026-08-31', 1),
+(3, 10, 'Tokyo decouverte', 8, '2026-08-15', '2026-09-30', 1),
+(4, 13, 'New York automne', 12, '2026-09-01', '2026-11-15', 1),
+(5, 14, 'Cancun detente', 18, '2026-10-01', '2026-12-15', 1),
+(6, 2, 'Alger patrimoine', 10, '2026-06-01', '2026-07-31', 1);
 
+-- Voyages de test
 INSERT INTO `voyages_organises`
 (`id_voyage`, `id_destination`, `titre`, `description`, `date_depart`, `date_retour`, `prix`, `nb_places`, `nb_places_restantes`, `image_url`, `statut`) VALUES
-(1, 1, 'City Break Paris', 'Voyage organise pour decouvrir les incontournables de Paris.', '2026-06-15', '2026-06-20', 590.00, 30, 30, NULL, 'actif'),
-(2, 2, 'Sejour Alger Authentique', 'Circuit organise a Alger avec visites guidees.', '2026-06-22', '2026-06-29', 430.00, 30, 30, NULL, 'actif'),
-(3, 3, 'Decouverte de Tunis', 'Sejour culturel a Tunis, Carthage et Sidi Bou Said.', '2026-07-01', '2026-07-07', 410.00, 25, 25, NULL, 'actif'),
-(4, 4, 'Budapest Detente', 'Voyage a Budapest avec decouverte des thermes et du centre historique.', '2026-07-10', '2026-07-16', 620.00, 25, 25, NULL, 'actif'),
-(5, 5, 'Rome Historique', 'Circuit organise a Rome entre monuments antiques et gastronomie.', '2026-07-20', '2026-07-26', 690.00, 30, 30, NULL, 'actif'),
+(1, 1, 'City Break Paris', 'Voyage organise pour decouvrir les incontournables de Paris.', '2026-06-15', '2026-06-20', 590.00, 30, 28, NULL, 'actif'),
+(2, 2, 'Sejour Alger Authentique', 'Circuit organise a Alger avec visites guidees.', '2026-06-22', '2026-06-29', 430.00, 30, 29, NULL, 'actif'),
+(3, 3, 'Decouverte de Tunis', 'Sejour culturel a Tunis, Carthage et Sidi Bou Said.', '2026-07-01', '2026-07-07', 410.00, 25, 23, NULL, 'actif'),
+(4, 4, 'Budapest Detente', 'Voyage a Budapest avec decouverte des thermes et du centre historique.', '2026-07-10', '2026-07-16', 620.00, 25, 24, NULL, 'actif'),
+(5, 5, 'Rome Historique', 'Circuit organise a Rome entre monuments antiques et gastronomie.', '2026-07-20', '2026-07-26', 690.00, 30, 27, NULL, 'actif'),
 (6, 6, 'Majorque Soleil', 'Sejour detente a Majorque avec plages et excursions.', '2026-08-01', '2026-08-08', 780.00, 20, 20, NULL, 'actif'),
-(7, 7, 'Athenes Antique', 'Voyage organise a Athenes avec visite de l Acropole.', '2026-08-10', '2026-08-16', 720.00, 25, 25, NULL, 'actif'),
+(7, 7, 'Athenes Antique', 'Voyage organise a Athenes avec visite de l Acropole.', '2026-08-10', '2026-08-16', 720.00, 25, 24, NULL, 'actif'),
 (8, 8, 'Prague Romantique', 'City trip a Prague avec visite de la vieille ville.', '2026-08-20', '2026-08-25', 640.00, 25, 25, NULL, 'actif'),
 (9, 9, 'Vienne Imperiale', 'Sejour a Vienne entre palais, musees et concerts.', '2026-09-01', '2026-09-07', 760.00, 25, 25, NULL, 'actif'),
-(10, 10, 'Tokyo Experience', 'Voyage organise a Tokyo entre quartiers modernes et traditions.', '2026-09-12', '2026-09-22', 1450.00, 20, 20, NULL, 'actif'),
+(10, 10, 'Tokyo Experience', 'Voyage organise a Tokyo entre quartiers modernes et traditions.', '2026-09-12', '2026-09-22', 1450.00, 20, 18, NULL, 'actif'),
 (11, 11, 'Kuala Lumpur Decouverte', 'Sejour en Malaisie avec visites culturelles et urbaines.', '2026-10-01', '2026-10-10', 1180.00, 20, 20, NULL, 'actif'),
 (12, 12, 'Bangkok Tropical', 'Voyage a Bangkok entre temples, marches et excursions.', '2026-10-15', '2026-10-24', 1120.00, 20, 20, NULL, 'actif'),
-(13, 13, 'New York City Trip', 'Sejour organise a New York avec visites libres et guidees.', '2026-11-01', '2026-11-08', 1590.00, 25, 25, NULL, 'actif'),
+(13, 13, 'New York City Trip', 'Sejour organise a New York avec visites libres et guidees.', '2026-11-01', '2026-11-08', 1590.00, 25, 24, NULL, 'actif'),
 (14, 14, 'Cancun Soleil', 'Sejour au Mexique entre plage, detente et excursion maya.', '2026-11-15', '2026-11-24', 1380.00, 20, 20, NULL, 'actif'),
-(15, 15, 'La Havane Culture', 'Voyage organise a Cuba avec decouverte de La Havane.', '2026-12-01', '2026-12-10', 1320.00, 20, 20, NULL, 'actif');
+(15, 15, 'La Havane Culture', 'Voyage organise a Cuba avec decouverte de La Havane.', '2026-12-01', '2026-12-10', 1320.00, 20, 18, NULL, 'actif');
 
--- Reservations destinations
-
+-- Reservations destinations de test
 INSERT INTO `reservations_destinations`
 (`id_reservation_destination`, `id_client`, `id_destination`, `date_depart`, `date_retour`, `nb_personnes`, `prix_total`, `statut`) VALUES
 (1, 1, 1, '2026-06-10', '2026-06-15', 2, 3500.00, 'confirmee'),
@@ -353,8 +334,7 @@ INSERT INTO `reservations_destinations`
 (9, 9, 13, '2026-10-05', '2026-10-12', 2, 12880.00, 'confirmee'),
 (10, 10, 14, '2026-11-03', '2026-11-10', 2, 10920.00, 'en_attente');
 
--- Reservations voyages
-
+-- Reservations voyages de test
 INSERT INTO `reservations_voyages`
 (`id_reservation_voyage`, `id_client`, `id_voyage`, `nb_personnes`, `prix_total`, `statut`) VALUES
 (1, 11, 1, 2, 1180.00, 'confirmee'),
@@ -367,5 +347,15 @@ INSERT INTO `reservations_voyages`
 (8, 18, 10, 2, 2900.00, 'en_attente'),
 (9, 19, 13, 1, 1590.00, 'confirmee'),
 (10, 20, 15, 2, 2640.00, 'en_attente');
+
+-- Auto increment
+ALTER TABLE `utilisateurs` AUTO_INCREMENT = 26;
+ALTER TABLE `client` AUTO_INCREMENT = 24;
+ALTER TABLE `continents` AUTO_INCREMENT = 7;
+ALTER TABLE `destinations` AUTO_INCREMENT = 16;
+ALTER TABLE `offres` AUTO_INCREMENT = 7;
+ALTER TABLE `voyages_organises` AUTO_INCREMENT = 16;
+ALTER TABLE `reservations_destinations` AUTO_INCREMENT = 11;
+ALTER TABLE `reservations_voyages` AUTO_INCREMENT = 11;
 
 SET FOREIGN_KEY_CHECKS = 1;

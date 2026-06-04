@@ -1,5 +1,7 @@
 <?php
 
+// Vue profil : formulaire de compte, mot de passe et suppression client.
+
 // securite donnees
 
 $profil = $profil ?? [];

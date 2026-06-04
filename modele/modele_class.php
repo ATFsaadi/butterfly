@@ -1,11 +1,14 @@
 <?php
 
+// Modele : gere la connexion a la base et toutes les requetes SQL.
+
 class Modele
 {
     private PDO $pdo;
 
     // connexion bdd
 
+    // Ouvre la connexion PDO a la base de donnees.
     public function __construct()
     {
         $dsn = "mysql:host=localhost;dbname=bfly;charset=utf8mb4";
@@ -26,6 +29,7 @@ class Modele
 
     // méthodes internes
 
+    // Execute une requete et retourne une seule ligne.
     private function fetchOne(string $sql, array $params = []): array|false
     {
         $stmt = $this->pdo->prepare($sql);
@@ -34,6 +38,7 @@ class Modele
         return $stmt->fetch();
     }
 
+    // Execute une requete et retourne toutes les lignes.
     private function fetchAll(string $sql, array $params = []): array
     {
         $stmt = $this->pdo->prepare($sql);
@@ -42,6 +47,7 @@ class Modele
         return $stmt->fetchAll();
     }
 
+    // Execute une requete sans retour de donnees.
     private function execute(string $sql, array $params = []): void
     {
         $stmt = $this->pdo->prepare($sql);
@@ -50,6 +56,7 @@ class Modele
 
     // utilisateurs
 
+    // Recupere un utilisateur actif pour la connexion.
     public function select_user_login(string $email): array|false
     {
         $sql = "select *
@@ -62,6 +69,7 @@ class Modele
         ]);
     }
 
+    // Recupere un utilisateur par son email.
     public function selectWhere_utilisateur_by_email(string $email): array|false
     {
         $sql = "select *
@@ -73,6 +81,7 @@ class Modele
         ]);
     }
 
+    // Insere un nouvel utilisateur.
     public function insert_utilisateur(array $tab): void
     {
         $sql = "insert into utilisateurs (email, mot_de_passe_hash, role, actif)
@@ -85,6 +94,7 @@ class Modele
         ]);
     }
 
+    // Active ou desactive un utilisateur.
     public function setUtilisateurActif(int $idUtilisateur, int $actif): void
     {
         $sql = "update utilisateurs
@@ -97,6 +107,7 @@ class Modele
         ]);
     }
 
+    // Recupere le mot de passe hash d'un utilisateur.
     public function selectMotDePasseUtilisateur(int $idUtilisateur): array|false
     {
         $sql = "select mot_de_passe_hash
@@ -108,6 +119,7 @@ class Modele
         ]);
     }
 
+    // Met a jour le mot de passe hash.
     public function updateMotDePasseUtilisateur(int $idUtilisateur, string $hash): void
     {
         $sql = "update utilisateurs
@@ -120,6 +132,7 @@ class Modele
         ]);
     }
 
+    // Verifie si un email appartient deja a un autre utilisateur.
     public function emailExistePourAutreUtilisateur(string $email, int $idUtilisateur): array|false
     {
         $sql = "select *
@@ -135,6 +148,7 @@ class Modele
 
     // clients
 
+    // Insere une fiche client.
     public function insert_client(array $tab): void
     {
         $sql = "insert into client (id_utilisateur, nom, prenom, telephone, adresse, ville, pays)
@@ -151,6 +165,7 @@ class Modele
         ]);
     }
 
+    // Recupere la fiche client liee a un utilisateur.
     public function selectWhere_client_by_user(int $id_utilisateur): array|false
     {
         $sql = "select *
@@ -162,9 +177,11 @@ class Modele
         ]);
     }
 
+    // Cree un compte complet avec utilisateur et client.
     public function inscription_complete(array $userTab, array $clientTab): array|false
     {
         try {
+            // Creation utilisateur + client dans une seule transaction.
             $this->pdo->beginTransaction();
 
             $this->insert_utilisateur($userTab);
@@ -193,6 +210,7 @@ class Modele
 
     // clients admin
 
+    // Liste les clients pour le tableau admin.
     public function selectAll_clients_admin(): array
     {
         $sql = "select
@@ -216,6 +234,7 @@ class Modele
         return $this->fetchAll($sql);
     }
 
+    // Recherche les clients dans le tableau admin.
     public function selectLike_clients_admin(string $filtre): array
     {
         $sql = "select
@@ -248,6 +267,7 @@ class Modele
         ]);
     }
 
+    // Recupere le detail admin d'un client.
     public function selectWhere_client_admin(int $idUtilisateur): array|false
     {
         $sql = "select
@@ -276,6 +296,7 @@ class Modele
         ]);
     }
 
+    // Supprime un client par son utilisateur.
     public function deleteClientByAdmin(int $idUtilisateur): void
     {
         $sql = "delete from utilisateurs
@@ -289,6 +310,7 @@ class Modele
 
     // continents
 
+    // Liste les continents.
     public function selectAll_continents(): array
     {
         $sql = "select *
@@ -298,6 +320,7 @@ class Modele
         return $this->fetchAll($sql);
     }
 
+    // Recupere un continent par id.
     public function selectWhere_continent(int $id_continent): array|false
     {
         $sql = "select *
@@ -311,6 +334,7 @@ class Modele
 
     // destinations
 
+    // Insere une destination.
     public function insert_destination(array $tab): void
     {
         $sql = "insert into destinations (pays, ville, id_continent, description, prix_base, image_url, actif)
@@ -326,6 +350,7 @@ class Modele
         ]);
     }
 
+    // Liste les destinations actives publiques.
     public function selectAll_destinations(): array
     {
         $sql = "select d.*, c.nom as continent
@@ -337,6 +362,7 @@ class Modele
         return $this->fetchAll($sql);
     }
 
+    // Liste toutes les destinations pour l'admin.
     public function selectAll_destinations_admin(): array
     {
         $sql = "select d.*, c.nom as continent
@@ -347,6 +373,7 @@ class Modele
         return $this->fetchAll($sql);
     }
 
+    // Recherche les destinations actives.
     public function selectLike_destination(string $filtre): array
     {
         $sql = "select d.*, c.nom as continent
@@ -365,6 +392,7 @@ class Modele
         ]);
     }
 
+    // Recupere une destination par id.
     public function selectWhere_destination(int $id_destination): array|false
     {
         $sql = "select d.*, c.nom as continent
@@ -377,6 +405,7 @@ class Modele
         ]);
     }
 
+    // Cherche une destination par pays et ville.
     public function selectWhere_destination_by_pays_ville(string $pays, string $ville): array|false
     {
         $sql = "select *
@@ -390,6 +419,7 @@ class Modele
         ]);
     }
 
+    // Cherche un doublon de destination en excluant un id.
     public function selectWhere_destination_by_pays_ville_except_id(
         string $pays,
         string $ville,
@@ -408,6 +438,7 @@ class Modele
         ]);
     }
 
+    // Met a jour une destination.
     public function update_destination(array $tab): void
     {
         $sql = "update destinations
@@ -432,6 +463,7 @@ class Modele
         ]);
     }
 
+    // Desactive une destination.
     public function delete_destination(int $id_destination): void
     {
         $sql = "update destinations
@@ -443,6 +475,7 @@ class Modele
         ]);
     }
 
+    // Change le statut actif d'une destination.
     public function set_destination_actif(int $id_destination, int $actif): void
     {
         $sql = "update destinations
@@ -455,9 +488,11 @@ class Modele
         ]);
     }
 
+    // Cree une reservation pour une destination.
     public function reserver_destination(array $tab): bool
     {
         try {
+            // Verifie la destination puis cree la reservation.
             $this->pdo->beginTransaction();
 
             $sql = "select actif
@@ -499,6 +534,7 @@ class Modele
 
     // offres
 
+    // Insere une offre promotionnelle.
     public function insert_offre(array $tab): void
     {
         $sql = "insert into offres (id_destination, titre, pourcentage_reduction, date_debut, date_fin, actif)
@@ -513,6 +549,7 @@ class Modele
         ]);
     }
 
+    // Liste toutes les offres.
     public function selectAll_offres(): array
     {
         $sql = "select o.*, d.pays, d.ville, cont.nom as continent
@@ -524,6 +561,7 @@ class Modele
         return $this->fetchAll($sql);
     }
 
+    // Liste les offres actives et valides aujourd'hui.
     public function selectAll_offres_actives(): array
     {
         $sql = "select o.*, d.pays, d.ville, d.image_url, d.prix_base, cont.nom as continent
@@ -538,6 +576,7 @@ class Modele
         return $this->fetchAll($sql);
     }
 
+    // Recherche les offres pour l'admin.
     public function selectLike_offre(string $filtre): array
     {
         $sql = "select o.*, d.pays, d.ville, cont.nom as continent
@@ -555,6 +594,7 @@ class Modele
         ]);
     }
 
+    // Recherche les offres actives publiques.
     public function selectLike_offres_actives(string $filtre): array
     {
         $sql = "select o.*, d.pays, d.ville, d.image_url, d.prix_base, cont.nom as continent
@@ -577,6 +617,7 @@ class Modele
         ]);
     }
 
+    // Recupere une offre par id.
     public function selectWhere_offre(int $id_offre): array|false
     {
         $sql = "select *
@@ -588,6 +629,7 @@ class Modele
         ]);
     }
 
+    // Recupere l'offre active d'une destination.
     public function selectWhere_offre_active_by_destination(int $id_destination): array|false
     {
         $sql = "select o.*
@@ -605,6 +647,7 @@ class Modele
         ]);
     }
 
+    // Met a jour une offre.
     public function update_offre(array $tab): void
     {
         $sql = "update offres
@@ -627,6 +670,7 @@ class Modele
         ]);
     }
 
+    // Desactive une offre.
     public function delete_offre(int $id_offre): void
     {
         $sql = "update offres
@@ -638,6 +682,7 @@ class Modele
         ]);
     }
 
+    // Change le statut actif d'une offre.
     public function set_offre_actif(int $id_offre, int $actif): void
     {
         $sql = "update offres
@@ -652,6 +697,7 @@ class Modele
 
     // voyages
 
+    // Insere un voyage organise.
     public function insert_voyage(array $tab): void
     {
         $sql = "insert into voyages_organises
@@ -673,6 +719,7 @@ class Modele
         ]);
     }
 
+    // Liste tous les voyages pour l'admin.
     public function selectAll_voyages_admin(): array
     {
         $sql = "select v.*, d.pays, d.ville, cont.nom as continent
@@ -684,6 +731,7 @@ class Modele
         return $this->fetchAll($sql);
     }
 
+    // Liste les voyages actifs publics.
     public function selectAll_voyages_actifs(): array
     {
         $sql = "select v.*, d.pays, d.ville, d.image_url as destination_image_url, cont.nom as continent
@@ -697,6 +745,7 @@ class Modele
         return $this->fetchAll($sql);
     }
 
+    // Liste les voyages actifs d'une destination.
     public function selectAll_voyages_actifs_by_destination(int $id_destination): array
     {
         $sql = "select v.*, d.pays, d.ville, cont.nom as continent
@@ -713,6 +762,7 @@ class Modele
         ]);
     }
 
+    // Recupere un voyage par id.
     public function selectWhere_voyage(int $id_voyage): array|false
     {
         $sql = "select v.*, d.pays, d.ville, d.description as destination_description, d.prix_base, d.image_url as destination_image_url, cont.nom as continent
@@ -726,6 +776,7 @@ class Modele
         ]);
     }
 
+    // Met a jour un voyage organise.
     public function update_voyage(array $tab): void
     {
         $sql = "update voyages_organises
@@ -756,6 +807,7 @@ class Modele
         ]);
     }
 
+    // Supprime un voyage organise.
     public function delete_voyage(int $id_voyage): void
     {
         $sql = "delete from voyages_organises
@@ -766,6 +818,7 @@ class Modele
         ]);
     }
 
+    // Change le statut d'un voyage.
     public function set_voyage_statut(int $id_voyage, string $statut): void
     {
         $sql = "update voyages_organises
@@ -778,6 +831,7 @@ class Modele
         ]);
     }
 
+    // Retire des places si elles sont disponibles.
     public function decrement_places_voyage(int $id_voyage, int $nb_personnes): int
     {
         $sql = "update voyages_organises
@@ -796,9 +850,11 @@ class Modele
         return $stmt->rowCount();
     }
 
+    // Cree une reservation pour un voyage.
     public function reserver_voyage(array $tab): bool
     {
         try {
+            // Retire les places puis cree la reservation voyage.
             $this->pdo->beginTransaction();
 
             $changed = $this->decrement_places_voyage(
@@ -832,6 +888,7 @@ class Modele
         }
     }
 
+    // Recupere l'id voyage depuis une reservation.
     public function select_id_voyage_by_reservation_voyage(int $id_reservation_voyage): int
     {
         $sql = "select id_voyage
@@ -846,6 +903,7 @@ class Modele
         return $row ? (int) $row["id_voyage"] : 0;
     }
 
+    // Passe le voyage en complet si plus aucune place.
     public function maj_statut_voyage_si_complet(int $id_voyage): void
     {
         $sql = "update voyages_organises
@@ -861,6 +919,7 @@ class Modele
 
     // réservations
 
+    // Insere une reservation destination.
     public function insert_reservation_destination(array $tab): void
     {
         $sql = "insert into reservations_destinations
@@ -879,6 +938,7 @@ class Modele
         ]);
     }
 
+    // Insere une reservation voyage.
     public function insert_reservation_voyage(array $tab): void
     {
         $sql = "insert into reservations_voyages
@@ -895,6 +955,7 @@ class Modele
         ]);
     }
 
+    // Liste les reservations de destinations.
     public function selectAll_reservations_destinations(): array
     {
         $sql = "select rd.*,
@@ -910,6 +971,7 @@ class Modele
         return $this->fetchAll($sql);
     }
 
+    // Liste les reservations de voyages.
     public function selectAll_reservations_voyages(): array
     {
         $sql = "select rv.*,
@@ -931,6 +993,7 @@ class Modele
         return $this->fetchAll($sql);
     }
 
+    // Liste les reservations destination d'un client.
     public function selectWhere_reservations_destinations_by_client(int $id_client): array
     {
         $sql = "select rd.*,
@@ -948,6 +1011,7 @@ class Modele
         ]);
     }
 
+    // Liste les reservations voyage d'un client.
     public function selectWhere_reservations_voyages_by_client(int $id_client): array
     {
         $sql = "select rv.*,
@@ -972,8 +1036,10 @@ class Modele
         ]);
     }
 
+    // Liste toutes les reservations dans une seule table.
     public function selectAll_reservations_union(): array
     {
+        // Fusionne les reservations destination et voyage pour l'admin.
         $sql = "
             select
                 rd.id_reservation_destination as id_reservation,
@@ -1028,8 +1094,10 @@ class Modele
         return $this->fetchAll($sql);
     }
 
+    // Liste toutes les reservations d'un client.
     public function selectWhere_reservations_by_client_union(int $id_client): array
     {
+        // Fusionne les deux types de reservations pour un client.
         $sql = "select *
                 from (
                     select
@@ -1088,6 +1156,7 @@ class Modele
         ]);
     }
 
+    // Met a jour le statut d'une reservation destination.
     public function update_reservation_destination_statut(array $tab): void
     {
         $sql = "update reservations_destinations
@@ -1100,6 +1169,7 @@ class Modele
         ]);
     }
 
+    // Met a jour le statut d'une reservation voyage.
     public function update_reservation_voyage_statut(array $tab): void
     {
         $sql = "update reservations_voyages
@@ -1112,6 +1182,7 @@ class Modele
         ]);
     }
 
+    // Liste les reservations destination d'un utilisateur.
     public function selectReservationsDestinationsByUtilisateur(int $idUtilisateur): array
     {
         $sql = "select
@@ -1135,6 +1206,7 @@ class Modele
         ]);
     }
 
+    // Liste les reservations voyage d'un utilisateur.
     public function selectReservationsVoyagesByUtilisateur(int $idUtilisateur): array
     {
         $sql = "select
@@ -1162,6 +1234,7 @@ class Modele
 
     // profil client
 
+    // Recupere le profil complet d'un client.
     public function getProfilClient(int $idUtilisateur): array|false
     {
         $sql = "select
@@ -1184,6 +1257,7 @@ class Modele
         ]);
     }
 
+    // Recupere le profil simple d'un utilisateur.
     public function getProfilUtilisateur(int $idUtilisateur): array|false
     {
         $sql = "select
@@ -1200,6 +1274,7 @@ class Modele
         ]);
     }
 
+    // Met a jour le profil utilisateur.
     public function updateProfilUtilisateur(array $tab): void
     {
         $sql = "update utilisateurs
@@ -1212,8 +1287,10 @@ class Modele
         ]);
     }
 
+    // Met a jour le profil client complet.
     public function updateProfilClient(array $tab): void
     {
+        // Met a jour l'utilisateur puis la fiche client.
         $sqlUtilisateur = "update utilisateurs
                            set email = :email
                            where id_utilisateur = :id_utilisateur";
@@ -1245,8 +1322,10 @@ class Modele
 
     // dashboard admin
 
+    // Calcule les statistiques du dashboard admin.
     public function getStatsDashboardAdmin(): array
     {
+        // Calcule les indicateurs affiches dans le dashboard admin.
         $sqlClients = "select count(*) as total_clients
                        from utilisateurs
                        where role = 'client'";

@@ -1,5 +1,7 @@
 <?php
 
+// Controleur connexion : verifie les identifiants et cree la session.
+
 // variables de connexion
 
 $erreurLogin = "";

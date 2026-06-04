@@ -1,5 +1,7 @@
 <?php
 
+// Controleur admin offres : CRUD des promotions et tri de la liste.
+
 // sécurité admin
 
 $unControleur->verifAdmin();
@@ -150,6 +152,7 @@ if ($ordre !== "desc") {
     $ordre = "asc";
 }
 
+// comparaison utilisee pour trier les offres
 usort($lesOffres, function (array $a, array $b) use ($tri, $ordre): int {
     if ($tri === "destination") {
         $valeurA = trim((string) ($a["pays"] ?? "") . " " . (string) ($a["ville"] ?? ""));

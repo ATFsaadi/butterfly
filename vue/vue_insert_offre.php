@@ -1,5 +1,7 @@
 <?php
 
+// Formulaire admin offre : creation ou modification d'une promotion.
+
 // sécurité des données
 
 $destinations = $destinations ?? [];
@@ -110,16 +112,19 @@ if ($offre !== null && array_key_exists("actif", $offre)) {
 
             <!-- réduction -->
 
-            <input
-                type="number"
-                name="pourcentage_reduction"
-                placeholder="réduction (%)"
-                required
-                min="1"
-                max="100"
-                class="form-control mb-2"
-                value="<?= htmlspecialchars((string) $reduc) ?>"
-            >
+           <div class="input-group mb-2">
+    <input
+        type="number"
+        name="pourcentage_reduction"
+        placeholder="réduction"
+        required
+        min="1"
+        max="100"
+        class="form-control"
+        value="<?= htmlspecialchars((string) $reduc) ?>"
+    >
+    <span class="input-group-text">%</span>
+</div>
 
             <!-- dates -->
 

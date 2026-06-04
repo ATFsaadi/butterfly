@@ -1,4 +1,5 @@
 <!-- modale à propos -->
+<!-- Modale a propos : presentation courte de l'agence. -->
 
 <div
     class="modal fade"

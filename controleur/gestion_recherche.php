@@ -1,5 +1,7 @@
 <?php
 
+// Controleur recherche : lance une recherche globale sur le site.
+
 // récupération de la recherche
 
 $recherche = trim((string) ($_GET["q"] ?? ""));
@@ -23,6 +25,7 @@ if ($recherche !== "") {
     $allVoyages = $unControleur->selectAll_voyages_actifs() ?? [];
     $filtreMin = mb_strtolower($recherche);
 
+    // fonction de filtre appliquee aux voyages
     $voyages = array_values(array_filter($allVoyages, function ($voyage) use ($filtreMin) {
         $titre = mb_strtolower((string) ($voyage["titre"] ?? ""));
         $pays = mb_strtolower((string) ($voyage["pays"] ?? ""));

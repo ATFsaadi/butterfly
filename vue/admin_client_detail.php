@@ -1,5 +1,7 @@
 <?php
 
+// Vue detail client admin : informations client et historique reservations.
+
 // sécurité des données
 
 $client = $client ?? [];

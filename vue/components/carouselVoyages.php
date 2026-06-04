@@ -1,3 +1,5 @@
+<!-- Composant carrousel voyages : affiche les coups de coeur de l'accueil. -->
+
 <?php if (!empty($voyages)): ?>
 
     <!-- titre coups de cœur -->

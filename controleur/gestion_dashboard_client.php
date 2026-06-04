@@ -1,5 +1,7 @@
 <?php
 
+// Controleur espace client : recupere les reservations du client connecte.
+
 // sécurité client
 
 $unControleur->verifConnexion();

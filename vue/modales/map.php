@@ -1,4 +1,4 @@
-<!-- modale carte agence -->
+<!-- Modale carte agence : conteneur utilise par Leaflet. -->
 <div id="mapModal" class="modal">
 
     <!-- contenu modale -->

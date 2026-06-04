@@ -1,5 +1,7 @@
 <?php
 
+// Vue dashboard admin : affiche les indicateurs principaux.
+
 // securite donnees
 
 $stats = $stats ?? [];

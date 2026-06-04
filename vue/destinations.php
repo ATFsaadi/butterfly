@@ -1,5 +1,7 @@
 <?php
 
+// Vue destinations : affiche les cartes publiques avec pagination simple.
+
 // sécurité des données
 
 $destinations = $destinations ?? [];

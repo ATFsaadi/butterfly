@@ -1,5 +1,7 @@
 <?php
 
+// Vue detail voyage : affiche le voyage et son etat de reservation.
+
 // sécurité des données
 
 $voyage = $voyage ?? null;

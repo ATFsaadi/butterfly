@@ -1,19 +1,20 @@
 // js/script.js → commun à toutes les pages
+// Script commun : modales, cartes Leaflet et menus.
 document.addEventListener("DOMContentLoaded", function () {
 
-  /* modale carte agence */
+  // modale carte agence
   const modal = document.getElementById('mapModal');
   const closeBtn = document.querySelector('#mapModal .close');
 
   let map = null;
 
-  /* helper : ouvrir modale */
+  // ouverture modale
   function openModal() {
     if (!modal) return;
     modal.style.display = 'block';
     document.body.style.overflow = 'hidden';
 
-    /* laisse le temps au layout */
+    // attente layout
     setTimeout(() => {
       if (!map) {
         initMap();
@@ -23,65 +24,65 @@ document.addEventListener("DOMContentLoaded", function () {
     }, 300);
   }
 
-  /* helper : fermer modale */
+  // fermeture modale
   function closeModal() {
     if (!modal) return;
     modal.style.display = 'none';
     document.body.style.overflow = 'auto';
 
-    /* reset map */
+    // reset map
     if (map) {
       map.remove();
       map = null;
     }
   }
 
-  /* fonction globale (navbar) */
+  // fonction globale navbar
   window.openAgenceMap = function () {
     openModal();
   };
 
-  /* bouton fermeture */
+  // bouton fermeture
   if (closeBtn) closeBtn.addEventListener('click', closeModal);
 
-  /* fermeture clic dehors */
+  // fermeture clic dehors
   window.addEventListener('click', (e) => {
     if (modal && e.target === modal) closeModal();
   });
 
-  /* fermeture touche echap */
+  // fermeture echap
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && modal && modal.style.display === 'block') {
       closeModal();
     }
   });
 
-  /* carte leaflet dans modale */
+  // carte leaflet
   function initMap() {
     if (typeof L === 'undefined') return;
     if (!document.getElementById('map')) return;
 
-    /* coordonnees agence */
+    // coordonnees agence
     const lat = 48.8738;
     const lng = 2.3320;
 
-    /* init map */
+    // init map
     map = L.map('map').setView([lat, lng], 18);
 
-    /* tuiles osm */
+    // tuiles osm
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap contributors',
       maxZoom: 19
     }).addTo(map);
 
-    /* marker custom */
+    // marker custom
     const icon = L.divIcon({
       html: `<div style="background:#F27438;color:white;width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:1.4rem;box-shadow:0 4px 14px rgba(0,0,0,0.4);border:4px solid white;">A</div>`,
       iconSize: [42, 42],
       className: 'custom-marker'
     });
 
-    /* marker + popup */
+    // marker et popup
     L.marker([lat, lng], { icon })
       .addTo(map)
       .bindPopup(`
@@ -96,12 +97,14 @@ document.addEventListener("DOMContentLoaded", function () {
         </div>
       `)
       .openPopup()
+      // ajout du clic sur le lien Google Maps
       .on('popupopen', function () {
 
-        /* lien google maps */
+        // lien google maps
         const link = document.getElementById('openGoogleMaps');
         if (!link) return;
 
+        // ouverture de l'itineraire selon l'appareil
         link.onclick = function (e) {
           e.preventDefault();
 
@@ -118,18 +121,18 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 
-  /* mini-carte footer */
+  // mini carte footer
   function initFooterMap() {
     if (typeof L === 'undefined') return;
 
     const footerEl = document.getElementById('footerMap');
     if (!footerEl) return;
 
-    /* coordonnees agence */
+    // coordonnees agence
     const lat = 48.8738;
     const lng = 2.3320;
 
-    /* init map */
+    // init map
     const footerMap = L.map('footerMap', {
       zoomControl: false,
       dragging: false,
@@ -140,12 +143,12 @@ document.addEventListener("DOMContentLoaded", function () {
       keyboard: false
     }).setView([lat, lng], 16);
 
-    /* tuiles osm */
+    // tuiles osm
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: ''
     }).addTo(footerMap);
 
-    /* marker footer */
+    // marker footer
     const icon = L.divIcon({
       html: `<div style="background:#F27438;color:white;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:0.9rem;border:3px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.3);">A</div>`,
       iconSize: [28, 28],
@@ -154,17 +157,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
     L.marker([lat, lng], { icon }).addTo(footerMap);
 
-    /* clic footer */
+    // clic footer
     footerEl.addEventListener('click', () => {
       openModal();
     });
   }
 
-  /* lancement mini map */
+  // lancement mini map
   initFooterMap();
 
-  /* dropdown hover */
+  // dropdown hover
   if (window.innerWidth >= 992 && typeof bootstrap !== 'undefined') {
+    // activation des menus au survol sur desktop
     document.querySelectorAll('.nav-item.dropdown').forEach(item => {
       const toggle = item.querySelector('.dropdown-toggle');
       if (!toggle) return;

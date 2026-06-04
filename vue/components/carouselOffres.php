@@ -1,3 +1,5 @@
+<!-- Composant carrousel offres : affiche les promotions de l'accueil. -->
+
 <?php if (!empty($offres)): ?>
 
     <!-- titre offres -->

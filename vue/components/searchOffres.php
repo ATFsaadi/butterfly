@@ -1,5 +1,7 @@
 <?php
 
+// Composant recherche offres : filtre les promotions publiques.
+
 // récupération de la recherche
 
 $q = trim((string) ($_GET["q"] ?? ""));

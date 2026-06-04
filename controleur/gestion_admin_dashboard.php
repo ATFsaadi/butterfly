@@ -1,5 +1,7 @@
 <?php
 
+// Controleur dashboard admin : charge les statistiques principales.
+
 // sécurité admin
 
 $unControleur->verifAdmin();

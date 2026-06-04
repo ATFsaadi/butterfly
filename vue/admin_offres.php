@@ -1,5 +1,7 @@
 <?php
 
+// Vue admin offres : assemble messages, formulaire et tableau.
+
 // sécurité des données
 
 $success = $success ?? "";

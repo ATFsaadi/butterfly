@@ -1,5 +1,7 @@
 <?php
 
+// Controleur detail destination : charge une destination et sa reservation.
+
 // variables de base
 
 $erreurReservation = "";

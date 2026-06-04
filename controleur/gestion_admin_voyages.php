@@ -1,5 +1,7 @@
 <?php
 
+// Controleur admin voyages : CRUD, upload image, filtre et tri.
+
 // sécurité admin
 
 $unControleur->verifAdmin();
@@ -227,6 +229,7 @@ $lesVoyages = $unControleur->selectAll_voyages_admin();
 if ($filtre !== "") {
     $filtreMin = mb_strtolower($filtre);
 
+    // fonction de filtre appliquee a chaque voyage
     $lesVoyages = array_values(array_filter($lesVoyages, function ($voyage) use ($filtreMin) {
         return str_contains(mb_strtolower((string) ($voyage["titre"] ?? "")), $filtreMin)
             || str_contains(mb_strtolower((string) ($voyage["pays"] ?? "")), $filtreMin)
@@ -249,6 +252,7 @@ if ($ordre !== "desc") {
     $ordre = "asc";
 }
 
+// comparaison utilisee pour trier les voyages
 usort($lesVoyages, function (array $a, array $b) use ($tri, $ordre): int {
     if ($tri === "destination") {
         $valeurA = trim((string) ($a["pays"] ?? "") . " " . (string) ($a["ville"] ?? ""));

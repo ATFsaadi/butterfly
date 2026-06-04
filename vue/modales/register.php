@@ -1,4 +1,4 @@
-<!-- modale inscription -->
+<!-- Modale inscription : formulaire de creation de compte client. -->
 
 <div
     class="modal fade"
@@ -141,6 +141,7 @@
 <!-- ouverture modales -->
 
 <script>
+    // ouvre automatiquement la bonne modale apres inscription
     document.addEventListener("DOMContentLoaded", function () {
         try {
             if (window.__OPEN_REGISTER_MODAL__) {

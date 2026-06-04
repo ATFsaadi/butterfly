@@ -1,5 +1,7 @@
 <?php
 
+// Vue admin clients : filtre, tableau et actions sur les comptes.
+
 // sécurité des données
 
 $clients = $clients ?? [];

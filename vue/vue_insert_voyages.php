@@ -1,5 +1,7 @@
 <?php
 
+// Formulaire admin voyage : creation ou modification.
+
 // sécurité des données
 
 $voyageToEdit = $voyageToEdit ?? ($voyage ?? null);

@@ -1,5 +1,7 @@
 <?php
 
+// Controleur voyages : charge les voyages actifs avec recherche.
+
 // récupération de la recherche
 
 $q = trim((string) ($_GET["q"] ?? ""));
@@ -13,6 +15,7 @@ $all = $unControleur->selectAll_voyages_actifs();
 if ($q !== "" && mb_strlen($q) >= 2) {
     $f = mb_strtolower($q);
 
+    // fonction de filtre appliquee aux voyages
     $voyages = array_values(array_filter($all, function ($v) use ($f) {
         $titre = mb_strtolower((string) ($v["titre"] ?? ""));
         $pays = mb_strtolower((string) ($v["pays"] ?? ""));

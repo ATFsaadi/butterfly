@@ -1,5 +1,7 @@
 <?php
 
+// Modale connexion : gere le formulaire et la redirection apres login.
+
 // paramètres de redirection
 
 $redirect = (string) ($_GET["redirect"] ?? "");
@@ -173,6 +175,7 @@ if ($id_destination_redirect > 0) {
 
 <?php if (!empty($erreurLogin) || (($_GET["page"] ?? "") === "login")): ?>
     <script>
+        // ouvre la modale si la connexion a echoue ou est demandee
         document.addEventListener("DOMContentLoaded", function () {
             const modal = new bootstrap.Modal(document.getElementById("loginModal"));
             modal.show();

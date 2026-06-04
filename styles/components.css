@@ -1,3 +1,5 @@
+/* Composants visuels : navbar, recherche, carrousels et footer. */
+
 /* navbar du haut (nav) */
 
 nav.custom-navbar{
@@ -28,14 +30,14 @@ nav.custom-navbar .navbar-nav .nav-item{
   margin: 0;
 }
 
-/* liens (navbar du haut) â€” reprends le rendu de l'ancien */
+/* liens navbar */
 nav.custom-navbar .nav-link{
   font-size: 15px;
   color: var(--secondary-color);
   font-weight: 400;
   letter-spacing: 0.55px;
 
-  /*   anciens effets */
+  /* effet texte */
   text-shadow: 0 0 0.6px currentColor;
 
   transition: color 0.3s ease, background 0.3s ease;
@@ -54,7 +56,7 @@ nav.custom-navbar .nav-link:hover{
   background: transparent;
 }
 
-/* icones rondes (navbar du haut) â€” comme l'ancien */
+/* icones rondes */
 nav.custom-navbar .icon-circle{
   display: flex;
   justify-content: center;
@@ -67,7 +69,7 @@ nav.custom-navbar .icon-circle{
   font-size: 20px;
   color: var(--text-color);
 
-  /*   comme l'ancien */
+  /* animation */
   transition: var(--transition);
 }
 
@@ -121,13 +123,13 @@ div.custom-navbar{
   z-index: 1050;
 }
 
-/* enlÃ¨ve padding bootstrap qui agrandit le fond */
+/* reset padding bootstrap */
 div.custom-navbar .container-fluid{
   padding-top: 0 !important;
   padding-bottom: 0 !important;
 }
 
-/* menu centrÃ© dans la hauteur */
+/* menu centre */
 div.custom-navbar .navbar-nav{
   height: 100%;
   align-items: center;
@@ -137,7 +139,7 @@ div.custom-navbar .navbar-nav{
   padding: 0;
 }
 
-/* liens du menu bas â€” reprends couleurs/rendu de l'ancien */
+/* liens menu bas */
 div.custom-navbar .nav-link{
   padding-top: 0 !important;
   padding-bottom: 0 !important;
@@ -217,7 +219,7 @@ div.custom-navbar #navbarNav{
   display:flex;
   align-items:center;
   gap:10px;
-  height:auto;          /*   au lieu de 100px */
+  height:auto;          /* hauteur auto */
 }
 
 .search-icon{
@@ -237,8 +239,8 @@ div.custom-navbar #navbarNav{
   justify-content:center;
   cursor:pointer;
   transition:.3s ease;
-  text-decoration:none; /*   important pour un <a> */
-  margin-top:0;         /*   on enlÃ¨ve le dÃ©calage */
+  text-decoration:none; /* lien bouton */
+  margin-top:0;         /* reset decalage */
 }
 
 .voyage-reset-icon:hover{
@@ -265,7 +267,7 @@ div.custom-navbar #navbarNav{
 }
 
 /* boutons cards + carousel */
-.card .btn,
+.card .btn:not(.grid-btn):not(.detail-btn):not(.res-btn):not(.admin-btn),
 .carousel-caption .btn{
   background:linear-gradient(135deg,var(--primary-color),#F2A65B);
   color:var(--bg-light);
@@ -277,7 +279,7 @@ div.custom-navbar #navbarNav{
 }
 
 /*   hover: utiliser background (pas background-color) */
-.card .btn:hover,
+.card .btn:not(.grid-btn):not(.detail-btn):not(.res-btn):not(.admin-btn):hover,
 .carousel-caption .btn:hover{
   background:transparent;
   color:var(--muted-color);
@@ -303,7 +305,7 @@ div.custom-navbar #navbarNav{
   flex-direction: row;
   cursor: pointer;
 
-  transition: transform .2s ease, opacity .2s ease;   /*   important */
+  transition: transform .2s ease, opacity .2s ease;   /* animation */
 }
 
 .voyage-search-btn:hover{
@@ -501,7 +503,7 @@ div.custom-navbar #navbarNav{
 
 .footer-voyage a:hover{ color:var(--primary-color); }
 
-/* Contact (âš ï¸ seulement contact, pas les rÃ©seaux) */
+/* contact footer */
 .footer-contact p{
   margin:0 0 8px;
   font-size:.92rem;
@@ -535,7 +537,7 @@ div.custom-navbar #navbarNav{
 
 .footer-map:hover{ transform:translateY(-2px); }
 
-/* Social (  centrage parfait) */
+/* reseaux sociaux */
 .footer-social a{
   display:inline-flex;
   align-items:center;
@@ -555,8 +557,8 @@ div.custom-navbar #navbarNav{
 .footer-social a i{
   display:block;
   line-height:1;
-  margin:0;          /*   Ã©vite tout dÃ©calage */
-  width:auto;        /*   Ã©vite le width:18px du contact */
+  margin:0;          /* reset decalage */
+  width:auto;        /* reset largeur */
 }
 
 .footer-social a:hover{
@@ -566,7 +568,7 @@ div.custom-navbar #navbarNav{
   color:var(--primary-color);
 }
 
-/* SÃ©paration */
+/* separation */
 .footer-voyage hr{
   border-color:rgba(255,255,255,.10);
   margin:28px 0 14px;

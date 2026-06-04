@@ -1,5 +1,7 @@
 <?php
 
+// Tableau admin offres : filtre, tri et actions.
+
 // sécurité des données
 
 $lesOffres = $lesOffres ?? ($offres ?? []);

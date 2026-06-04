@@ -1,5 +1,7 @@
 <?php
 
+// Controleur offres : charge les offres actives avec recherche.
+
 // récupération de la recherche
 
 $recherche = trim((string) ($_GET["q"] ?? ""));

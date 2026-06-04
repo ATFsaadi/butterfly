@@ -1,5 +1,7 @@
 <?php
 
+// Vue voyages : affiche les voyages actifs et les actions de reservation.
+
 // sécurité des données
 
 $voyages = $voyages ?? [];

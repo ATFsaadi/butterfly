@@ -1,3 +1,5 @@
+<!-- Composant footer : navigation, carte agence, contact et reseaux sociaux. -->
+
 <footer class="footer-voyage text-light">
     <div class="container">
 

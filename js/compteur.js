@@ -1,5 +1,6 @@
+// Compteurs reservation : met a jour les prix en direct.
 (() => {
-  // Destination
+  // calcul destination
   const d1 = document.getElementById("date_depart"),
     d2 = document.getElementById("date_retour"),
     nb = document.getElementById("nb_personnes"),
@@ -14,6 +15,7 @@
     const pu = Number(cfgD.dataset.prixUnitaire || "0");
     const fmt = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" });
 
+    // mise à jour du total destination
     const upd = () => {
       const p = Math.max(1, parseInt(nb.value || "1", 10));
       nb.value = p;
@@ -38,6 +40,7 @@
       btnD.disabled = bad;
     };
 
+    // ecoute les changements du formulaire destination
     ["input", "change"].forEach((e) => {
       d1.addEventListener(e, upd);
       d2.addEventListener(e, upd);
@@ -47,7 +50,7 @@
     upd();
   }
 
-  // Voyage
+  // calcul voyage
   const nbV = document.getElementById("voyage_nb_personnes"),
     totV = document.getElementById("voyage_total"),
     cfgV = document.getElementById("js_voyage");
@@ -56,12 +59,14 @@
     const puV = Number(cfgV.dataset.prixUnitaire || "0");
     const fmtV = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" });
 
+    // mise à jour du total voyage
     const updV = () => {
       const p = Math.max(1, parseInt(nbV.value || "1", 10));
       nbV.value = p;
       totV.textContent = fmtV.format(puV * p);
     };
 
+    // ecoute les changements du formulaire voyage
     ["input", "change"].forEach((e) => nbV.addEventListener(e, updV));
     updV();
   }

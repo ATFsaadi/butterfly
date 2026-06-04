@@ -1,5 +1,7 @@
 <?php
 
+// Vue admin destinations : assemble messages, formulaire et tableau.
+
 // sécurité des données
 
 $success = $success ?? "";

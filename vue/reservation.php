@@ -1,5 +1,7 @@
 <?php
 
+// Vue reservation : prepare le resume et affiche le formulaire adapte.
+
 // sécurité des données
 
 $voyage = $voyage ?? null;

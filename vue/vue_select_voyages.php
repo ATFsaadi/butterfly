@@ -1,5 +1,7 @@
 <?php
 
+// Tableau admin voyages : filtre, tri et actions.
+
 // sécurité des données
 
 $lesVoyages = $lesVoyages ?? ($voyages ?? []);

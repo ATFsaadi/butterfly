@@ -1,5 +1,7 @@
 <?php
 
+// Composant recherche globale : conserve le mot saisi.
+
 // récupération de la recherche
 
 $q = trim((string) ($_GET["q"] ?? ""));

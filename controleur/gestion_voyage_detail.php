@@ -1,5 +1,7 @@
 <?php
 
+// Controleur detail voyage : charge le voyage demande.
+
 // récupération du voyage
 
 $idVoyage = (int) ($_GET["id_voyage"] ?? 0);

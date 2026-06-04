@@ -1,5 +1,7 @@
 <?php
 
+// Composant recherche destinations : filtre par pays, ville ou continent.
+
 // récupération des paramètres
 
 $q = trim((string) ($_GET["q"] ?? ""));

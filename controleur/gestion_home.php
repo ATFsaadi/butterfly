@@ -1,5 +1,7 @@
 <?php
 
+// Controleur accueil : charge les elements affiches sur la page d'accueil.
+
 // récupération des données d'accueil
 
 $voyages = $unControleur->selectAll_voyages_actifs();

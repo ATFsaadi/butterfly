@@ -1,5 +1,7 @@
 <?php
 
+// Vue accueil : affiche la recherche globale, les resultats ou les carrousels.
+
 // sécurité des données
 
 $destinations = $destinations ?? [];

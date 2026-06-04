@@ -1,5 +1,7 @@
 <?php
 
+// Composant navbar : menus publics, menus client/admin et deconnexion.
+
 // token csrf
 
 if (empty($_SESSION["csrf_token"])) {
@@ -402,8 +404,17 @@ $isAdminConnecte = $isUserConnecte && (($_SESSION["user"]["role"] ?? "") === "ad
 
 <div class="custom-navbar navbar-expand-lg navbar-light sticky-top">
     <div class="container-fluid">
-        <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="collapse navbar-collapse mobile-nav-panel" id="navbarNav">
             <ul class="navbar-nav mx-auto">
+
+                <li class="nav-item me-4">
+                    <a
+                        class="nav-link <?= $pageActuelle === "home" ? "active" : "" ?>"
+                        href="index.php?page=home"
+                    >
+                        <i class="fas fa-home nav-icon"></i> Accueil
+                    </a>
+                </li>
 
                 <li class="nav-item me-4">
                     <a

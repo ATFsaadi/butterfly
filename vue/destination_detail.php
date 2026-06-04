@@ -1,5 +1,7 @@
 <?php
 
+// Vue detail destination : affiche les informations et le bouton reserver.
+
 // sécurité des données
 
 $destination = $destination ?? null;

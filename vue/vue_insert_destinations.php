@@ -1,5 +1,7 @@
 <?php
 
+// Formulaire admin destination : creation ou modification.
+
 // sécurité des données
 
 $destinationToEdit = $destinationToEdit ?? ($destination ?? null);

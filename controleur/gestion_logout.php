@@ -1,5 +1,7 @@
 <?php
 
+// Controleur deconnexion : vide la session et renvoie vers l'accueil.
+
 // démarrage de la session
 
 if (session_status() !== PHP_SESSION_ACTIVE) {

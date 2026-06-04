@@ -1,3 +1,5 @@
+/* Pages publiques : cartes, details, reservation et responsive. */
+
 /* base commune */
 
 .section-title {
@@ -31,11 +33,11 @@
 .detail-btn,
 .grid-btn,
 .res-btn {
-    font-size: 0.78rem;
-    padding: 4px 10px;
+    font-size: 0.84rem;
+    padding: 7px 14px;
     border-radius: var(--btn-radius);
     border-width: 1px;
-    font-weight: 600;
+    font-weight: 800;
     line-height: 1.2;
     transition: 0.15s ease;
 }
@@ -43,15 +45,15 @@
 .ui-btn-primary,
 .btn-success.detail-btn,
 .btn-success.grid-btn {
-    background: var(--primary-color);
+    background: rgba(235, 120, 20, 0.14);
     border-color: var(--primary-color);
-    color: #fff;
+    color: var(--primary-color);
 }
 
 .ui-btn-primary:hover,
 .btn-success.detail-btn:hover,
 .btn-success.grid-btn:hover {
-    opacity: 0.9;
+    background: var(--primary-color);
     color: #fff;
 }
 
@@ -66,7 +68,8 @@
 .ui-btn-outline:hover,
 .btn-outline-primary.detail-btn:hover,
 .btn-outline-primary.grid-btn:hover {
-    opacity: 0.85;
+    background: rgba(235, 120, 20, 0.08);
+    color: var(--primary-color);
 }
 
 /* modales auth */
@@ -230,8 +233,9 @@
 }
 
 .detail-value {
-    color: var(--text-color);
+    color: var(--primary-color);
     font-weight: 800;
+    font-size: 1.05rem;
 }
 
 .detail-desc {
@@ -319,14 +323,15 @@
     position: absolute;
     right: 0;
     bottom: 0;
-    padding: 6px 14px;
-    background: var(--primary-color);
+    padding: 8px 18px;
+    background: linear-gradient(135deg, var(--primary-color), #d97728);
     color: #fff;
     font-weight: 800;
-    font-size: 0.85rem;
+    font-size: 1rem;
     line-height: 1;
     border-radius: 0;
     border: 0;
+    box-shadow: 0 8px 18px rgba(235, 120, 20, 0.24);
 }
 
 .grid-body {
@@ -336,7 +341,11 @@
 .grid-actions {
     display: flex;
     justify-content: center;
-    gap: 8px;
+    gap: 10px;
+}
+
+.grid-actions .grid-btn {
+    min-width: 128px;
 }
 
 /* triangle promotion */

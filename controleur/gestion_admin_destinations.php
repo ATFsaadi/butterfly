@@ -1,5 +1,7 @@
 <?php
 
+// Controleur admin destinations : CRUD, upload image, filtre et tri.
+
 // sécurité admin
 $unControleur->verifAdmin();
 
@@ -202,6 +204,7 @@ $filtre = trim((string) ($_GET["filtre"] ?? ($_POST["filtre"] ?? "")));
 if ($filtre !== "") {
     $filtreMin = mb_strtolower($filtre);
 
+    // fonction de filtre appliquee a chaque destination
     $destinations = array_values(array_filter($destinations, function ($destination) use ($filtreMin) {
         $pays = mb_strtolower((string) ($destination["pays"] ?? ""));
         $ville = mb_strtolower((string) ($destination["ville"] ?? ""));
@@ -231,6 +234,7 @@ if ($ordre !== "desc") {
     $ordre = "asc";
 }
 
+// comparaison utilisee pour trier les destinations
 usort($destinations, function (array $a, array $b) use ($tri, $ordre): int {
     if ($tri === "prix_base") {
         $comparaison = (float) ($a[$tri] ?? 0) <=> (float) ($b[$tri] ?? 0);

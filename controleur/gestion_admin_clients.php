@@ -1,5 +1,7 @@
 <?php
 
+// Controleur admin clients : recherche, tri et activation des comptes.
+
 // sécurité admin
 
 $unControleur->verifAdmin();
@@ -49,6 +51,7 @@ if ($ordre !== "desc") {
     $ordre = "asc";
 }
 
+// comparaison utilisee pour trier les clients
 usort($clients, function (array $a, array $b) use ($tri, $ordre): int {
     $valeurA = $a[$tri] ?? "";
     $valeurB = $b[$tri] ?? "";

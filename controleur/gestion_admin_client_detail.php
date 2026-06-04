@@ -1,5 +1,7 @@
 <?php
 
+// Controleur detail client admin : affiche le profil et ses reservations.
+
 // sécurité admin
 
 $unControleur->verifAdmin();

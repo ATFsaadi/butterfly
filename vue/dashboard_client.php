@@ -1,5 +1,7 @@
 <?php
 
+// Vue espace client : liste les reservations du client connecte.
+
 // sécurité des données
 
 $lesReservationsDestinations = $lesReservationsDestinations ?? [];

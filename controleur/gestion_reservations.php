@@ -1,5 +1,7 @@
 <?php
 
+// Controleur reservation : gere les reservations voyages et destinations.
+
 // sécurité client
 
 $unControleur->verifConnexion();

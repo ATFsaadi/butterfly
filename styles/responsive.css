@@ -1,3 +1,5 @@
+/* Responsive : adaptations mobiles, tablettes et grands ecrans. */
+
 /* mobile first */
 @media (max-width: 480px) {
     .container-fluid { padding: 0 15px !important; }
@@ -56,7 +58,21 @@
 
 /* ajustements globaux */
 @media (max-width: 991.98px) {
-    .sticky-top { border-bottom: 1px solid #eee; }
+    .custom-navbar.navbar-light.sticky-top {
+        position: static !important;
+        top: auto !important;
+        z-index: auto;
+        height: auto !important;
+        display: block;
+        align-items: stretch;
+        border-bottom: 1px solid #eee;
+    }
+
+    .custom-navbar.navbar-light.sticky-top > .container-fluid {
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+    }
+
     nav.custom-navbar > .container-fluid {
         padding: 16px 18px !important;
     }
@@ -78,7 +94,7 @@
         color: var(--primary-color);
     }
     .admin-mobile-panel,
-    .sticky-top .navbar-collapse {
+    .mobile-nav-panel {
         width: calc(100% - 32px);
         margin: 0 auto 12px;
         padding: 12px;
@@ -87,19 +103,26 @@
         border-radius: var(--border-radius);
         box-shadow: 0 12px 28px rgba(0, 127, 140, 0.12);
     }
-    .sticky-top .navbar-collapse {
-        margin-top: 10px;
+
+    .admin-mobile-panel.collapsing,
+    .mobile-nav-panel.collapsing {
+        height: 0;
+        overflow: hidden;
+        transition: height 0.22s ease;
     }
-    .sticky-top .navbar-collapse .navbar-nav {
+
+    .mobile-nav-panel .navbar-nav {
+        width: 100%;
+        flex-direction: column;
         gap: 4px;
         align-items: stretch;
     }
-    .sticky-top .navbar-collapse .nav-item {
+    .mobile-nav-panel .nav-item {
         margin: 0 !important;
     }
     .admin-mobile-panel a,
     .admin-mobile-panel button,
-    .sticky-top .navbar-collapse .nav-link {
+    .mobile-nav-panel .nav-link {
         width: 100%;
         display: flex;
         align-items: center;
@@ -116,8 +139,8 @@
     .admin-mobile-panel a.active,
     .admin-mobile-panel a:hover,
     .admin-mobile-panel button:hover,
-    .sticky-top .navbar-collapse .nav-link.active,
-    .sticky-top .navbar-collapse .nav-link:hover {
+    .mobile-nav-panel .nav-link.active,
+    .mobile-nav-panel .nav-link:hover {
         background: rgba(235, 120, 20, 0.1);
         color: var(--primary-color);
     }

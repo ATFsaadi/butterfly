@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="fr">
 
+<!-- Layout principal : charge les styles, la navbar, la page active, les modales et les scripts. -->
+
 <head>
     <!-- métadonnées -->
 
@@ -26,11 +28,11 @@
 
     <!-- styles projet -->
 
-    <link rel="stylesheet" href="styles/style.css?v=20260524b">
-    <link rel="stylesheet" href="styles/page.css?v=20260524b">
-    <link rel="stylesheet" href="styles/components.css?v=20260524b">
-    <link rel="stylesheet" href="styles/responsive.css?v=20260524b">
-    <link rel="stylesheet" href="styles/admin.css?v=20260524b">
+    <link rel="stylesheet" href="styles/style.css?v=20260524d">
+    <link rel="stylesheet" href="styles/page.css?v=20260524d">
+    <link rel="stylesheet" href="styles/components.css?v=20260524d">
+    <link rel="stylesheet" href="styles/responsive.css?v=20260524d">
+    <link rel="stylesheet" href="styles/admin.css?v=20260524d">
 </head>
 
 <body class="bg-light">

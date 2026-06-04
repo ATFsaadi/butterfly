@@ -1,5 +1,7 @@
 <?php
 
+// Controleur destinations : charge la liste publique avec recherche.
+
 // récupération de la recherche
 
 $recherche = trim((string) ($_GET["q"] ?? ""));

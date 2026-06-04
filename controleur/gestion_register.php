@@ -1,5 +1,7 @@
 <?php
 
+// Controleur inscription : valide les champs et cree le compte client.
+
 // variables d'inscription
 
 $erreurRegister = $erreurRegister ?? "";

@@ -1,5 +1,7 @@
 <?php
 
+// Controleur admin reservations : confirme ou annule les demandes.
+
 // sécurité admin
 
 $unControleur->verifAdmin();
@@ -83,6 +85,7 @@ if ($ordre !== "asc") {
     $ordre = "desc";
 }
 
+// comparaison utilisee pour trier les reservations
 usort($lesReservations, function (array $a, array $b) use ($tri, $ordre): int {
     if ($tri === "id") {
         $comparaison = (int) ($a["id_reservation"] ?? 0) <=> (int) ($b["id_reservation"] ?? 0);

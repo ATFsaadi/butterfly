@@ -1,5 +1,7 @@
 <?php
 
+// Controleur profil : modifie les informations, le mot de passe et le compte.
+
 // securite utilisateur
 
 if (!isset($_SESSION["user"])) {
@@ -22,6 +24,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["modifier_profil"])) {
         die("csrf invalide");
     }
 
+    // recuperation des champs
+
     $nom = trim((string) ($_POST["nom"] ?? ""));
     $prenom = trim((string) ($_POST["prenom"] ?? ""));
     $email = trim((string) ($_POST["email"] ?? ""));
@@ -34,6 +38,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["modifier_profil"])) {
     $nouveauMotDePasse = (string) ($_POST["nouveau_mot_de_passe"] ?? "");
     $confirmationMotDePasse = (string) ($_POST["confirmation_mot_de_passe"] ?? "");
 
+    // validation profil
+
     if (!$isAdminProfil && ($nom === "" || $prenom === "" || $email === "")) {
         $erreur = "Nom, prenom et email sont obligatoires.";
     } elseif ($isAdminProfil && $email === "") {
@@ -43,6 +49,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["modifier_profil"])) {
     } elseif ($unControleur->emailExistePourAutreUtilisateur($email, $idUtilisateur)) {
         $erreur = "Cet email est deja utilise.";
     } else {
+        // mise a jour profil
+
         if ($isAdminProfil) {
             $unControleur->updateProfilUtilisateur([
                 "id_utilisateur" => $idUtilisateur,
@@ -64,6 +72,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["modifier_profil"])) {
         }
 
         $_SESSION["user"]["email"] = $email;
+
+        // changement mot de passe
 
         if ($motDePasseActuel !== "" || $nouveauMotDePasse !== "" || $confirmationMotDePasse !== "") {
             if ($motDePasseActuel === "" || $nouveauMotDePasse === "" || $confirmationMotDePasse === "") {
@@ -99,6 +109,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["supprimer_compte"])) 
     if ($isAdminProfil) {
         $erreur = "Suppression admin non disponible depuis le profil.";
     } else {
+        // validation suppression
+
         $motDePasseSuppression = (string) ($_POST["mot_de_passe_suppression"] ?? "");
         $confirmationSuppression = trim((string) ($_POST["confirmation_suppression"] ?? ""));
 

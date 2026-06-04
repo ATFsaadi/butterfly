@@ -1,5 +1,7 @@
 <?php
 
+// Composant recherche voyages : filtre les voyages publics.
+
 // récupération de la recherche
 
 $q = trim((string) ($_GET["q"] ?? ""));

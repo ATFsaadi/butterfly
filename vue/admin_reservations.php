@@ -1,5 +1,7 @@
 <?php
 
+// Vue admin reservations : affiche les demandes et les actions de statut.
+
 // sécurité des données
 
 $lesReservations = $lesReservations ?? [];
@@ -24,10 +26,12 @@ function lienTriReservation(string $colonne, string $label, string $triActuel, s
         . '</a>';
 }
 
+// separe les reservations de destinations
 $resaDest = array_values(array_filter($lesReservations, function ($reservation) {
     return ($reservation["type_reservation"] ?? "") === "destination";
 }));
 
+// separe les reservations de voyages
 $resaVoy = array_values(array_filter($lesReservations, function ($reservation) {
     return ($reservation["type_reservation"] ?? "") === "voyage";
 }));

@@ -1,3 +1,5 @@
+/* Espace admin : formulaires, tableaux, boutons, statuts et dashboard. */
+
 /* formulaire admin */
 form.mb-4 {
     max-width: 980px;
@@ -53,11 +55,22 @@ form.mb-4 textarea.form-control {
 
 /* bouton principal */
 form.mb-4 .btn.btn-primary {
-    border: none;
+    border: 1px solid var(--primary-color);
     border-radius: var(--btn-radius);
-    padding: 12px 18px;
+    padding: 5px 12px;
+    min-height: 30px;
     font-weight: 700;
-    background: linear-gradient(135deg, var(--primary-color), #F2A65B);
+    font-size: 0.78rem;
+    line-height: 1.15;
+    background: transparent;
+    color: var(--primary-color);
+}
+
+form.mb-4 .btn.btn-primary.px-5,
+.admin-btn.px-4,
+.admin-btn.px-5 {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
 }
 
 /* hover bouton principal */
@@ -151,51 +164,65 @@ table.table.table-bordered.admin-table tbody tr:hover {
 .admin-btn {
     border-radius: var(--btn-radius);
     border: 1px solid var(--primary-color);
-    padding: 7px 13px;
-    font-size: 0.82rem;
+    padding: 5px 12px;
+    min-height: 30px;
+    font-size: 0.78rem;
     font-weight: 700;
+    line-height: 1.15;
+    background: transparent;
     transition: 0.2s ease;
 }
 
 .admin-btn.admin-btn-primary {
-    background: linear-gradient(135deg, var(--primary-color), #F2A65B);
-    color: #fff;
+    background: transparent;
+    color: var(--primary-color);
+    border-color: var(--primary-color);
 }
 
 .admin-btn.admin-btn-outline {
     background: transparent;
     color: var(--primary-color);
+    border-color: var(--primary-color);
 }
 
 .admin-btn.admin-btn-green {
-    background: #198754;
+    background: transparent;
     border-color: #198754;
-    color: #fff;
+    color: #198754;
 }
 
 .admin-btn.admin-btn-red {
-    background: #dc3545;
+    background: transparent;
     border-color: #dc3545;
-    color: #fff;
+    color: #dc3545;
 }
 
 .admin-btn.admin-btn-green:hover,
 .admin-btn.admin-btn-red:hover {
-    color: #fff;
+    color: inherit;
 }
 
 .admin-btn.admin-btn-green:hover {
-    background: #157347;
+    background: rgba(25, 135, 84, 0.08);
     border-color: #157347;
+    color: #157347;
 }
 
 .admin-btn.admin-btn-red:hover {
-    background: #bb2d3b;
+    background: rgba(220, 53, 69, 0.08);
     border-color: #bb2d3b;
+    color: #bb2d3b;
+}
+
+.admin-btn.admin-btn-primary:hover,
+.admin-btn.admin-btn-outline:hover,
+form.mb-4 .btn.btn-primary:hover {
+    background: rgba(235, 120, 20, 0.08);
+    color: var(--primary-color);
+    border-color: var(--primary-color);
 }
 
 .admin-btn:hover {
-    opacity: 0.9;
     transform: translateY(-1px);
 }
 
@@ -205,9 +232,10 @@ table.table.table-bordered.admin-table tbody tr:hover {
     align-items: center;
     justify-content: center;
     min-width: 78px;
-    padding: 4px 10px;
+    padding: 5px 11px;
+    min-height: 30px;
     border-radius: var(--btn-radius);
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     font-weight: 800;
     border: 1px solid currentColor;
 }
