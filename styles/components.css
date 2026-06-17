@@ -79,6 +79,40 @@ nav.custom-navbar .icon-circle svg{
   transition: fill 0.3s ease;
 }
 
+/* badge notifications navbar */
+nav.custom-navbar .nav-notification-badge{
+  position: absolute;
+  top: -7px;
+  right: -9px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: #dc3545;
+  color: #fff;
+  border: 2px solid #fff;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 15px;
+  text-align: center;
+}
+
+nav.custom-navbar .nav-notification-badge-inline{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  margin-left: auto;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: #dc3545;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1;
+}
+
 /* hover icone (navbar du haut) */
 nav.custom-navbar .icon-circle:hover{
   transform: scale(1.1);

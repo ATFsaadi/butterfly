@@ -13,8 +13,6 @@ if (empty($_SESSION["csrf_token"])) {
 $pageActuelle = $_GET["page"] ?? "home";
 $continentActif = isset($_GET["continent"]) ? (int) $_GET["continent"] : 0;
 
-$notifReservations = 0;
-
 $prenomAffiche =
     $_SESSION["user"]["prenom"]
     ?? $_SESSION["client"]["prenom"]
@@ -22,6 +20,25 @@ $prenomAffiche =
 
 $isUserConnecte = isset($_SESSION["user"]);
 $isAdminConnecte = $isUserConnecte && (($_SESSION["user"]["role"] ?? "") === "admin");
+$notifReservations = 0;
+
+if ($isUserConnecte && isset($unControleur)) {
+    try {
+        if ($isAdminConnecte) {
+            $notifReservations = $unControleur->countReservationsEnAttenteAdmin();
+        } else {
+            $idClientNotif = (int) ($_SESSION["user"]["id_client"] ?? 0);
+
+            if ($idClientNotif > 0) {
+                $notifReservations = $unControleur->countReservationsEnAttenteClient($idClientNotif);
+            }
+        }
+    } catch (Throwable $e) {
+        $notifReservations = 0;
+    }
+}
+
+$notifReservationsLabel = $notifReservations > 99 ? "99+" : (string) $notifReservations;
 
 ?>
 
@@ -72,7 +89,7 @@ $isAdminConnecte = $isUserConnecte && (($_SESSION["user"]["role"] ?? "") === "ad
 
                     <?php if (($_SESSION["user"]["role"] ?? "") === "admin"): ?>
 
-                        <!-- réservations admin -->
+                        <!-- ss admin -->
 
                         <li class="nav-item d-flex flex-column align-items-center position-relative">
                             <a
@@ -86,31 +103,15 @@ $isAdminConnecte = $isUserConnecte && (($_SESSION["user"]["role"] ?? "") === "ad
 
                                     <?php if ($notifReservations > 0): ?>
                                         <span
-                                            class="badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle"
-                                            style="font-size:10px;"
+                                            class="nav-notification-badge"
+                                            aria-label="<?= (int) $notifReservations ?> reservation(s) en attente"
                                         >
-                                            <?= (int) $notifReservations ?>
+                                            <?= htmlspecialchars($notifReservationsLabel) ?>
                                         </span>
                                     <?php endif; ?>
                                 </span>
 
                                 <span class="mt-1">Réservations</span>
-                            </a>
-                        </li>
-
-                        <!-- voyages admin -->
-
-                        <li class="nav-item d-flex flex-column align-items-center nav-item-fixed">
-                            <a
-                                class="nav-link d-flex flex-column align-items-center <?= $pageActuelle === "admin_voyages" ? "active" : "" ?>"
-                                href="index.php?page=admin_voyages"
-                            >
-                                <span class="icon-circle">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15">
-                                        <path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 8h14v-2H7v2zm0-4h14v-2H7v2zm0-6v2h14V7H7z"/>
-                                    </svg>
-                                </span>
-                                <span class="mt-1">Voyages</span>
                             </a>
                         </li>
 
@@ -127,6 +128,23 @@ $isAdminConnecte = $isUserConnecte && (($_SESSION["user"]["role"] ?? "") === "ad
                                     </svg>
                                 </span>
                                 <span class="mt-1">Destinations</span>
+                            </a>
+                        </li>
+
+                        
+                        <!-- voyages admin -->
+
+                        <li class="nav-item d-flex flex-column align-items-center nav-item-fixed">
+                            <a
+                                class="nav-link d-flex flex-column align-items-center <?= $pageActuelle === "admin_voyages" ? "active" : "" ?>"
+                                href="index.php?page=admin_voyages"
+                            >
+                                <span class="icon-circle">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15">
+                                        <path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 8h14v-2H7v2zm0-4h14v-2H7v2zm0-6v2h14V7H7z"/>
+                                    </svg>
+                                </span>
+                                <span class="mt-1">Voyages</span>
                             </a>
                         </li>
 
@@ -229,10 +247,19 @@ $isAdminConnecte = $isUserConnecte && (($_SESSION["user"]["role"] ?? "") === "ad
                                 class="nav-link d-flex flex-column align-items-center <?= $pageActuelle === "dashboard_client" ? "active" : "" ?>"
                                 href="index.php?page=dashboard_client"
                             >
-                                <span class="icon-circle">
+                                <span class="icon-circle position-relative">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15">
                                         <path d="M4 6h16v2H4V6zm0 5h16v2H4v-2zm0 5h10v2H4v-2z"/>
                                     </svg>
+
+                                    <?php if ($notifReservations > 0): ?>
+                                        <span
+                                            class="nav-notification-badge"
+                                            aria-label="<?= (int) $notifReservations ?> reservation(s) en attente"
+                                        >
+                                            <?= htmlspecialchars($notifReservationsLabel) ?>
+                                        </span>
+                                    <?php endif; ?>
                                 </span>
                                 <span class="mt-1">mes réservations</span>
                             </a>
@@ -365,6 +392,11 @@ $isAdminConnecte = $isUserConnecte && (($_SESSION["user"]["role"] ?? "") === "ad
         <div class="collapse admin-mobile-panel d-lg-none" id="adminNav">
             <a href="index.php?page=admin_reservations" class="<?= $pageActuelle === "admin_reservations" ? "active" : "" ?>">
                 <i class="fas fa-calendar-check"></i> reservations
+                <?php if ($notifReservations > 0): ?>
+                    <span class="nav-notification-badge-inline">
+                        <?= htmlspecialchars($notifReservationsLabel) ?>
+                    </span>
+                <?php endif; ?>
             </a>
             <a href="index.php?page=admin_voyages" class="<?= $pageActuelle === "admin_voyages" ? "active" : "" ?>">
                 <i class="fas fa-route"></i> voyages

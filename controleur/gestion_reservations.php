@@ -70,7 +70,7 @@ $dateRetour = (string) ($_POST["date_retour"] ?? ($_GET["date_retour"] ?? ""));
 
 if ($erreurReservation === "") {
     if ($type === "voyage") {
-        $voyage = $unControleur->selectWhere_voyage($idVoyage);
+        $voyage = $unControleur->selectWhere_voyage_actif($idVoyage);
 
         if ($voyage) {
             $idDestinationVoyage = (int) ($voyage["id_destination"] ?? 0);
@@ -114,7 +114,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 if ($idVoyage <= 0) {
                     $erreurReservation = "voyage invalide.";
                 } else {
-                    $voyage = $unControleur->selectWhere_voyage($idVoyage);
+                    $voyage = $unControleur->selectWhere_voyage_actif($idVoyage);
 
                     if (!$voyage) {
                         $erreurReservation = "impossible de réserver : voyage introuvable.";

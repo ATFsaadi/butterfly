@@ -51,14 +51,6 @@ if ($offre !== null && array_key_exists("actif", $offre)) {
     </div>
 <?php endif; ?>
 
-<!-- message succès -->
-
-<?php if ($success !== ""): ?>
-    <div class="alert alert-success">
-        <?= htmlspecialchars($success) ?>
-    </div>
-<?php endif; ?>
-
 <!-- formulaire -->
 
 <form action="" method="post" class="mb-4">

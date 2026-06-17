@@ -11,9 +11,13 @@ class Modele
     // Ouvre la connexion PDO a la base de donnees.
     public function __construct()
     {
+       // $dsn = "mysql:host=localhost;dbname=bfly;charset=utf8mb4";
+       // $user = "root";
+       // $password = "";
+
         $dsn = "mysql:host=localhost;dbname=bfly;charset=utf8mb4";
-        $user = "root";
-        $password = "";
+        $user = "user";
+        $password = "user";
 
         try {
             $this->pdo = new PDO($dsn, $user, $password, [
@@ -776,6 +780,22 @@ class Modele
         ]);
     }
 
+    // Recupere un voyage actif par id pour les pages publiques.
+    public function selectWhere_voyage_actif(int $id_voyage): array|false
+    {
+        $sql = "select v.*, d.pays, d.ville, d.description as destination_description, d.prix_base, d.image_url as destination_image_url, cont.nom as continent
+                from voyages_organises v
+                join destinations d on d.id_destination = v.id_destination
+                left join continents cont on cont.id_continent = d.id_continent
+                where v.id_voyage = :id_voyage
+                  and v.statut = 'actif'
+                  and d.actif = 1";
+
+        return $this->fetchOne($sql, [
+            ":id_voyage" => $id_voyage,
+        ]);
+    }
+
     // Met a jour un voyage organise.
     public function update_voyage(array $tab): void
     {
@@ -807,10 +827,11 @@ class Modele
         ]);
     }
 
-    // Supprime un voyage organise.
+    // Desactive un voyage organise sans supprimer les reservations liees.
     public function delete_voyage(int $id_voyage): void
     {
-        $sql = "delete from voyages_organises
+        $sql = "update voyages_organises
+                set statut = 'annule'
                 where id_voyage = :id_voyage";
 
         $this->execute($sql, [
@@ -854,19 +875,8 @@ class Modele
     public function reserver_voyage(array $tab): bool
     {
         try {
-            // Retire les places puis cree la reservation voyage.
+            // Le trigger MySQL retire les places et bloque si le voyage est complet.
             $this->pdo->beginTransaction();
-
-            $changed = $this->decrement_places_voyage(
-                (int) $tab["id_voyage"],
-                (int) $tab["nb_personnes"]
-            );
-
-            if ($changed !== 1) {
-                $this->pdo->rollBack();
-
-                return false;
-            }
 
             $this->insert_reservation_voyage([
                 "id_client" => (int) $tab["id_client"],
@@ -1180,6 +1190,49 @@ class Modele
             ":id_reservation_voyage" => (int) $tab["id_reservation_voyage"],
             ":statut" => $tab["statut"],
         ]);
+    }
+
+    // Compte les reservations en attente pour le badge admin.
+    public function countReservationsEnAttenteAdmin(): int
+    {
+        $sqlDest = "select count(*) as total
+                    from reservations_destinations
+                    where statut = 'en_attente'";
+
+        $sqlVoy = "select count(*) as total
+                   from reservations_voyages
+                   where statut = 'en_attente'";
+
+        $destinations = $this->fetchOne($sqlDest);
+        $voyages = $this->fetchOne($sqlVoy);
+
+        return (int) ($destinations["total"] ?? 0)
+            + (int) ($voyages["total"] ?? 0);
+    }
+
+    // Compte les reservations en attente d'un client pour le badge client.
+    public function countReservationsEnAttenteClient(int $idClient): int
+    {
+        $sqlDest = "select count(*) as total
+                    from reservations_destinations
+                    where id_client = :id_client
+                      and statut = 'en_attente'";
+
+        $sqlVoy = "select count(*) as total
+                   from reservations_voyages
+                   where id_client = :id_client
+                     and statut = 'en_attente'";
+
+        $destinations = $this->fetchOne($sqlDest, [
+            ":id_client" => $idClient,
+        ]);
+
+        $voyages = $this->fetchOne($sqlVoy, [
+            ":id_client" => $idClient,
+        ]);
+
+        return (int) ($destinations["total"] ?? 0)
+            + (int) ($voyages["total"] ?? 0);
     }
 
     // Liste les reservations destination d'un utilisateur.

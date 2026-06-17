@@ -73,7 +73,7 @@ function lienTriVoyage(string $colonne, string $label, string $filtreActuel, str
                 <th><?= lienTriVoyage("prix", "prix", $filtreActuel, $triActuel, $ordreActuel) ?></th>
                 <th><?= lienTriVoyage("places", "places", $filtreActuel, $triActuel, $ordreActuel) ?></th>
                 <th><?= lienTriVoyage("statut", "statut", $filtreActuel, $triActuel, $ordreActuel) ?></th>
-                <th style="width:200px;">actions</th>
+                <th style="width:220px;">actions</th>
             </tr>
         </thead>
 
@@ -96,6 +96,7 @@ function lienTriVoyage(string $colonne, string $label, string $filtreActuel, str
                     $nbRestantes = (int) ($voyage["nb_places_restantes"] ?? 0);
 
                     $statut = (string) ($voyage["statut"] ?? "");
+                    $statutLabel = $statut === "annule" ? "Désactivé" : $statut;
                     $image = (string) ($voyage["image_url"] ?? "");
 
                     $destinationLabel = trim($pays . " - " . $ville, " -");
@@ -127,7 +128,7 @@ function lienTriVoyage(string $colonne, string $label, string $filtreActuel, str
                         <td><?= $nbRestantes ?> / <?= $nbPlaces ?></td>
                         <td>
                             <span class="admin-status <?= $statut === "actif" ? "is-active" : "is-muted" ?>">
-                                <?= htmlspecialchars($statut) ?>
+                                <?= htmlspecialchars($statutLabel) ?>
                             </span>
                         </td>
 
@@ -141,13 +142,23 @@ function lienTriVoyage(string $colonne, string $label, string $filtreActuel, str
                                 modifier
                             </a>
 
-                            <a
-                                href="index.php?page=admin_voyages&action=sup&id_voyage=<?= $id ?>"
-                                onclick="return confirm('supprimer ce voyage ?');"
-                                class="btn btn-sm admin-btn admin-btn-red"
-                            >
-                                supprimer
-                            </a>
+                            <?php if ($statut === "annule"): ?>
+                                <a
+                                    href="index.php?page=admin_voyages&action=reactiver&id_voyage=<?= $id ?>"
+                                    onclick="return confirm('réactiver ce voyage ?');"
+                                    class="btn btn-sm admin-btn admin-btn-primary"
+                                >
+                                    réactiver
+                                </a>
+                            <?php else: ?>
+                                <a
+                                    href="index.php?page=admin_voyages&action=sup&id_voyage=<?= $id ?>"
+                                    onclick="return confirm('désactiver ce voyage ?');"
+                                    class="btn btn-sm admin-btn admin-btn-red"
+                                >
+                                    désactiver
+                                </a>
+                            <?php endif; ?>
                         </td>
                     </tr>
                 <?php endforeach; ?>

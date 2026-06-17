@@ -323,6 +323,12 @@ class Controleur
         return $this->modele->selectWhere_voyage($id_voyage);
     }
 
+    // Recupere un voyage actif par son id.
+    public function selectWhere_voyage_actif(int $id_voyage)
+    {
+        return $this->modele->selectWhere_voyage_actif($id_voyage);
+    }
+
     // Modifie un voyage.
     public function update_voyage(array $tab): void
     {
@@ -430,6 +436,18 @@ class Controleur
     public function update_reservation_voyage_statut(array $tab): void
     {
         $this->modele->update_reservation_voyage_statut($tab);
+    }
+
+    // Compte les reservations en attente pour le badge admin.
+    public function countReservationsEnAttenteAdmin(): int
+    {
+        return $this->modele->countReservationsEnAttenteAdmin();
+    }
+
+    // Compte les reservations en attente d'un client pour le badge client.
+    public function countReservationsEnAttenteClient(int $idClient): int
+    {
+        return $this->modele->countReservationsEnAttenteClient($idClient);
     }
 
     // Recupere le voyage lie a une reservation voyage.

@@ -11,13 +11,20 @@ $errors = [];
 $destinationToEdit = null;
 $continents = $unControleur->selectAll_continents();
 
-// action supprimer ou modifier
+// action modifier, desactiver ou reactiver
 if (isset($_GET["action"], $_GET["id_destination"])) {
     $action = $_GET["action"];
     $idDestination = (int) $_GET["id_destination"];
 
     if ($action === "sup" && $idDestination > 0) {
         $unControleur->delete_destination($idDestination);
+
+        header("location: index.php?page=admin_destinations");
+        exit();
+    }
+
+    if ($action === "reactiver" && $idDestination > 0) {
+        $unControleur->set_destination_actif($idDestination, 1);
 
         header("location: index.php?page=admin_destinations");
         exit();

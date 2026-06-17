@@ -11,10 +11,10 @@ $voyage = null;
 // chargement du voyage
 
 if ($idVoyage > 0) {
-    $voyage = $unControleur->selectWhere_voyage($idVoyage);
+    $voyage = $unControleur->selectWhere_voyage_actif($idVoyage);
 }
 
-// redirection si voyage introuvable
+// redirection si voyage introuvable ou desactive
 
 if (!$voyage) {
     header("location: index.php?page=destinations");

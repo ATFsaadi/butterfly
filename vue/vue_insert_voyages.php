@@ -47,14 +47,6 @@ $isActif = ($statut !== "annule");
     </div>
 <?php endif; ?>
 
-<!-- message succès -->
-
-<?php if ($success !== ""): ?>
-    <div class="alert alert-success">
-        <?= htmlspecialchars($success) ?>
-    </div>
-<?php endif; ?>
-
 <!-- formulaire -->
 
 <form action="" method="post" enctype="multipart/form-data" class="mb-4">
@@ -242,7 +234,7 @@ $isActif = ($statut !== "annule");
                 $statuts = [
                     "actif" => "actif",
                     "complet" => "complet",
-                    "annule" => "annulé",
+                    "annule" => "Désactivé",
                 ];
                 ?>
 

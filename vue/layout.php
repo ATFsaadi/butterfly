@@ -30,7 +30,7 @@
 
     <link rel="stylesheet" href="styles/style.css?v=20260524d">
     <link rel="stylesheet" href="styles/page.css?v=20260524d">
-    <link rel="stylesheet" href="styles/components.css?v=20260524d">
+    <link rel="stylesheet" href="styles/components.css?v=20260610a">
     <link rel="stylesheet" href="styles/responsive.css?v=20260524d">
     <link rel="stylesheet" href="styles/admin.css?v=20260524d">
 </head>

@@ -161,7 +161,7 @@ if ($id_destination_redirect > 0) {
 
                 <div class="auth-logo text-center p-3">
                     <img
-                        src="icons/logoForm.png"
+                        src="icons/LogoForm.png"
                         alt="Logo de l'agence"
                         style="max-height:300px;"
                     >

@@ -9,7 +9,9 @@ $unControleur->verifAdmin();
 // variables de base
 
 $errors = [];
-$success = "";
+$success = (string) ($_SESSION["flash_success_admin_voyages"] ?? "");
+
+unset($_SESSION["flash_success_admin_voyages"]);
 
 $voyageToEdit = null;
 $destinations = $unControleur->selectAll_destinations_admin();
@@ -25,6 +27,21 @@ if (isset($_GET["action"], $_GET["id_voyage"])) {
 
         if ($voyageExistant) {
             $unControleur->delete_voyage($idVoyage);
+            $_SESSION["flash_success_admin_voyages"] = "Le voyage a été désactivé avec succès";
+        }
+
+        header("location: index.php?page=admin_voyages");
+        exit();
+    }
+
+    if ($action === "reactiver") {
+        $voyageExistant = $unControleur->selectWhere_voyage($idVoyage);
+
+        if ($voyageExistant) {
+            $statut = ((int) ($voyageExistant["nb_places_restantes"] ?? 0) <= 0) ? "complet" : "actif";
+
+            $unControleur->set_voyage_statut($idVoyage, $statut);
+            $_SESSION["flash_success_admin_voyages"] = "Le voyage a été réactivé avec succès";
         }
 
         header("location: index.php?page=admin_voyages");

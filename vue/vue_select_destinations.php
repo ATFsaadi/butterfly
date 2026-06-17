@@ -120,13 +120,23 @@ function lienTriDestination(string $colonne, string $label, string $filtreActuel
                                 modifier
                             </a>
 
-                            <a
-                                href="index.php?page=admin_destinations&action=sup&id_destination=<?= $id ?>"
-                                onclick="return confirm('supprimer (désactiver) cette destination ?');"
-                                class="btn btn-sm admin-btn admin-btn-red"
-                            >
-                                supprimer
-                            </a>
+                            <?php if ($actif): ?>
+                                <a
+                                    href="index.php?page=admin_destinations&action=sup&id_destination=<?= $id ?>"
+                                    onclick="return confirm('desactiver cette destination ?');"
+                                    class="btn btn-sm admin-btn admin-btn-red"
+                                >
+                                    desactiver
+                                </a>
+                            <?php else: ?>
+                                <a
+                                    href="index.php?page=admin_destinations&action=reactiver&id_destination=<?= $id ?>"
+                                    onclick="return confirm('reactiver cette destination ?');"
+                                    class="btn btn-sm admin-btn admin-btn-primary"
+                                >
+                                    reactiver
+                                </a>
+                            <?php endif; ?>
                         </td>
                     </tr>
                 <?php endforeach; ?>

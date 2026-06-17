@@ -9,7 +9,10 @@ $unControleur->verifAdmin();
 // variables de base
 
 $errors = [];
-$success = "";
+$success = (string) ($_SESSION["flash_success_admin_offres"] ?? "");
+
+unset($_SESSION["flash_success_admin_offres"]);
+
 $offre = null;
 
 // action supprimer ou modifier
@@ -19,7 +22,24 @@ if (isset($_GET["action"], $_GET["id_offre"])) {
     $idOffre = (int) $_GET["id_offre"];
 
     if ($action === "sup") {
-        $unControleur->delete_offre($idOffre);
+        $offreExistante = $unControleur->selectWhere_offre($idOffre);
+
+        if ($offreExistante) {
+            $unControleur->delete_offre($idOffre);
+            $_SESSION["flash_success_admin_offres"] = "L'offre a été désactivée avec succès";
+        }
+
+        header("location: index.php?page=admin_offres");
+        exit();
+    }
+
+    if ($action === "reactiver") {
+        $offreExistante = $unControleur->selectWhere_offre($idOffre);
+
+        if ($offreExistante) {
+            $unControleur->set_offre_actif($idOffre, 1);
+            $_SESSION["flash_success_admin_offres"] = "L'offre a été réactivée avec succès";
+        }
 
         header("location: index.php?page=admin_offres");
         exit();

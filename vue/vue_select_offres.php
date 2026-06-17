@@ -109,7 +109,11 @@ function lienTriOffre(string $colonne, string $label, string $filtreActuel, stri
                         <td><?= $reduc ?>%</td>
                         <td><?= htmlspecialchars($dateDebut) ?></td>
                         <td><?= htmlspecialchars($dateFin) ?></td>
-                        <td><?= $actif ? "oui" : "non" ?></td>
+                        <td>
+                            <span class="admin-status <?= $actif ? "is-active" : "is-muted" ?>">
+                                <?= $actif ? "Active" : "Désactivée" ?>
+                            </span>
+                        </td>
 
                         <!-- actions offre -->
 
@@ -122,13 +126,23 @@ function lienTriOffre(string $colonne, string $label, string $filtreActuel, stri
                                     modifier
                                 </a>
 
-                                <a
-                                    href="index.php?page=admin_offres&action=sup&id_offre=<?= $idOffre ?>"
-                                    onclick="return confirm('voulez-vous vraiment supprimer cette offre ?');"
-                                    class="btn btn-sm admin-btn admin-btn-red"
-                                >
-                                    supprimer
-                                </a>
+                                <?php if ($actif): ?>
+                                    <a
+                                        href="index.php?page=admin_offres&action=sup&id_offre=<?= $idOffre ?>"
+                                        onclick="return confirm('désactiver cette offre ?');"
+                                        class="btn btn-sm admin-btn admin-btn-red"
+                                    >
+                                        désactiver
+                                    </a>
+                                <?php else: ?>
+                                    <a
+                                        href="index.php?page=admin_offres&action=reactiver&id_offre=<?= $idOffre ?>"
+                                        onclick="return confirm('réactiver cette offre ?');"
+                                        class="btn btn-sm admin-btn admin-btn-primary"
+                                    >
+                                        réactiver
+                                    </a>
+                                <?php endif; ?>
                             </div>
                         </td>
                     </tr>
